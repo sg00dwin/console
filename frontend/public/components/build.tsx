@@ -7,6 +7,7 @@ import { cloneBuild, formatBuildDuration } from '../module/k8s/builds';
 import { ColHead, DetailsPage, List, ListHeader, ListPage } from './factory';
 import { errorModal } from './modals';
 import { BuildStrategy, Cog, history, navFactory, ResourceCog, ResourceLink, resourceObjPath, ResourceSummary, Timestamp } from './utils';
+import { BuildPipeline } from './build-pipeline';
 import { breadcrumbsForOwnerRefs } from './utils/breadcrumbs';
 import { fromNow } from './utils/datetime';
 import { EnvironmentPage } from './environment';
@@ -39,6 +40,11 @@ export const BuildsDetails: React.SFC<BuildsDetailsProps> = ({obj: build}) => {
 
   return <div className="co-m-pane__body">
     <div className="row">
+      <div className="col-xs-12">
+        <BuildPipeline obj={build} />
+      </div>
+    </div>
+    <div className="row">
       <div className="col-sm-6">
         <ResourceSummary resource={build} showPodSelector={false} showNodeSelector={false}>
           {triggeredBy && <dt>Triggered By</dt>}
@@ -58,7 +64,8 @@ export const BuildsDetails: React.SFC<BuildsDetailsProps> = ({obj: build}) => {
         </BuildStrategy>
       </div>
     </div>
-  </div>;
+  </div>
+  ;
 };
 
 const envPath = ['spec', 'strategy', 'sourceStrategy'];

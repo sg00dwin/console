@@ -1,0 +1,433 @@
+$pipeline-aborted-color: $color-pf-black-300;
+$pipeline-border-color: $color-pf-black-300;
+$pipeline-failed-color: $color-pf-red-100;
+$pipeline-in-progress-color: $color-pf-blue-400;
+$pipeline-new-color: $color-pf-blue-100;
+$pipeline-pending-color: $color-pf-black-300;
+$pipeline-success-color: $color-pf-green-400;
+$pipeline-require-attention-color: $color-pf-gold-400;
+$pipeline-font-base: 12px;
+$pipeline-circle-animation-time: 0.35s;
+$pipeline-circle-diameter: 18px;
+$pipeline-line-border-width: 8px;
+$pipeline-circle-border-width: ($pipeline-line-border-width / 2);
+$pipeline-circle-radius: ($pipeline-circle-diameter / 2);
+$pipeline-inner-circle-animation-time: 0.1s;
+$pipeline-icon-animation-time: $pipeline-inner-circle-animation-time;
+$pipeline-inner-circle-color: #fff;
+$pipeline-line-animation-time: $pipeline-circle-animation-time;
+$pipeline-line-border-width: 8px;
+$pipeline-line-grow-animation-time: 0.5s;
+$pipeline-line-height: ($pipeline-line-border-width / 2);
+$pipeline-padding: 10px;
+$pipeline-progress-line: 100%;
+$pipeline-progress-rail-animation-time: 5s;
+$pipeline-semi-circle-animation-time: ($pipeline-circle-animation-time / 2);
+
+// Animations
+@keyframes build-progress-line {
+  from {
+    width: 0;
+  }
+  to {
+    width: $pipeline-progress-line;
+  }
+}
+
+@keyframes build-progress-rail {
+  to {
+    transform: translateX(400%)
+  }
+}
+
+@keyframes build-progress {
+  from {
+    -webkit-transform: rotate(0);
+    transform: rotate(0);
+  }
+  to {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+  }
+}
+
+@keyframes pipeline-stage-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pipeline-stage-fadeOut {
+  to {
+    background-color: transparent;
+  }
+}
+
+// Solid circle backgrounds
+@keyframes pipeline-stage-fadeInSuccess {
+  to {background-color: $pipeline-success-color;}
+}
+
+@keyframes pipeline-stage-fadeInFailed {
+  to {background-color: $pipeline-failed-color;}
+}
+
+@keyframes pipeline-stage-fadeInProgress {
+  to {background-color: $pipeline-in-progress-color;}
+}
+
+@keyframes pipeline-stage-fadeInAborted {
+  to {background-color: $pipeline-aborted-color;}
+}
+
+@keyframes pipeline-stage-fadeInNotExecuted {
+  to {background-color: $pipeline-pending-color;}
+}
+
+.build-pipeline {
+  border: 1px solid $pipeline-border-color;
+  border-top-width: 2px;
+	font-size: $pipeline-font-base;
+  margin-bottom: 30px;
+  &:first-child {
+    border-top-width: 1px;
+  }
+}
+
+.build-pipeline__container {
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+.build-pipeline__stages {
+  display: flex;
+  flex-wrap: wrap;
+  height: 100%;
+  padding: 0 ($pipeline-padding / 2);
+}
+.build-pipeline__stage {
+  // need to use flex-basis: auto and width because of IE11 bug
+  flex: 0 0 auto;
+  min-height: 96px;
+  padding: ($pipeline-padding + 5) $pipeline-padding  ($pipeline-padding * 3) $pipeline-padding;
+  position: relative;
+  width: 100%;
+  // add arrow after each stage
+  &:before {
+    bottom: 0;
+    color:  darken($pipeline-border-color, 5%);
+    content: '\2193';
+    font-size: 22px;
+    left: 0;
+    line-height: 1;
+    position: absolute;
+    right: 0;
+    text-align: center;
+  }
+  // hide arrow on last stage
+  &:last-child:before {
+    display: none;
+  }
+  &.build-pipeline__stage--none {
+    align-items: center;
+    display: flex;
+    // so that .build-pipeline__stage-name doesn't truncate
+    width: auto;
+    &:before {
+      display: none;
+    }
+    .build-pipeline__stage-name {
+      margin-bottom: 0;
+    }
+  }
+}
+
+
+.build-pipeline__stage-name, .build-pipeline__stage-time, .build-pipeline__stage-actions {
+  font-size: $pipeline-font-base;
+  text-align: center;
+}
+.build-pipeline__stage-name {
+  @include text-overflow();
+  margin-bottom: $pipeline-padding + 3px;
+}
+.build-pipeline__stage-time, .build-pipeline__stage-actions {
+  margin-top: 12px;
+  &--in-progress {
+    color: #777;
+  }
+}
+
+.build-pipeline__status-icon {
+  &--complete {
+    color: $pipeline-success-color;
+  }
+  &--failed{
+    color: $pipeline-failed-color;
+  }
+}
+
+.build-pipeline__summary {
+  border-bottom: 1px solid $pipeline-border-color;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding: 5px;
+  position: relative;
+  text-align: center;
+}
+
+@media (min-width: 480px) {
+  .build-pipeline__stage {
+    padding-right: ($pipeline-padding * 5.2);
+    padding-bottom: ($pipeline-padding + 5);
+    width: (100% / 3);
+    &:before {
+      bottom: auto;
+      content: '\2192';
+      left: auto;
+      right: 10px;
+      top: 37%;
+    }
+  }
+}
+
+@media (min-width: 600px) {
+  .build-pipeline {
+    display: flex;
+    flex: 1 1 0%;
+    flex-direction: row;
+  }
+  .build-pipeline__name {
+    white-space: nowrap;
+  }
+  .build-pipeline__summary {
+    border-bottom-width: 0;
+    border-right: 1px solid $pipeline-border-color;
+    flex: 0 0 125px;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+@media (min-width: $screen-md-min) {
+  .build-pipeline__stage {
+    width: (100% / 4);
+  }
+}
+
+@media (min-width: $screen-lg-min) {
+  .build-pipeline__stage {
+    width: (100% / 5);
+  }
+}
+@media (min-width: ($screen-lg-min + 200)) {
+  .build-pipeline__stage {
+    width: (100% / 6);
+  }
+}
+
+@media (min-width: ($screen-lg-min + 400)) {
+  .build-pipeline__stage {
+    width: (100% / 7);
+  }
+}
+
+.build-pipeline__status-bar  {
+  .build-pipeline__animation-line:before,
+  .build-pipeline__circle-clip1:before,
+  .build-pipeline__circle-clip2:before {
+    background-color: $pipeline-pending-color;
+  }
+  .build-pipeline__circle-inner-fill {
+    background-color: $pipeline-inner-circle-color;
+    opacity: 0;
+  }
+}
+.build-pipeline__status-bar--success  {
+  .build-pipeline__animation-line:before,
+  .build-pipeline__circle-clip1:before,
+  .build-pipeline__circle-clip2:before,
+  .build-pipeline__circle-inner-fill {
+    background-color: $pipeline-success-color;
+  }
+  .build-pipeline__animation-circle {
+    animation: pipeline-stage-fadeInSuccess 0s ($pipeline-line-animation-time + $pipeline-circle-animation-time) linear forwards;
+    &:after {
+      content: "\f00c";
+    }
+  }
+}
+
+.build-pipeline__status-bar--failed  {
+  .build-pipeline__animation-line:before,
+  .build-pipeline__circle-clip1:before,
+  .build-pipeline__circle-clip2:before,
+  .build-pipeline__circle-inner-fill {
+    background-color: $pipeline-failed-color;
+  }
+  .build-pipeline__animation-circle {
+    animation: pipeline-stage-fadeInFailed 0s ($pipeline-line-animation-time + $pipeline-circle-animation-time) linear forwards;
+    &:after {
+      content: "\f00d";
+    }
+  }
+}
+
+.build-pipeline__status-bar--in-progress  {
+  .build-pipeline__animation-line {
+    overflow: hidden;
+    &:before {
+      animation: build-progress-rail $pipeline-progress-rail-animation-time $pipeline-line-grow-animation-time linear infinite;
+      background-color: $pipeline-in-progress-color;
+      transform: translateX(-100%);
+      width: 25%;
+    }
+  }
+  .build-pipeline__circle-clip1:before,
+  .build-pipeline__circle-clip2:before,
+  .build-pipeline__circle-inner-fill {
+    background-color: $pipeline-in-progress-color;
+  }
+  .build-pipeline__animation-circle {
+    animation: pipeline-stage-fadeInProgress 0s ($pipeline-line-animation-time + $pipeline-circle-animation-time) linear forwards;
+    &:after {
+      content: "\f021";
+    }
+  }
+}
+
+.build-pipeline__status-bar--not-executed  {
+  .build-pipeline__animation-line:before,
+  .build-pipeline__circle-clip1:before,
+  .build-pipeline__circle-clip2:before,
+  .build-pipeline__circle-inner-fill {
+    background-color: $pipeline-pending-color;
+  }
+  .build-pipeline__animation-circle {
+    animation: pipeline-stage-fadeInNotExecuted 0s ($pipeline-line-animation-time + $pipeline-circle-animation-time) linear forwards;
+    &:after {
+      content: ""; // no icon
+    }
+  }
+}
+
+.build-pipeline__status-bar--paused-pending-input  {
+  .build-pipeline__animation-line:before,
+  .build-pipeline__circle-clip1:before,
+  .build-pipeline__circle-clip2:before,
+  .build-pipeline__circle-inner-fill {
+    background-color: $pipeline-require-attention-color;
+  }
+  .build-pipeline__animation-circle {
+    &:after {
+      content: "\f04c";
+      font-size: 10px;
+    }
+  }
+}
+
+
+.build-pipeline__status-bar--aborted  {
+  .build-pipeline__animation-line:before,
+  .build-pipeline__circle-clip1:before,
+  .build-pipeline__circle-clip2:before,
+  .build-pipeline__circle-inner-fill {
+    background-color: $pipeline-aborted-color;
+  }
+  .build-pipeline__animation-circle {
+    animation: pipeline-stage-fadeInAborted 0s ($pipeline-line-animation-time + $pipeline-circle-animation-time) linear forwards;
+    &:after {
+      content: "\f05e";
+    }
+  }
+}
+
+.build-pipeline__status-bar {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: -($pipeline-circle-diameter / 2);
+}
+.build-pipeline__animation-line {
+  width: $pipeline-progress-line;
+  height: $pipeline-line-height;
+  background: $pipeline-pending-color;
+  position: relative;
+  &:before {
+    content: '';
+    position: absolute;
+    height: 100%;
+    animation: build-progress-line $pipeline-line-animation-time ease-in forwards;
+  }
+}
+.build-pipeline__animation-circle {
+  background: $pipeline-pending-color;
+  width: $pipeline-circle-diameter;
+  height: $pipeline-circle-diameter;
+  border-radius: $pipeline-circle-radius;
+  margin-top: (-($pipeline-circle-diameter / 2) - ($pipeline-line-height / 2));
+  position: relative;
+  transform: rotate(-90deg);
+  &:after {
+    position: absolute;
+    color: $pipeline-inner-circle-color;
+    font-family: 'FontAwesome';
+    font-size: $pipeline-font-base;
+    transform: translate(-50%, -50%) rotate(90deg);
+    top: 50%;
+    left: 50%;
+    opacity: 0;
+    animation: pipeline-stage-fadeIn $pipeline-icon-animation-time ($pipeline-line-grow-animation-time + $pipeline-semi-circle-animation-time + ($pipeline-inner-circle-animation-time * 2)) linear forwards;
+  }
+}
+.build-pipeline__circle-clip1 {
+  position: absolute;
+  clip: rect(0, $pipeline-circle-diameter, $pipeline-circle-diameter, $pipeline-circle-radius);
+  z-index: -9;
+  &:before {
+    content: '';
+    position: absolute;
+    width: $pipeline-circle-diameter;
+    height: $pipeline-circle-diameter;
+    clip: rect(0, $pipeline-circle-radius, $pipeline-circle-diameter, 0);
+    border-radius: $pipeline-circle-radius;
+    transform: rotate(360deg);
+    animation: build-progress $pipeline-semi-circle-animation-time $pipeline-line-animation-time linear forwards;
+  }
+}
+.build-pipeline__circle-clip2 {
+  position: absolute;
+  clip: rect(0, $pipeline-circle-radius, $pipeline-circle-diameter, 0);
+  z-index: -9;
+  &:before {
+    content: '';
+    position: absolute;
+    width: $pipeline-circle-diameter;
+    height: $pipeline-circle-diameter;
+    clip: rect(0, $pipeline-circle-diameter, $pipeline-circle-diameter, $pipeline-circle-radius);
+    border-radius: $pipeline-circle-radius;
+    transform: rotate(360deg);
+    animation: build-progress $pipeline-semi-circle-animation-time ($pipeline-semi-circle-animation-time + $pipeline-line-animation-time) linear forwards;
+  }
+}
+.build-pipeline__circle-inner {
+  height: ($pipeline-circle-diameter - $pipeline-circle-border-width * 2);
+  width: ($pipeline-circle-diameter - $pipeline-circle-border-width * 2);
+  border-radius: $pipeline-circle-radius;
+  background-color: $pipeline-inner-circle-color;
+  position: absolute;
+  top: $pipeline-circle-border-width;
+  left: $pipeline-circle-border-width;
+  animation: pipeline-stage-fadeOut $pipeline-inner-circle-animation-time ($pipeline-line-animation-time + $pipeline-circle-animation-time) linear forwards;
+}
+.build-pipeline__circle-inner-fill {
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+  opacity: 0;
+}
