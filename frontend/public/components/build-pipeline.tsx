@@ -1,7 +1,5 @@
 import * as React from 'react';
 import * as _ from 'lodash-es';
-import { Link } from 'react-router-dom';
-import { resourcePath } from './utils';
 import { fromNow } from './utils/datetime';
 import { K8sResourceKind } from '../module/k8s';
 
@@ -9,7 +7,11 @@ const getBuildNumber = (resource: K8sResourceKind): number => _.get(resource, ['
 const getStages = (status): any[] => (status && status.stages) || [];
 const getJenkinsStatus = (resource: K8sResourceKind) => {
   const status = _.get(resource, ['metadata', 'annotations', 'openshift.io/jenkins-status-json']);
-  const json = _.attempt(JSON.parse(status));
+  if (!status) {
+    return {};
+  }
+
+  const json = _.attempt(JSON.parse, status);
   return _.isError(json) ? {} : json;
 };
 const getJenkinsLogURL = (resource: K8sResourceKind): string => _.get(resource, ['metadata', 'annotations', 'openshift.io/jenkins-log-url']);
@@ -41,13 +43,12 @@ const BuildSummaryStatusIcon: React.SFC<BuildSummaryStatusIconProps> = ({status}
 const BuildLogLink: React.SFC<BuildLogLinkProps> = ({obj}) => {
   const link = getJenkinsLogURL(obj);
   return link ? <div className="build-pipeline__link">
-    <a href={link} target="_blank" rel="noopener noreferrer">View Log</a>
+    <a href={link} className="build-pipeline__log-link" target="_blank" rel="noopener noreferrer">View Log</a>
   </div> : null;
 };
 
 const StagesNotStarted: React.SFC<StagesNotStartedProps> = ({stages}) => {
-  return !stages.length ? <div className="build-pipeline__stage build-pipeline__stage--none">
-    <div className="build-pipeline__stage-name">No stages have started.</div>
+  return !stages.length ? <div className="build-pipeline__stage build-pipeline__stage--none">No stages have started.
   </div> : null;
 };
 
@@ -57,12 +58,10 @@ const BuildSummaryTimestamp: React.SFC<BuildSummaryTimestampProps> = ({timestamp
 </span>;
 
 const BuildPipelineSummary: React.SFC<BuildPipelineSummaryProps> = ({obj}) => {
-  const { name, namespace } = obj.metadata;
   const buildNumber = getBuildNumber(obj);
-  const path: string = resourcePath(obj.kind, name, namespace);
   return <div className="build-pipeline__summary">
     <div className="build-pipeline__phase">
-      <BuildSummaryStatusIcon status={obj.status.phase} /> <Link to={path} title={name}>Build {buildNumber}</Link>
+      <BuildSummaryStatusIcon status={obj.status.phase} /> Build {buildNumber}
     </div>
     <BuildSummaryTimestamp timestamp={obj.metadata.creationTimestamp} />
     <BuildLogLink obj={obj} />
