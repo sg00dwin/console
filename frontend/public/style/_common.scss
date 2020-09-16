@@ -1,5 +1,10 @@
 $co-external-link-padding-right: 15px;
 
+.co-section-details--2-columns {
+  columns: 2 350px;
+  column-gap: 30px;
+}
+
 dl.co-inline {
   dd {
     margin-bottom: 1em;

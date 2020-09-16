@@ -106,11 +106,11 @@ const DescriptorDetailsItemGroup: React.FC<DescriptorDetailsItemGroupProps> = ({
   const label = descriptor?.displayName || groupSchema?.title || _.startCase(groupPath);
   const arrayGroups = _.pickBy(nested, 'isArrayGroup');
   const primitives = _.omitBy(nested, 'isArrayGroup');
-  const className = _.isEmpty(arrayGroups) || _.isEmpty(primitives) ? 'col-sm-6' : 'col-sm-12';
+
   return (
-    <div className={className}>
+    <div className="details-item">
       <DetailsItem description={description} label={label} obj={obj} path={`${type}.${groupPath}`}>
-        <dl className="details-item__value--group olm-descriptors__group">
+        <dl className="details-item__value--group olm-descriptors__group ">
           {!_.isEmpty(primitives) && (
             <div>
               {_.map(primitives, ({ descriptor: primitiveDescriptor }) => (
@@ -179,7 +179,7 @@ export const DescriptorDetailsItemList: React.FC<DescriptorDetailsItemListProps>
         const { isArrayGroup, descriptor, nested } = group;
         if (isArrayGroup) {
           return (
-            <div className="col-sm-6">
+            <div className="details-item">
               <DescriptorDetailsItemArrayGroup {...groupProps} {...commonProps} />
             </div>
           );
@@ -190,7 +190,7 @@ export const DescriptorDetailsItemList: React.FC<DescriptorDetailsItemListProps>
         }
 
         return (
-          <div className="col-sm-6">
+          <div className="details-item">
             <DescriptorDetailsItem descriptor={descriptor} {...commonProps} />
           </div>
         );

@@ -108,10 +108,6 @@ $co-affinity-row-margin: 15px;
   margin-bottom: 20px;
 }
 
-.co-operand-details__section--info dd {
-  margin-bottom: 20px !important;
-}
-
 .co-catalog-install-modal .modal-header .co-clusterserviceversion-logo__icon {
   border: 1px solid #ddd;
 }
@@ -258,10 +254,14 @@ $co-affinity-row-margin: 15px;
 
 .olm-descriptors__group {
   display: flex;
+  flex-direction: column;
   justify-content: start;
   & > div {
     margin-right: var(--pf-global--spacer--sm);
     flex-grow: 1;
+  }
+  div + div {
+    margin-top: var(--pf-global--spacer--sm);
   }
 }
 

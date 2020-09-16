@@ -1,6 +1,7 @@
 .details-item {
   display: inline-block;
   margin-bottom: var(--pf-global--spacer--lg);
+  width: 100%;
 }
 
 .details-item__label {
@@ -14,6 +15,10 @@
   @include co-popover-button();
 }
 
+.details-item__value {
+  min-width: 0; // enable break-word
+  @include co-break-word;
+}
 .details-item__value--group {
   border: 1px solid var(--pf-global--BorderColor--300);
   margin-top: var(--pf-global--spacer--xs);

@@ -514,12 +514,12 @@ export const OperandDetails = connectToModel(({ crd, csv, kindObj, obj }: Operan
           podStatusDescriptors={podStatuses}
         />
         <div className="co-operand-details__section co-operand-details__section--info">
-          <div className="row">
-            <div className="col-sm-6">
+          <div className="co-section-details--2-columns">
+            <div className="details-item">
               <ResourceSummary resource={obj} />
             </div>
             {mainStatusDescriptor && (
-              <div className="col-sm-6" key={mainStatusDescriptor.path}>
+              <div className="details-item" key={mainStatusDescriptor.path}>
                 <DescriptorDetailsItem
                   descriptor={mainStatusDescriptor}
                   model={kindObj}
@@ -532,7 +532,7 @@ export const OperandDetails = connectToModel(({ crd, csv, kindObj, obj }: Operan
             {otherStatusDescriptors?.length > 0 && (
               <DescriptorDetailsItemList
                 descriptors={otherStatusDescriptors}
-                itemClassName="col-sm-6"
+                itemClassName="details-item"
                 model={kindObj}
                 obj={obj}
                 schema={schema}
@@ -545,10 +545,10 @@ export const OperandDetails = connectToModel(({ crd, csv, kindObj, obj }: Operan
       {!_.isEmpty(specDescriptors) && (
         <div className="co-m-pane__body">
           <div className="co-operand-details__section co-operand-details__section--info">
-            <div className="row">
+            <div className="co-section-details--2-columns">
               <DescriptorDetailsItemList
                 descriptors={specDescriptors}
-                itemClassName="col-sm-6"
+                itemClassName="details-item"
                 model={kindObj}
                 obj={obj}
                 onError={handleError}
