@@ -16,7 +16,7 @@ $co-m-horizontal-nav__menu-item-link-padding-lr: ($grid-gutter-width / 2);
   }
   &--within-sidebar {
     border-top: 1px solid $color-grey-background-border;
-    margin-bottom: $grid-gutter-width;
+    margin-bottom: $grid-gutter-width !important;
     margin-left: -($grid-gutter-width / 2);
     margin-right: -($grid-gutter-width / 2);
     overflow: visible; // so focus indicator is not clipped since these don't need to scroll

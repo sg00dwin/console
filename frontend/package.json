@@ -245,7 +245,6 @@
     "acorn": "^7.0.0",
     "acorn-jsx": "5.2.0",
     "babel-loader": "^8.1.0",
-    "bootstrap-sass": "^3.3.7",
     "browser-env": "3.x",
     "cache-loader": "1.x",
     "chalk": "2.4.x",
