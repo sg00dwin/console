@@ -186,6 +186,7 @@
   "In progress": "In progress",
   "Healthy": "Healthy",
   "Warning": "Warning",
+  "Invalid value {{value}}": "Invalid value {{value}}",
   "Enable": "Enable",
   "Disable": "Disable",
   "Enabling console plugin": "Enabling console plugin",
