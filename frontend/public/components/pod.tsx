@@ -74,7 +74,9 @@ import { Conditions } from './conditions';
 // t('public~Log in')
 // t('public~Welcome to {{platformTitle}}')
 // t('public~Log in with {{providerName}}')
-// t('public~Error')
+// t('public~Login is required. Please try again.')
+// t('public~Could not check CSRF token. Please try again.')
+// t('public~Invalid login or password. Please try again.')
 
 // Only request metrics if the device's screen width is larger than the
 // breakpoint where metrics are visible.
