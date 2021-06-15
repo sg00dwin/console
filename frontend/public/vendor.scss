@@ -5,35 +5,35 @@
 @import "~openshift-logos-icon/style";
 @import "~@fortawesome/fontawesome-free/scss/fontawesome";
 @import "~@fortawesome/fontawesome-free/scss/solid";
-@import '~patternfly/dist/sass/patternfly/variables';
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/variables";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/mixins";
-@import '~patternfly/dist/sass/patternfly/bootstrap-mixin-overrides';
+// @import '~patternfly/dist/sass/patternfly/variables';
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap/variables";
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap/mixins";
+// @import '~patternfly/dist/sass/patternfly/bootstrap-mixin-overrides';
 // @import "~bootstrap-sass/assets/stylesheets/bootstrap/normalize";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/scaffolding";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/type";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/code";
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap/scaffolding";
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap/type";
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap/code";
 // @import "~bootstrap-sass/assets/stylesheets/bootstrap/grid";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/tables";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/forms";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/buttons"; // required by <FilterSidePanelCategory> in patternfly-react
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/component-animations";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/button-groups";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/input-groups";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/list-group";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/close";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/modals";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/tooltip"; // required by <CatalogTileBadge> in patternfly-react
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/utilities";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/responsive-utilities";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/dropdowns"; // required by @patternfly/react-console
-@import "~patternfly/dist/sass/patternfly/mixins";
-@import '~patternfly/dist/sass/patternfly/buttons'; // required by <FilterSidePanelCategory> in patternfly-react
-@import '~patternfly/dist/sass/patternfly/dropdowns'; // required by @patternfly/react-console
-@import '~patternfly/dist/sass/patternfly/modals';
-@import "~patternfly/dist/sass/patternfly/notifications-drawer";
-@import '~patternfly/dist/sass/patternfly/toolbar';
-@import '~patternfly/dist/sass/patternfly/forms';
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap/tables";
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap/forms";
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap/buttons"; // required by <FilterSidePanelCategory> in patternfly-react
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap/component-animations";
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap/button-groups";
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap/input-groups";
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap/list-group";
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap/close";
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap/modals";
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap/tooltip"; // required by <CatalogTileBadge> in patternfly-react
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap/utilities";
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap/responsive-utilities";
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap/dropdowns"; // required by @patternfly/react-console
+// @import "~patternfly/dist/sass/patternfly/mixins";
+// @import '~patternfly/dist/sass/patternfly/buttons'; // required by <FilterSidePanelCategory> in patternfly-react
+// @import '~patternfly/dist/sass/patternfly/dropdowns'; // required by @patternfly/react-console
+// @import '~patternfly/dist/sass/patternfly/modals'; // NO LONGER USED I THINK...
+// @import "~patternfly/dist/sass/patternfly/notifications-drawer";
+// @import '~patternfly/dist/sass/patternfly/toolbar'; // NO LONGER USED
+// @import '~patternfly/dist/sass/patternfly/forms'; // NO LONGER USED
 @import '~@patternfly/react-catalog-view-extension/dist/sass/variables';
 @import '~@patternfly/react-catalog-view-extension/dist/sass/catalog-item';
 @import '~@patternfly/react-catalog-view-extension/dist/sass/catalog-tile';

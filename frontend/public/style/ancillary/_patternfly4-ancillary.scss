@@ -1,0 +1,42 @@
+// Addition of specific styles to bring elements into visual likeness with PF4
+// These are either components we don't currently use or that our current
+// markup structure doesn't align with PF4 so we must apply through targeted css
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--pf-global--FontFamily--heading--sans-serif);
+  font-weight: var(--pf-global--FontWeight--normal);
+  line-height: var(--pf-global--LineHeight--md);
+  word-break: break-word;
+}
+
+h1 {
+  font-size: var(--pf-global--FontSize--2xl);
+  line-height: var(--pf-global--LineHeight--sm);
+}
+h2 {
+  font-size: var(--pf-global--FontSize--xl);
+}
+h3 {
+  font-size: var(--pf-global--FontSize--lg);
+}
+h4, h5, h6 {
+  font-size: var(--pf-global--FontSize--md);
+}
+
+
+// Override PF4 inheritance
+button, input, optgroup, select, textarea,
+.pf-c-badge {
+  font-family: var(--pf-global--FontFamily--sans-serif);
+}
+
+p {
+  --pf-c-content--MarginBottom: var(--pf-global--spacer--md);
+  margin-bottom: var(--pf-c-content--MarginBottom);
+}
+
+// These are written as nested rules in PF4 .pf-c-content *
+// node_modules/@patternfly/patternfly/components/Content/content.css
+p:not(:last-child), dl:not(:last-child), ol:not(:last-child), ul:not(:last-child), blockquote:not(:last-child), small:not(:last-child), pre:not(:last-child), table:not(:last-child), hr:not(:last-child) {
+  margin-bottom: var(--pf-c-content--MarginBottom);
+}

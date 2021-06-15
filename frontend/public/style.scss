@@ -7,7 +7,7 @@
 @import '~patternfly/dist/sass/patternfly/variables';
 @import '~@patternfly/react-catalog-view-extension/dist/sass/variables';
 @import '~bootstrap-sass/assets/stylesheets/bootstrap/variables';
-@import '~bootstrap-sass/assets/stylesheets/bootstrap/mixins';
+// @import '~bootstrap-sass/assets/stylesheets/bootstrap/mixins';
 @import '~@fortawesome/fontawesome-free/scss/variables';
 
 @import 'style/base';
@@ -24,6 +24,13 @@
 // Overrides
 @import 'style/overrides';
 
+// Ancillary Styles to support removing Bootstrap
+@import 'style/ancillary/bootstrap';
+
+// Ancillary Styles to achieve likeness with PatternFly4
+@import 'style/ancillary/patternfly4-ancillary';
+
+
 /* CUSTOM STYLES */
 
 // Base
@@ -32,8 +39,6 @@
 @import 'style/layout';
 @import 'style/text';
 @import 'style/forms';
-@import 'style/bootstrap-grid-show.scss';
-// @import 'style/bootstrap-grid.scss';
 
 // React Components
 @import 'components/utils/alerts';
