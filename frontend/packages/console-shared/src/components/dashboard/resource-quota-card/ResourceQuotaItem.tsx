@@ -25,9 +25,7 @@ const ResourceQuotaItem: React.FC<ResourceQuotaItemProps> = ({ resourceQuota }) 
           inline="true"
           title={resourceQuota.metadata.name}
         />
-        {scopes && (
-          <QuotaScopesInline className="co-resource-quota-dashboard-scopes" scopes={scopes} />
-        )}
+        {scopes && <QuotaScopesInline scopes={scopes} />}
       </div>
       <QuotaGaugeCharts
         quota={resourceQuota}

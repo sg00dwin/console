@@ -2,12 +2,23 @@
 // These are either components we don't currently use or that our current
 // markup structure doesn't align with PF4 so we must apply through targeted css
 
+
+// Prevents our tile text from inheriting the link color
+.co-catalog-tile {
+  color: var(--pf-global--Color--100);
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--pf-global--FontFamily--heading--sans-serif);
   font-weight: var(--pf-global--FontWeight--normal);
   line-height: var(--pf-global--LineHeight--md);
   word-break: break-word;
 }
+
+// h3, h4, h5, h6 {
+//   --pf-c-content--h2--MarginBottom: var(--pf-global--spacer--sm)
+//   margin-bottom: var(--pf-global--spacer--sm);
+// }
 
 h1 {
   font-size: var(--pf-global--FontSize--2xl);
