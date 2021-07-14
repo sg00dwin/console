@@ -90,7 +90,7 @@ const ResourceListDropdown_: React.SFC<ResourceListDropdownProps> = (props) => {
               )}
             </span>
             {isDup(model.kind) && (
-              <span className="co-resource-item__resource-api text-muted co-truncate show co-nowrap small">
+              <span className="co-resource-item__resource-api text-muted co-truncate pf-u-display-block co-nowrap small">
                 {model.apiGroup || 'core'}/{model.apiVersion}
               </span>
             )}

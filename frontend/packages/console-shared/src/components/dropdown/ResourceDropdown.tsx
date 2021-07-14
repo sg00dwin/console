@@ -32,7 +32,7 @@ const DropdownItem: React.FC<DropdownItemProps> = ({ model, name, namespace }) =
     <span className="co-resource-item__resource-name">
       <span>{name}</span>
       {namespace && (
-        <span className="text-muted co-truncate show co-nowrap small co-resource-item__resource-namespace">
+        <span className="text-muted co-truncate pf-u-display-block co-nowrap small co-resource-item__resource-namespace">
           {namespace}
         </span>
       )}
