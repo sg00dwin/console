@@ -19,45 +19,47 @@ export const Conditions: React.FC<ConditionsProps> = ({ conditions }) => {
   };
 
   const rows = conditions?.map?.((condition: K8sResourceCondition, i: number) => (
-    <div className="row" data-test={condition.type} key={i}>
-      <div className="col-xs-4 col-sm-2 col-md-2" data-test={`condition[${i}].type`}>
+    <tr data-test={condition.type} key={i}>
+      <td data-test={`condition[${i}].type`}>
         <CamelCaseWrap value={condition.type} />
-      </div>
-      <div className="col-xs-4 col-sm-2 col-md-2" data-test={`condition[${i}].status`}>
+      </td>
+      <td data-test={`condition[${i}].status`}>
         {getStatusLabel(condition.status)}
-      </div>
-      <div
-        className="hidden-xs hidden-sm col-md-2"
+      </td>
+      <td
+        className="pf-m-hidden pf-m-visible-on-md"
         data-test={`condition[${i}].lastTransitionTime`}
       >
         <Timestamp timestamp={condition.lastTransitionTime} />
-      </div>
-      <div className="col-xs-4 col-sm-3 col-md-2" data-test={`condition[${i}].reason`}>
+      </td>
+      <td data-test={`condition[${i}].reason`}>
         <CamelCaseWrap value={condition.reason} />
-      </div>
+      </td>
       {/* remove initial newline which appears in route messages */}
-      <div
-        className="hidden-xs col-sm-5 col-md-4 co-break-word co-pre-line co-conditions__message"
+      <td
+        className="pf-m-hidden pf-m-visible-on-sm co-break-word co-pre-line co-conditions__message"
         data-test={`condition[${i}].message`}
       >
         {condition.message?.trim() || '-'}
-      </div>
-    </div>
+      </td>
+    </tr>
   ));
 
   return (
     <>
       {conditions?.length ? (
-        <div className="co-m-table-grid co-m-table-grid--bordered">
-          <div className="row co-m-table-grid__head">
-            <div className="col-xs-4 col-sm-2 col-md-2">{t('public~Type')}</div>
-            <div className="col-xs-4 col-sm-2 col-md-2">{t('public~Status')}</div>
-            <div className="hidden-xs hidden-sm col-md-2">{t('public~Updated')}</div>
-            <div className="col-xs-4 col-sm-3 col-md-2">{t('public~Reason')}</div>
-            <div className="hidden-xs col-sm-5 col-md-4">{t('public~Message')}</div>
-          </div>
-          <div className="co-m-table-grid__body">{rows}</div>
-        </div>
+        <table className="pf-c-table pf-m-compact pf-m-border-rows">
+          <thead>
+            <tr>
+              <th>{t('public~Type')}</th>
+              <th>{t('public~Status')}</th>
+              <th className="pf-m-hidden pf-m-visible-on-md">{t('public~Updated')}</th>
+              <th>{t('public~Reason')}</th>
+              <th className="pf-m-hidden pf-m-visible-on-sm">{t('public~Message')}</th>
+            </tr>
+          </thead>
+          <tbody>{rows}</tbody>
+        </table>
       ) : (
         <div className="cos-status-box">
           <div className="pf-u-text-align-center">{t('public~No conditions found')}</div>
