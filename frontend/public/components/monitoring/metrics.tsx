@@ -3,11 +3,24 @@ import * as _ from 'lodash-es';
 import { List as ImmutableList } from 'immutable';
 import {
   ActionGroup,
+  Alert,
+  AlertGroup,
+  Card,
+  CardBody,
+  CardTitle,
   Button,
   EmptyState,
   EmptyStateBody,
   EmptyStateIcon,
   EmptyStateVariant,
+  Gallery,
+  GalleryItem,
+  Hint,
+  HintBody,
+  HintTitle,
+  Page,
+  PageSection,
+  Stack,
   Switch,
   Title,
 } from '@patternfly/react-core';
@@ -953,44 +966,41 @@ const QueryBrowserPage_: React.FC<QueryBrowserPageProps> = ({ deleteAll }) => {
   React.useEffect(() => deleteAll, [deleteAll]);
 
   return (
-    <>
-      <Helmet>
-        <title>{t('public~Metrics')}</title>
-      </Helmet>
-      <div className="co-m-nav-title">
-        <h1 className="co-m-pane__heading">
-          <span>{t('public~Metrics')}</span>
-          <div className="co-actions">
-            <PollIntervalDropdown />
-            <MetricsActionsMenu />
-          </div>
-        </h1>
-      </div>
-      <div className="co-m-pane__body">
-        <div className="row">
-          <div className="col-xs-12">
-            <ToggleGraph />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-xs-12">
-            <QueryBrowserWrapper />
-            <div className="query-browser__controls">
-              <div className="query-browser__controls--left">
-                <MetricsDropdown />
-              </div>
-              <div className="query-browser__controls--right">
-                <ActionGroup className="pf-c-form pf-c-form__group--no-top-margin">
-                  <AddQueryButton />
-                  <RunQueriesButton />
-                </ActionGroup>
-              </div>
-            </div>
-            <QueriesList />
-          </div>
-        </div>
-      </div>
-    </>
+    <div className="fix-ocp-pf">
+      {/* <Page
+        additionalGroupedContent={
+          <PageSection variant="light">
+            <Title headingLevel="h1">title</Title>
+          </PageSection>
+        }
+        groupProps={{ sticky: 'top' }}
+      > */}
+        <PageSection variant="light">
+          <Title headingLevel="h1">title</Title>
+        </PageSection>
+        <PageSection>
+          <Stack hasGutter>
+            <AlertGroup>
+              <Alert title="Example info alert" variant="info" isInline />
+              <Alert title="Example warning alert" variant="warning" isInline />
+            </AlertGroup>
+            <Hint>
+              <HintTitle>Example hint</HintTitle>
+              <HintBody>This page shows an example gallery view with cards</HintBody>
+            </Hint>
+            <Gallery hasGutter>
+              {new Array(50).fill(0).map((_, index) => (
+                <GalleryItem key={index}>
+                  <Card>
+                    <CardTitle>Example card</CardTitle>
+                    <CardBody>Card content goes here.</CardBody>
+                  </Card>
+                </GalleryItem>
+              ))}
+            </Gallery>
+          </Stack>
+        </PageSection>
+    </div>
   );
 };
 export const QueryBrowserPage = withFallback(

@@ -49,7 +49,7 @@ import '@patternfly/quickstarts/dist/quickstarts.min.css';
 // PF4 Imports
 import { Page, SkipToContent, AlertVariant } from '@patternfly/react-core';
 
-const breakpointMD = 768;
+const breakpointMD = 1200;
 const NOTIFICATION_DRAWER_BREAKPOINT = 1800;
 // Edge lacks URLSearchParams
 import 'url-search-params-polyfill';
