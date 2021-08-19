@@ -35,4 +35,5 @@ $console-collapse-link-z-index: $console-z-index + 20;
 
 .default-overflow {
   overflow: visible !important;
+  z-index: 400 !important; // place above pf-c-page__header and pf-c-page__sidebar
 }
