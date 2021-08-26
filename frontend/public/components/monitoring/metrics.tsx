@@ -966,7 +966,7 @@ const QueryBrowserPage_: React.FC<QueryBrowserPageProps> = ({ deleteAll }) => {
   React.useEffect(() => deleteAll, [deleteAll]);
 
   return (
-    <div className="fix-ocp-pf">
+    <>
       {/* <Page
         additionalGroupedContent={
           <PageSection variant="light">
@@ -978,7 +978,7 @@ const QueryBrowserPage_: React.FC<QueryBrowserPageProps> = ({ deleteAll }) => {
         <PageSection variant="light">
           <Title headingLevel="h1">title</Title>
         </PageSection>
-        <PageSection>
+        <PageSection className="co-m-page__body--grey">
           <Stack hasGutter>
             <AlertGroup>
               <Alert title="Example info alert" variant="info" isInline />
@@ -1000,7 +1000,7 @@ const QueryBrowserPage_: React.FC<QueryBrowserPageProps> = ({ deleteAll }) => {
             </Gallery>
           </Stack>
         </PageSection>
-    </div>
+    </>
   );
 };
 export const QueryBrowserPage = withFallback(
