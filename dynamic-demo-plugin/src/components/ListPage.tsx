@@ -1,120 +1,96 @@
 import * as React from 'react';
-import {
-  ListPageHeader,
-  ListPageBody,
-  ListPageCreate,
-  VirtualizedTable,
-  useK8sWatchResource,
-  useListPageFilter,
-  K8sResourceCommon,
-  ListPageFilter,
-  RowFilter,
-  TableData,
-  RowProps,
-  ResourceLink,
-  TableColumn,
-} from '@openshift-console/dynamic-plugin-sdk';
 
-const columns: TableColumn<K8sResourceCommon>[] = [
-  {
-    title: 'Name',
-    id: 'name',
-  },
-  {
-    title: 'Namespace',
-    id: 'namespace',
-  },
-];
+// import { TableComposable, Caption, Thead, Tr, Th, Tbody, Td } from '@patternfly/react-table';
 
-const PodRow: React.FC<RowProps<K8sResourceCommon>> = ({ obj, activeColumnIDs }) => {
-  return (
-    <>
-      <TableData id={columns[0].id} activeColumnIDs={activeColumnIDs}>
-        <ResourceLink kind="Pod" name={obj.metadata.name} namespace={obj.metadata.namespace} />
-      </TableData>
-      <TableData id={columns[1].id} activeColumnIDs={activeColumnIDs}>
-        <ResourceLink kind="Namespace" name={obj.metadata.namespace} />
-      </TableData>
-    </>
-  );
-};
 
-type PodsTableProps = {
-  data: K8sResourceCommon[];
-  unfilteredData: K8sResourceCommon[];
-  loaded: boolean;
-  loadError: any;
-};
+// interface Repository {
+//   name: string;
+//   branches: string | null;
+//   prs: string | null;
+//   workspaces: string;
+//   lastCommit: string;
+// }
 
-const PodsTable: React.FC<PodsTableProps> = ({ data, unfilteredData, loaded, loadError }) => {
-  return (
-    <VirtualizedTable<K8sResourceCommon>
-      data={data}
-      unfilteredData={unfilteredData}
-      loaded={loaded}
-      loadError={loadError}
-      columns={columns}
-      Row={PodRow}
-    />
-  );
-};
+// export const ListPage: React.FunctionComponent = () => {
+  // const repositories: Repository[] = [
+  //   { name: 'one', branches: 'two', prs: 'three', workspaces: 'four', lastCommit: 'five' },
+  //   { name: 'one - 2', branches: null, prs: null, workspaces: 'four - 2', lastCommit: 'five - 2' },
+  //   { name: 'one - 3', branches: 'two - 3', prs: 'three - 3', workspaces: 'four - 3', lastCommit: 'five - 3' }
+  // ];
 
-export const filters: RowFilter[] = [
-  {
-    filterGroupName: 'App type',
-    type: 'pod-app',
-    reducer: (pod) => (pod.metadata.name.includes('kube-scheduler') ? 'scheduler' : 'other'),
-    filter: (input, pod) => {
-      if (input.selected?.length) {
-        if (pod.metadata.name.includes('kube-scheduler')) {
-          return input.selected.includes('scheduler');
-        }
-        if (!pod.metadata.name.includes('kube-scheduler')) {
-          return input.selected.includes('other');
-        }
-      }
-      return true;
-    },
-    items: [
-      { id: 'scheduler', title: 'Scheduler pods' },
-      { id: 'other', title: 'Other pods' },
-    ],
-  },
-];
+  // const columnNames = {
+  //   name: 'Repositories',
+  //   branches: 'Branches',
+  //   prs: 'Pull requests',
+  //   workspaces: 'Workspaces',
+  //   lastCommit: 'Last commit'
+  // };
+
+
+//   return (
+//     <React.Fragment>
+      // <TableComposable>
+      //   <Caption>Simple table using composable components</Caption>
+      //   <Thead>
+      //     <Tr>
+      //       <Th>{columnNames.name}</Th>
+      //       <Th>{columnNames.branches}</Th>
+      //       <Th>{columnNames.prs}</Th>
+      //       <Th>{columnNames.workspaces}</Th>
+      //       <Th>{columnNames.lastCommit}</Th>
+      //     </Tr>
+      //   </Thead>
+      //   <Tbody>
+      //     {repositories.map(repo => (
+      //       <Tr key={repo.name}>
+      //         <Td dataLabel={columnNames.name}>{repo.name}</Td>
+      //         <Td dataLabel={columnNames.branches}>{repo.branches}</Td>
+      //         <Td dataLabel={columnNames.prs}>{repo.prs}</Td>
+      //         <Td dataLabel={columnNames.workspaces}>{repo.workspaces}</Td>
+      //         <Td dataLabel={columnNames.lastCommit}>{repo.lastCommit}</Td>
+      //       </Tr>
+      //     ))}
+      //   </Tbody>
+      // </TableComposable>
+//     </React.Fragment>
+//   );
+// };
+
 
 const ListPage = () => {
-  const [pods, loaded, loadError] = useK8sWatchResource<K8sResourceCommon[]>({
-    groupVersionKind: {
-      version: 'v1',
-      kind: 'Pod',
-    },
-    isList: true,
-    namespaced: true,
-  });
 
-  const [data, filteredData, onFilterChange] = useListPageFilter(pods, filters, {
-    name: { selected: ['openshift'] },
-  });
+
+  // const columnNames = {
+  //   name: 'Repositories',
+  //   branches: 'Branches',
+  //   prs: 'Pull requests',
+  //   workspaces: 'Workspaces',
+  //   lastCommit: 'Last commit'
+  // };
 
   return (
     <>
-      <ListPageHeader title="OpenShift Pods List Page">
-        <ListPageCreate groupVersionKind="Pod">Create Pod</ListPageCreate>
-      </ListPageHeader>
-      <ListPageBody>
-        <ListPageFilter
-          data={data}
-          loaded={loaded}
-          rowFilters={filters}
-          onFilterChange={onFilterChange}
-        />
-        <PodsTable
-          data={filteredData}
-          unfilteredData={data}
-          loaded={loaded}
-          loadError={loadError}
-        />
-      </ListPageBody>
+      {/* <TableComposable>
+        <Caption>Simple table using composable components</Caption>
+        <Thead>
+          <Tr>
+            <Th>name</Th>
+            <Th>branches</Th>
+            <Th>prs</Th>
+            <Th>workspaces</Th>
+            <Th>lastCommit</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          <Tr>
+            <Td dataLabel="name">name</Td>
+            <Td dataLabel="branches">branches</Td>
+            <Td dataLabel="prs">prs</Td>
+            <Td dataLabel="workspaces">workspaces</Td>
+            <Td dataLabel="lastCommit">lastCommit</Td>
+          </Tr>
+        </Tbody>
+      </TableComposable> */}
     </>
   );
 };
