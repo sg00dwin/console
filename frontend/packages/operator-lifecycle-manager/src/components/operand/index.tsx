@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Grid, GridItem } from '@patternfly/react-core';
 import { sortable } from '@patternfly/react-table';
 import * as classNames from 'classnames';
 import { JSONSchema7 } from 'json-schema';
@@ -613,22 +612,16 @@ export const ProvidedAPIPage: React.FC<ProvidedAPIPageProps> = (props) => {
   return inFlight ? null : (
     <ModelStatusBox groupVersionKind={kind}>
       <ListPageHeader title={showTitle ? `${model.label}s` : undefined}>
-        <Grid hasGutter>
-          <GridItem span={8}>
-            {managesOtherNamespaces && (
-              <WrappedToggleView
-                toggleValue={toggleValue}
-                toggleView={toggleView}
-                onChangeToggleValue={onChangeToggleValue}
-              />
-            )}
-          </GridItem>
-          <GridItem span={4}>
-            <ListPageCreateLink to={createPath}>{`${t('public~Create ')} ${
-              model.label
-            }`}</ListPageCreateLink>
-          </GridItem>
-        </Grid>
+        {managesOtherNamespaces && (
+          <WrappedToggleView
+            toggleValue={toggleValue}
+            toggleView={toggleView}
+            onChangeToggleValue={onChangeToggleValue}
+          />
+        )}
+        <ListPageCreateLink to={createPath}>{`${t('public~Create ')} ${
+          model.label
+        }`}</ListPageCreateLink>
       </ListPageHeader>
       <ListPageBody>
         <ListPageFilter

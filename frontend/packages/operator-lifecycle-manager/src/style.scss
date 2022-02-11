@@ -320,11 +320,15 @@ $co-affinity-row-margin: 15px;
   min-height: 160px;
 }
 
-.co-operator-details__toggle-view {
+.co-operator-details__actions {
   display: flex;
+  flex-grow: 1;
+  justify-content: flex-end;
 }
 
-.co-operator-details__toggle-view-heading {
-  padding-right: 20px;
- }
+.co-operator-details__toggle-view {
+  flex-grow: 1;
+  margin-right: var(--pf-global--spacer--xl);
+  margin-top: var(--pf-global--spacer--xs);
+}
 
