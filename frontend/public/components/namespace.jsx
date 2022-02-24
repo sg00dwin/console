@@ -9,6 +9,8 @@ import {
   EmptyStateBody,
   EmptyStateIcon,
   EmptyStatePrimary,
+  PageSection,
+  PageSectionVariants,
   Title,
   Tooltip,
 } from '@patternfly/react-core';
@@ -1149,7 +1151,12 @@ export const NamespaceBar = ({ hideProjects = false, children, disabled, onNames
     k8s.hasIn(['RESOURCES', 'models', ProjectModel.kind]),
   );
   return (
-    <div className="co-namespace-bar">
+    <PageSection
+      variant={PageSectionVariants.light}
+      sticky="top"
+      className="co-namespace-bar"
+      padding={{ default: 'noPadding' }}
+    >
       {hideProjects ? (
         <div className="co-namespace-bar__items" data-test-id="namespace-bar-dropdown">
           {children}
@@ -1170,7 +1177,7 @@ export const NamespaceBar = ({ hideProjects = false, children, disabled, onNames
           </NamespaceBarDropdowns>
         </Firehose>
       )}
-    </div>
+    </PageSection>
   );
 };
 

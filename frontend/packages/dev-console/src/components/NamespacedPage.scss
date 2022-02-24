@@ -1,3 +1,5 @@
+@import '../../../../public/style/vars';
+
 .odc-namespaced-page {
   display: flex;
   flex-direction: column;
@@ -19,6 +21,9 @@
 
   &__toolbar {
     margin-left: auto;
+    @media (min-width: $pf-global--breakpoint--md) {
+      margin-right: var(--pf-global--spacer--sm);
+    }
     display: flex;
     align-items: center;
   }

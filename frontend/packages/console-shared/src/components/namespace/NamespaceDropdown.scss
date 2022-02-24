@@ -1,8 +1,13 @@
 @import '../../../../../public/style/vars';
 
 .co-namespace-dropdown {
-    margin-right: 20px;
+    margin: 0 var(--pf-global--gutter);
     max-width: 60%;
+
+    @media (min-width: $pf-global--breakpoint--xl) {
+      margin-left: var(--pf-global--spacer--lg);
+      margin-right: var(--pf-global--spacer--lg);
+    }
 }
 
 
@@ -17,13 +22,27 @@
   @media (min-width: $pf-global--breakpoint--md) {
     --pf-c-menu--MinWidth: 325px;
   }
+
+  @at-root :where(.pf-theme-dark) {
+    .pf-c-menu__content {
+      border-left: var(--pf-global--BorderWidth--sm) solid var(--pf-global--BorderColor--100);
+      border-right: var(--pf-global--BorderWidth--sm) solid var(--pf-global--BorderColor--100);
+    }
+
+    .co-namespace-dropdown__footer {
+      border-left: var(--pf-global--BorderWidth--sm) solid var(--pf-global--BorderColor--100);
+      border-top: var(--pf-global--BorderWidth--sm) solid var(--pf-global--BorderColor--100);
+      border-right: var(--pf-global--BorderWidth--sm) solid var(--pf-global--BorderColor--100);
+    }
+  }
 }
 
 // The .co-namespace-dropdown__menu-toggle styles are enabled to make the PatternFly
 // more closely match the custom DropDown based drop down.
 // These are displayed side by site in the Developer view > Topology view.active.
 // Once the custom DropDown component changes to the PatternFly component, these styles can be removed.
-.co-namespace-dropdown__menu-toggle {
+.pf-c-menu-toggle.co-namespace-dropdown__menu-toggle {
+  background-color: var(--co-namespace-dropdown__menu-toggle--BackgroundColor, inherit); // Button should inherit the same backgound as the co-namespace-bar
   font-size: ($font-size-base + 1) !important;
   padding: 2px 0 !important;
   width: 100%;
