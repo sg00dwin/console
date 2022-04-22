@@ -2,23 +2,31 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import * as classNames from 'classnames';
-import { Button } from '@patternfly/react-core';
+import { Button, Flex, FlexItem, ToggleGroup } from '@patternfly/react-core';
 import { useTranslation } from 'react-i18next';
 
 import { filterList } from '@console/dynamic-plugin-sdk/src/app/k8s/actions/k8s';
 import { getQueryArgument, setQueryArgument } from './utils';
 
 export const CheckBox = ({ title, active, number, toggle }) => {
-  const klass = classNames('row-filter__box', {
-    'row-filter__box--active': active,
-    'row-filter__box--empty': !number,
+  const klass = classNames('pf-c-toggle-group__button', {
+    'pf-m-selected co-row-filter__box--active': active,
+    'pf-m-disabled': !number,
   });
 
   return (
-    <a href="#" onClick={toggle} className={klass}>
-      <span className="row-filter__number-bubble">{number}</span>
-      {title}
-    </a>
+    <div className="pf-c-toggle-group__item">
+      <a href="#" onClick={toggle} className={klass}>
+        <span
+          className={classNames('co-row-filter__number-bubble', {
+            'co-row-filter__number-bubble--active': active,
+          })}
+        >
+          {number}
+        </span>
+        {title}
+      </a>
+    </div>
   );
 };
 
@@ -33,28 +41,36 @@ export const CheckBoxControls = ({
   return (
     <div className="row">
       <div className="col-xs-12">
-        <div className="row-filter">
-          {children}
-          <div className="co-m-row-filter__controls">
-            <Button
-              className="co-m-row-filter__selector"
-              disabled={allSelected}
-              type="button"
-              onClick={onSelectAll}
-              variant="link"
-            >
-              {t('public~Select all filters')}
-            </Button>
-            <span className="co-m-row-filter__items">
+        <Flex className="co-row-filter">
+          <Flex>
+            <FlexItem>
+              <ToggleGroup>{children}</ToggleGroup>
+            </FlexItem>
+          </Flex>
+          <Flex>
+            <FlexItem>
+              <Button
+                disabled={allSelected}
+                type="button"
+                onClick={onSelectAll}
+                variant="link"
+                isInline
+              >
+                {t('public~Select all filters')}
+              </Button>
+            </FlexItem>
+          </Flex>
+          <Flex flex={{ default: 'flex_1' }}>
+            <FlexItem align={{ default: 'alignRight' }} className="co-row-filter__items">
               {itemCount === selectedCount ? (
                 itemCount
               ) : (
                 <>{t('public~{{selectedCount}} of {{itemCount}}', { selectedCount, itemCount })}</>
               )}{' '}
               {t('public~Item', { count: itemCount })}
-            </span>
-          </div>
-        </div>
+            </FlexItem>
+          </Flex>
+        </Flex>
       </div>
     </div>
   );
