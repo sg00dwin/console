@@ -2,8 +2,9 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import * as classNames from 'classnames';
-import { Button, Flex, FlexItem, ToggleGroup } from '@patternfly/react-core';
+import { Button, Divider, Flex, FlexItem, ToggleGroup } from '@patternfly/react-core';
 import { useTranslation } from 'react-i18next';
+import '@patternfly/react-styles/css/utilities/Accessibility/accessibility.css';
 
 import { filterList } from '@console/dynamic-plugin-sdk/src/app/k8s/actions/k8s';
 import { getQueryArgument, setQueryArgument } from './utils';
@@ -39,40 +40,31 @@ export const CheckBoxControls = ({
 }) => {
   const { t } = useTranslation();
   return (
-    <div className="row">
-      <div className="col-xs-12">
-        <Flex className="co-row-filter">
-          <Flex>
-            <FlexItem>
-              <ToggleGroup>{children}</ToggleGroup>
-            </FlexItem>
-          </Flex>
-          <Flex>
-            <FlexItem>
-              <Button
-                disabled={allSelected}
-                type="button"
-                onClick={onSelectAll}
-                variant="link"
-                isInline
-              >
-                {t('public~Select all filters')}
-              </Button>
-            </FlexItem>
-          </Flex>
-          <Flex flex={{ default: 'flex_1' }}>
-            <FlexItem align={{ default: 'alignRight' }} className="co-row-filter__items">
-              {itemCount === selectedCount ? (
-                itemCount
-              ) : (
-                <>{t('public~{{selectedCount}} of {{itemCount}}', { selectedCount, itemCount })}</>
-              )}{' '}
-              {t('public~Item', { count: itemCount })}
-            </FlexItem>
-          </Flex>
-        </Flex>
-      </div>
-    </div>
+    <Flex className="co-row-filter" direction={{ default: 'column', md: 'row' }}>
+      <ToggleGroup>{children}</ToggleGroup>
+      <Divider className="pf-u-hidden-on-md" />
+      <Flex flex={{ default: 'flex_1' }}>
+        <FlexItem>
+          <Button
+            disabled={allSelected}
+            type="button"
+            onClick={onSelectAll}
+            variant="link"
+            isInline
+          >
+            {t('public~Select all filters')}
+          </Button>
+        </FlexItem>
+        <FlexItem align={{ default: 'alignRight' }} className="co-row-filter__items">
+          {itemCount === selectedCount ? (
+            itemCount
+          ) : (
+            <>{t('public~{{selectedCount}} of {{itemCount}}', { selectedCount, itemCount })}</>
+          )}{' '}
+          {t('public~Item', { count: itemCount })}
+        </FlexItem>
+      </Flex>
+    </Flex>
   );
 };
 

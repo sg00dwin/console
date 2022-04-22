@@ -1,18 +1,27 @@
+@import '~@patternfly/patternfly/sass-utilities/all';
+
 .co-row-filter {
   background-color: var(--pf-global--BackgroundColor--100);
   margin-bottom: $pf-global--spacer--xl;
+  position: relative;
 
   // use pseudo element for border so that .pf-c-toggle-group__item(s) overlap
-  &::before {
-    border: var(--pf-global--BorderWidth--sm) solid var(--pf-global--BorderColor--100);
-    border-bottom-right-radius: var(--pf-global--BorderRadius--sm);
-    border-top-right-radius: var(--pf-global--BorderRadius--sm);
-    bottom: calc(var(--pf-global--spacer--xl));
-    content: '';
-    left: $pf-global-gutter;
-    position: absolute;
-    right: $pf-global-gutter;
-    top: 0;
+  @media screen and (min-width: $pf-global--breakpoint--md) {
+    &::before {
+      border: var(--pf-global--BorderWidth--sm) solid var(--pf-global--BorderColor--100);
+      border-bottom-right-radius: var(--pf-global--BorderRadius--sm);
+      border-top-right-radius: var(--pf-global--BorderRadius--sm);
+      bottom: 0;
+      content: '';
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+  }
+
+  .pf-c-toggle-group {
+    overflow: auto;
   }
 }
 
@@ -27,8 +36,11 @@
 
 .co-row-filter__items {
   font-weight: var(--pf-global--FontWeight--bold);
-  padding: 0 var(--pf-global--spacer--md);
   white-space: nowrap;
+
+  @media screen and (min-width: $pf-global--breakpoint--md) {
+    padding: 0 var(--pf-global--spacer--md);
+  }
 }
 
 .co-row-filter__number-bubble {
@@ -36,7 +48,7 @@
   border-radius: var(--pf-global--BorderRadius--sm);
   display: inline-block;
   line-height: var(--pf-global--LineHeight--sm);;
-  margin-right: var(--pf-global--spacer--xs);
+  margin-right: var(--pf-global--spacer--sm);
   padding: 2px 5px 0;
   text-align: center;
 
