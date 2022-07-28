@@ -6,10 +6,10 @@ import {
   FlexForm,
   FormBody,
   FormFooter,
-  FormHeader,
   SyncedEditorField,
   YAMLEditorField,
 } from '@console/shared';
+import { PageHeading } from '@console/internal/components/utils';
 import { downloadYaml } from '@console/shared/src/components/editor/yaml-download-utils';
 import { ConfigMapModel } from '@console/internal/models';
 import { safeJSToYAML, safeYAMLToJS } from '@console/shared/src/utils/yaml';
@@ -51,7 +51,7 @@ export const ConfigMapFormEditor: React.FC<FormikProps<any> & ConfigMapFormEdito
     isSubmitting;
 
   const formEditor = (
-    <div className="co-m-pane__form">
+    <div className="pf-c-form co-m-pane__form co-m-pane-spacing">
       <ConfigMapFormFields />
     </div>
   );
@@ -85,52 +85,54 @@ export const ConfigMapFormEditor: React.FC<FormikProps<any> & ConfigMapFormEdito
   }, [setStatus, values.editorType]);
 
   return (
-    <FlexForm onSubmit={handleSubmit} className="configmap-form">
-      <FormBody flexLayout>
-        <FormHeader
-          title={title}
-          helpText={t(
-            'public~Config maps hold key-value pairs that can be used in pods to read application configuration.',
-          )}
-        />
-        <SyncedEditorField
-          name="editorType"
-          formContext={{
-            name: 'formData',
-            editor: formEditor,
-            sanitizeTo: (yamlConfigMap: ConfigMap) =>
-              sanitizeToForm(values.formData, yamlConfigMap),
-          }}
-          yamlContext={{
-            name: 'yamlData',
-            editor: yamlEditor,
-            sanitizeTo: () =>
-              sanitizeToYaml(
-                values.formData,
-                _.merge({}, configMap, safeYAMLToJS(values.yamlData)),
-              ),
-          }}
-          lastViewUserSettingKey={LAST_VIEWED_EDITOR_TYPE_USERSETTING_KEY}
-          noMargin
-        />
-      </FormBody>
-      <FormFooter
-        handleSubmit={handleSubmit}
-        handleReset={values.isCreateFlow ? null : onReload}
-        errorMessage={status?.submitError || (immutableCfg && immutableCfgError)}
-        successMessage={status?.submitSuccess}
-        showAlert={isStale}
-        infoTitle={t('public~This object has been updated.')}
-        infoMessage={t('public~Click reload to see the new version.')}
-        isSubmitting={isSubmitting}
-        submitLabel={values.isCreateFlow ? t('public~Create') : t('public~Save')}
-        disableSubmit={disableSubmit}
-        handleCancel={handleCancel}
-        handleDownload={
-          values.editorType === EditorType.YAML && (() => downloadYaml(values.yamlData))
-        }
-        sticky
+    <>
+      <PageHeading
+        title={title}
+        helpText={t(
+          'public~Config maps hold key-value pairs that can be used in pods to read application configuration.',
+        )}
       />
-    </FlexForm>
+      <FlexForm onSubmit={handleSubmit} className="configmap-form">
+        <FormBody flexLayout>
+          <SyncedEditorField
+            name="editorType"
+            formContext={{
+              name: 'formData',
+              editor: formEditor,
+              sanitizeTo: (yamlConfigMap: ConfigMap) =>
+                sanitizeToForm(values.formData, yamlConfigMap),
+            }}
+            yamlContext={{
+              name: 'yamlData',
+              editor: yamlEditor,
+              sanitizeTo: () =>
+                sanitizeToYaml(
+                  values.formData,
+                  _.merge({}, configMap, safeYAMLToJS(values.yamlData)),
+                ),
+            }}
+            lastViewUserSettingKey={LAST_VIEWED_EDITOR_TYPE_USERSETTING_KEY}
+            noMargin
+          />
+        </FormBody>
+        <FormFooter
+          handleSubmit={handleSubmit}
+          handleReset={values.isCreateFlow ? null : onReload}
+          errorMessage={status?.submitError || (immutableCfg && immutableCfgError)}
+          successMessage={status?.submitSuccess}
+          showAlert={isStale}
+          infoTitle={t('public~This object has been updated.')}
+          infoMessage={t('public~Click reload to see the new version.')}
+          isSubmitting={isSubmitting}
+          submitLabel={values.isCreateFlow ? t('public~Create') : t('public~Save')}
+          disableSubmit={disableSubmit}
+          handleCancel={handleCancel}
+          handleDownload={
+            values.editorType === EditorType.YAML && (() => downloadYaml(values.yamlData))
+          }
+          sticky
+        />
+      </FlexForm>
+    </>
   );
 };

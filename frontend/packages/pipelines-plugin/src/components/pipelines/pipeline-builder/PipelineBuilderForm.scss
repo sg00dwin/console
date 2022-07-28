@@ -5,10 +5,6 @@
     display: flex;
     flex-grow: 1;
   }
-  &__grid {
-    padding-left: var(--pf-global--spacer--lg);
-    padding-right: var(--pf-global--spacer--lg);
-  }
 
   &__short-section {
     max-width: 400px;

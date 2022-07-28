@@ -2,12 +2,16 @@
 
 .ocs-synced-editor-field {
   &__editor-toggle {
-    padding-top: var(--pf-global--spacer--sm);
     border-bottom: var(--pf-global--BorderWidth--sm) solid var(--pf-global--BorderColor--100);
     border-top: var(--pf-global--BorderWidth--sm) solid var(--pf-global--BorderColor--100);
+    padding-left: $pf-global-gutter;
+    @media (min-width: $pf-global--breakpoint--xl) {
+      padding-left: $pf-global-gutter--md;
+    }
+    padding-top: var(--pf-global--spacer--sm);
 
     &.margin {
-      margin: var(--pf-global--spacer--md) 0;
+      margin: var(--pf-global--spacer--md) 0 0; // No bottom margin to allow borders to connect with side panel
     }
   }
 

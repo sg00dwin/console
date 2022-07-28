@@ -19,7 +19,30 @@ dl.co-inline {
   }
 }
 
+.gold {
+  border: 2px solid gold !important;
+}
+.violet {
+  border: 2px solid violet !important;
+}
+
+.co-m-pane-spacing {
+  border: 2px solid red;
+  margin: $pf-global-gutter--md 0 0;
+  padding: 0 $pf-global-gutter $pf-global-gutter--md;
+  @media (min-width: $pf-global--breakpoint--xl) {
+    padding-left: $pf-global-gutter--md;
+    padding-right: $pf-global-gutter--md;
+  }
+  > .co-m-pane-spacing {
+    margin: 0;
+    padding: 0;
+  }
+}
+
 .co-m-pane__body {
+  // @extend .co-m-pane-spacing;
+  border: 3px dashed green;
   margin: $pf-global-gutter--md 0 0;
   padding: 0 $pf-global-gutter $pf-global-gutter--md;
   @media (min-width: $pf-global--breakpoint--xl) {

@@ -32,7 +32,7 @@ const FormSection: React.FC<FormSectionProps> = ({
   style,
 }) => (
   <div
-    className={cx('pf-c-form', {
+    className={cx('pf-c-form co-m-pane-spacing gold', {
       'co-m-pane__form': !fullWidth,
       'odc-form-section--extra-margin': extraMargin,
     })}

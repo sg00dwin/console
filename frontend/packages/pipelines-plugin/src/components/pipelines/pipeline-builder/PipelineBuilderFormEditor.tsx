@@ -37,7 +37,7 @@ const PipelineBuilderFormEditor: React.FC<PipelineBuilderFormEditorProps> = (pro
   } = props;
 
   return (
-    <>
+    <div className="pf-c-form co-m-pane-spacing">
       <div className="opp-pipeline-builder-form__short-section">
         <InputField
           label={t('pipelines-plugin~Name')}
@@ -95,7 +95,7 @@ const PipelineBuilderFormEditor: React.FC<PipelineBuilderFormEditorProps> = (pro
           fieldName="formData.workspaces"
         />
       </div>
-    </>
+    </div>
   );
 };
 

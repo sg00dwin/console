@@ -144,28 +144,30 @@ const SyncedEditorField: React.FC<SyncedEditorFieldProps> = ({
 
   return loaded ? (
     <>
-      <div
-        className={cx('ocs-synced-editor-field__editor-toggle', { margin: !noMargin })}
-        data-test="synced-editor-field"
-      >
-        <RadioGroupField
-          label={t('console-shared~Configure via:')}
-          name={name}
-          options={[
-            {
-              label: formContext.label || t('console-shared~Form view'),
-              value: EditorType.Form,
-              isDisabled: formContext.isDisabled,
-            },
-            {
-              label: yamlContext.label || t('console-shared~YAML view'),
-              value: EditorType.YAML,
-              isDisabled: yamlContext.isDisabled,
-            },
-          ]}
-          onChange={(val: string) => onChangeType(val as EditorType)}
-          isInline
-        />
+      <div className="pf-c-form">
+        <div
+          className={cx('ocs-synced-editor-field__editor-toggle', { margin: !noMargin })}
+          data-test="synced-editor-field"
+        >
+          <RadioGroupField
+            label={t('console-shared~Configure via:')}
+            name={name}
+            options={[
+              {
+                label: formContext.label || t('console-shared~Form view'),
+                value: EditorType.Form,
+                isDisabled: formContext.isDisabled,
+              },
+              {
+                label: yamlContext.label || t('console-shared~YAML view'),
+                value: EditorType.YAML,
+                isDisabled: yamlContext.isDisabled,
+              },
+            ]}
+            onChange={(val: string) => onChangeType(val as EditorType)}
+            isInline
+          />
+        </div>
       </div>
       {yamlWarning && (
         <Alert

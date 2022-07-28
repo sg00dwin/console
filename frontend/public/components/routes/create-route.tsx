@@ -289,7 +289,7 @@ class CreateRouteWithTranslation extends React.Component<
     });
 
     return (
-      <div className="co-m-pane__form">
+      <div className="co-m-pane__form co-m-pane-spacing">
         <div className="form-group co-create-route__name">
           <label className="co-required" htmlFor="name">
             {t('public~Name')}

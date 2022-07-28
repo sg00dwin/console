@@ -69,6 +69,12 @@
   @media (min-width: 1200px) {
     max-width: 50%;
   }
+
+  // Prevent nested <FormSection>s, that apply co-m-pane__form, from expanding outside of the parents restricted width.
+  .pf-c-expandable-section__content & {
+    min-width: auto;
+    max-width: none;
+  }
 }
 
 .co-text-filter:focus + .co-text-filter-feedback {

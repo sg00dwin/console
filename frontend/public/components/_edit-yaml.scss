@@ -7,12 +7,12 @@
   @media (min-width: $pf-global--breakpoint--md) {
     margin-left: $pf-global-gutter;
     margin-right: $pf-global-gutter;
-    padding-top: $pf-global-gutter--md;
   }
   @media (min-width: $pf-global--breakpoint--xl) {
     margin-left: $pf-global-gutter--md;
     margin-right: $pf-global-gutter--md;
   }
+  padding-top: $pf-global-gutter--md;
 }
 
 .yaml-editor__buttons {

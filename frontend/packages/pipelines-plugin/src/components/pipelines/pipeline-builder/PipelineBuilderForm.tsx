@@ -199,7 +199,7 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = (props) => {
             <PipelineBuilderHeader namespace={namespace} />
             <FlexForm className="opp-pipeline-builder-form" onSubmit={handleSubmit}>
               <div className="opp-pipeline-builder-form__content">
-                <FormBody flexLayout disablePaneBody className="opp-pipeline-builder-form__grid">
+                <FormBody flexLayout>
                   <PipelineQuickSearch
                     namespace={namespace}
                     viewContainer={contentRef.current}
@@ -224,6 +224,7 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = (props) => {
                       sanitizeTo: () => sanitizeToYaml(formData, namespace, existingPipeline),
                     }}
                     lastViewUserSettingKey={LAST_VIEWED_EDITOR_TYPE_USERSETTING_KEY}
+                    noMargin
                   />
                 </FormBody>
               </div>

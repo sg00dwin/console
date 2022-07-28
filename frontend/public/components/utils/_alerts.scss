@@ -17,6 +17,18 @@
   margin-top: $pf-global-gutter;
 }
 
+.co-alert--margin-left-and-right {
+  // @extend .co-m-pane-spacing;
+  margin-left: $pf-global-gutter;
+  margin-right: $pf-global-gutter;
+  @media (min-width: $pf-global--breakpoint--xl) {
+    margin-left: $pf-global-gutter--md;
+    margin-right: $pf-global-gutter--md;
+  }
+}
+
+
+
 .co-alert--scrollable .pf-c-alert__description {
   max-height: 100px;
   overflow-x: hidden;

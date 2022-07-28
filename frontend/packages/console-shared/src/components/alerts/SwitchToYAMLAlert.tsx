@@ -13,6 +13,7 @@ const SwitchToYAMLAlert: React.FC<{ onClose?: () => void }> = ({ onClose }) => {
       )}
       variant="info"
       data-test="info-alert"
+      className="co-alert--margin-top co-alert--margin-left-and-right"
     />
   );
 };

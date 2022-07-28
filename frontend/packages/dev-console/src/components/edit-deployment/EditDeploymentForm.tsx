@@ -84,8 +84,8 @@ const EditDeploymentForm: React.FC<FormikProps<FormikValues> & {
 
   return (
     <FlexForm onSubmit={handleSubmit}>
+      <FormHeader title={heading} className="co-m-nav-title" />
       <FormBody flexLayout>
-        <FormHeader title={heading} />
         <SyncedEditorField
           name="editorType"
           formContext={{

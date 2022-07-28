@@ -2,6 +2,7 @@
 
 .co-synced-editor__editor-toggle {
   border-bottom: var(--pf-global--BorderWidth--sm) solid var(--pf-global--BorderColor--100);
+  border-top: var(--pf-global--BorderWidth--sm) solid var(--pf-global--BorderColor--100);
   padding: 8px $pf-global-gutter;
   @media (min-width: $pf-global--breakpoint--xl) {
     padding-left: $pf-global-gutter--md;
