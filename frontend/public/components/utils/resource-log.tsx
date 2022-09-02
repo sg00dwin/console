@@ -243,6 +243,14 @@ export const LogControls: React.FC<LogControlsProps> = ({
     );
   };
   const label = t('public~Debug container');
+
+  const [checkboxHasWrapLines, setCheckboxHasWrapLines] = React.useState(isWrapLines);
+  function handleClick() {
+    setCheckboxHasWrapLines(!isWrapLines);
+  }
+  console.log(isWrapLines, '<===isWrapLines');
+  console.log(checkboxHasWrapLines, '<===checkboxHasWrapLines');
+
   return (
     <div className="co-toolbar">
       <div className="co-toolbar__group co-toolbar__group--left">
@@ -320,6 +328,7 @@ export const LogControls: React.FC<LogControlsProps> = ({
           id="wrapLogLines"
           isChecked={isWrapLines}
           data-checked-state={isWrapLines}
+          onClick={handleClick}
           onChange={(checked: boolean) => {
             toggleWrapLines(checked);
           }}
@@ -369,6 +378,7 @@ export const ResourceLog: React.FC<ResourceLogProps> = ({
   dropdown,
   resource,
   resourceStatus,
+  checkboxHasWrapLines,
 }) => {
   const { t } = useTranslation();
   const cluster = useSelector((state: RootState) => getActiveCluster(state));
@@ -401,6 +411,20 @@ export const ResourceLog: React.FC<ResourceLogProps> = ({
     false,
     true,
   );
+
+  React.useEffect(() => {
+    if (
+      resource?.metadata?.annotations?.['console.openshift.io/wrap-log-lines'] === 'true' &&
+      !checkboxHasWrapLines
+    ) {
+      setWrapLines(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // console.log(wrapLines, '<===wrapLines');
+  // console.log(setWrapLines, '<===setWrapLines');
+  // console.log(LOG_WRAP_LINES_USERSETTINGS_KEY, '<===LOG_WRAP_LINES_USERSETTINGS_KEY');
 
   const timeoutIdRef = React.useRef(null);
   const countRef = React.useRef(0);
@@ -705,6 +729,7 @@ type ResourceLogProps = {
   dropdown?: React.ReactNode;
   resource: any;
   resourceStatus: string;
+  checkboxHasWrapLines: boolean;
 };
 
 type LogTypeStatus = typeof LOG_TYPE_CURRENT | typeof LOG_TYPE_PREVIOUS;
