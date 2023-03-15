@@ -402,6 +402,9 @@ export const OperatorHubTileView: React.FC<OperatorHubTileViewProps> = (props) =
   const [ignoreOperatorWarning, setIgnoreOperatorWarning, loaded] = useUserSettingsCompatibility<
     boolean
   >(userSettingsKey, storeKey, false);
+  const [updateChannel, setUpdateChannel] = React.useState('');
+  const [updateVersion, setUpdateVersion] = React.useState('');
+
   const filteredItems =
     activeCluster === HUB_CLUSTER_NAME ? filterByArchAndOS(props.items) : props.items;
 
@@ -452,7 +455,7 @@ export const OperatorHubTileView: React.FC<OperatorHubTileViewProps> = (props) =
 
   const createLink =
     detailsItem &&
-    `/operatorhub/subscribe?pkg=${detailsItem.obj.metadata.name}&catalog=${detailsItem.catalogSource}&catalogNamespace=${detailsItem.catalogSourceNamespace}&targetNamespace=${props.namespace}`;
+    `/operatorhub/subscribe?pkg=${detailsItem.obj.metadata.name}&catalog=${detailsItem.catalogSource}&catalogNamespace=${detailsItem.catalogSourceNamespace}&targetNamespace=${props.namespace}&channel=${updateChannel}&version=${updateVersion}`;
 
   const uninstallLink = () =>
     detailsItem &&
@@ -533,7 +536,7 @@ export const OperatorHubTileView: React.FC<OperatorHubTileViewProps> = (props) =
                 iconImg={detailsItem.imgUrl}
                 title={detailsItem.name}
                 vendor={t('olm~{{version}} provided by {{provider}}', {
-                  version: detailsItem.version,
+                  version: updateVersion || detailsItem.version,
                   provider: detailsItem.provider,
                 })}
                 data-test-id="operator-modal-header"
@@ -586,7 +589,13 @@ export const OperatorHubTileView: React.FC<OperatorHubTileViewProps> = (props) =
           onClose={closeOverlay}
           title={detailsItem.name}
         >
-          <OperatorHubItemDetails item={detailsItem} />
+          <OperatorHubItemDetails
+            item={detailsItem}
+            updateChannel={updateChannel}
+            setUpdateChannel={setUpdateChannel}
+            updateVersion={updateVersion}
+            setUpdateVersion={setUpdateVersion}
+          />
         </Modal>
       )}
     </>
@@ -601,6 +610,7 @@ type OperatorHubTileProps = {
 export type OperatorHubTileViewProps = {
   namespace?: string;
   items: OperatorHubItem[];
+  packageManifest: PackageManifestKind;
 };
 
 OperatorHubTileView.displayName = 'OperatorHubTileView';

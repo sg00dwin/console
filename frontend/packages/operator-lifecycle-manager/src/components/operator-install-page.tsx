@@ -293,7 +293,7 @@ const InstallingMessage: React.FC<InstallingMessageProps> = ({ namespace, obj })
 
 const OperatorInstallStatus: React.FC<OperatorInstallPageProps> = (props) => {
   const { t } = useTranslation();
-  const { resources, targetNamespace, pkgNameWithVersion } = props;
+  const { resources, targetNamespace, pkgNameWithVersion, installVersion } = props;
 
   let loading = true;
   let status = '';
@@ -372,14 +372,14 @@ const OperatorInstallStatus: React.FC<OperatorInstallPageProps> = (props) => {
   const channels = pkgManifest.status?.channels || [];
   const channel = channels.find((ch) => ch.currentCSV === pkgNameWithVersion) || channels[0];
   const displayName = channel?.currentCSVDesc?.displayName || '';
-  const logoVersion = channel?.currentCSVDesc?.version || '';
+  const version = installVersion || channel?.currentCSVDesc?.version || '';
 
   const CSVLogo = (
     <ClusterServiceVersionLogo
       displayName={displayName}
       icon={iconFor(pkgManifest)}
       provider={pkgManifest.status?.provider?.name || ''}
-      version={logoVersion}
+      version={version}
     />
   );
 
@@ -481,6 +481,7 @@ export type OperatorInstallPageProps = {
   targetNamespace: string;
   pkgNameWithVersion: string;
   resources?: OperatorResources;
+  installVersion: string;
 };
 
 type InstallSuccededMessageProps = {
