@@ -12,7 +12,9 @@ import { DefaultCatalogSource } from '../../const';
 import { ClusterServiceVersionModel } from '../../models';
 import { ClusterServiceVersionKind, SubscriptionKind } from '../../types';
 import { MarkdownView } from '../clusterserviceversion';
+import { defaultChannelNameFor } from '../index';
 import { OperatorHubItem } from './index';
+import { OperatorChannelSelect, OperatorVersionSelect } from './operator-channel-version-select';
 
 // t('olm~Basic Install'),
 // t('olm~Seamless Upgrades'),
@@ -180,7 +182,13 @@ const OperatorHubItemDetailsHintBlock: React.FC<OperatorHubItemDetailsHintBlockP
   return null;
 };
 
-export const OperatorHubItemDetails: React.FC<OperatorHubItemDetailsProps> = ({ item }) => {
+export const OperatorHubItemDetails: React.FC<OperatorHubItemDetailsProps> = ({
+  item,
+  updateChannel,
+  setUpdateChannel,
+  updateVersion,
+  setUpdateVersion,
+}) => {
   const { t } = useTranslation();
   const {
     capabilityLevel,
@@ -194,6 +202,7 @@ export const OperatorHubItemDetails: React.FC<OperatorHubItemDetailsProps> = ({ 
     isInstalling,
     longDescription,
     marketplaceSupportWorkflow,
+    obj,
     provider,
     repository,
     subscription,
@@ -225,13 +234,37 @@ export const OperatorHubItemDetails: React.FC<OperatorHubItemDetailsProps> = ({ 
     return null;
   }, [marketplaceSupportWorkflow]);
 
+  const selectedUpdateChannel = updateChannel || defaultChannelNameFor(obj);
+
   return item ? (
     <div className="modal-body modal-body-border">
       <div className="modal-body-content">
         <div className="modal-body-inner-shadow-covers">
           <div className="co-catalog-page__overlay-body">
             <PropertiesSidePanel>
-              <PropertyItem label={t('olm~Latest version')} value={version || notAvailable} />
+              <PropertyItem
+                label={t('olm~Channel')}
+                value={
+                  <OperatorChannelSelect
+                    packageManifest={obj}
+                    selectedUpdateChannel={selectedUpdateChannel}
+                    setUpdateChannel={setUpdateChannel}
+                    setUpdateVersion={setUpdateVersion}
+                  />
+                }
+              />
+              <PropertyItem
+                label={t('olm~Version')}
+                value={
+                  <OperatorVersionSelect
+                    packageManifest={obj}
+                    selectedUpdateChannel={selectedUpdateChannel}
+                    updateVersion={updateVersion}
+                    setUpdateVersion={setUpdateVersion}
+                  />
+                }
+              />
+              {/* <PropertyItem label={t('olm~Version')} value={version || notAvailable} /> */}
               <PropertyItem
                 label={t('olm~Capability level')}
                 value={
@@ -317,6 +350,10 @@ type OperatorHubItemDetailsHintBlockProps = {
 
 export type OperatorHubItemDetailsProps = {
   item: OperatorHubItem;
+  updateChannel: string;
+  updateVersion: string;
+  setUpdateChannel: (updateChannel: string) => void;
+  setUpdateVersion: (updateVersion: string) => void;
 };
 
 OperatorHubItemDetails.displayName = 'OperatorHubItemDetails';

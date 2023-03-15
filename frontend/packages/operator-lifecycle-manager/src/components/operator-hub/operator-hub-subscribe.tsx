@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { ActionGroup, Alert, Button, Checkbox } from '@patternfly/react-core';
+
 import * as _ from 'lodash';
 import { Helmet } from 'react-helmet';
 import { Trans, useTranslation } from 'react-i18next';
@@ -14,6 +15,7 @@ import {
   Firehose,
   getDocumentationURL,
   getURLSearchParams,
+  getQueryArgument,
   history,
   MsgBox,
   NsDropdown,
@@ -69,13 +71,34 @@ import {
   supportedInstallModesFor,
 } from '../index';
 import { installedFor, supports, providedAPIsForOperatorGroup, isGlobal } from '../operator-group';
+import { OperatorChannelSelect, OperatorVersionSelect } from './operator-channel-version-select';
 
 export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> = (props) => {
+  const packageManifest = props.packageManifest?.data?.[0];
+  const { name: pkgName } = packageManifest?.metadata ?? {};
+  const { provider, channels = [], packageName, catalogSource, catalogSourceNamespace } =
+    packageManifest?.status ?? {};
+
   const { catalogNamespace, pkg } = getURLSearchParams();
   const [targetNamespace, setTargetNamespace] = React.useState(null);
   const [installMode, setInstallMode] = React.useState(null);
-  const [updateChannel, setUpdateChannel] = React.useState(null);
-  const [approval, setApproval] = React.useState(InstallPlanApproval.Automatic);
+
+  const channel = getQueryArgument('channel');
+  const defaultChannel = defaultChannelNameFor(packageManifest);
+  const [updateChannelName, setUpdateChannelName] = React.useState(channel || defaultChannel);
+  const { currentCSVDesc } = channels.find((ch) => ch.name === updateChannelName) ?? {};
+  const { installModes = [], version: currentLatestVersion } = currentCSVDesc ?? {};
+
+  const version = getQueryArgument('version');
+  // const defaultVersion = channels.find((ch) => ch.name === defaultChannel)?.currentCSVDesc?.version;
+  const [updateVersion, setUpdateVersion] = React.useState(version || currentLatestVersion);
+
+  const [approval, setApproval] = React.useState(
+    updateVersion !== currentLatestVersion
+      ? InstallPlanApproval.Manual
+      : InstallPlanApproval.Automatic,
+  );
+
   const [cannotResolve, setCannotResolve] = React.useState(false);
   const [suggestedNamespaceExists, setSuggestedNamespaceExists] = React.useState(false);
   const [suggestedNamespaceExistsInFlight, setSuggestedNamespaceExistsInFlight] = React.useState(
@@ -103,26 +126,15 @@ export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> =
     }
   };
 
-  const { name: pkgName } = props.packageManifest.data[0].metadata;
-  const {
-    provider,
-    channels = [],
-    packageName,
-    catalogSource,
-    catalogSourceNamespace,
-  } = props.packageManifest.data[0].status;
-
   const search = new URLSearchParams({
     'details-item': `${new URLSearchParams(window.location.search).get(
       'pkg',
     )}-${new URLSearchParams(window.location.search).get('catalogNamespace')}`,
   });
 
-  const selectedUpdateChannel =
-    updateChannel || defaultChannelNameFor(props.packageManifest.data[0]);
   const selectedInstallMode =
     installMode ||
-    supportedInstallModesFor(props.packageManifest.data[0])(selectedUpdateChannel).reduce(
+    supportedInstallModesFor(props.packageManifest.data[0])(updateChannelName).reduce(
       (preferredInstallMode, mode) =>
         mode.type === InstallModeType.InstallModeTypeAllNamespaces
           ? InstallModeType.InstallModeTypeAllNamespaces
@@ -130,8 +142,6 @@ export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> =
       InstallModeType.InstallModeTypeOwnNamespace,
     );
 
-  const { currentCSVDesc } = channels.find((ch) => ch.name === selectedUpdateChannel);
-  const { installModes = [] } = currentCSVDesc;
   const suggestedNamespace =
     currentCSVDesc.annotations?.['operatorframework.io/suggested-namespace'];
   const suggestedNamespaceTemplate = parseJSONAnnotation(
@@ -197,8 +207,6 @@ export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> =
     operatorSuggestedNamespace && operatorSuggestedNamespace === selectedTargetNamespace;
   const showSuggestedNamespaceDetails =
     !suggestedNamespaceExistsInFlight && isSuggestedNamespaceSelected;
-  const selectedApproval = approval || InstallPlanApproval.Automatic;
-
   React.useEffect(() => {
     if (!operatorSuggestedNamespace) {
       setSuggestedNamespaceExistsInFlight(false);
@@ -241,6 +249,12 @@ export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> =
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [catalogSource, currentCSVDesc?.annotations?.['console.openshift.io/plugins']]);
 
+  React.useEffect(() => {
+    if (updateVersion !== currentLatestVersion) {
+      setApproval(InstallPlanApproval.Manual);
+    }
+  }, [updateVersion, currentLatestVersion]);
+
   const singleInstallMode = installModes.find(
     (m) => m.type === InstallModeType.InstallModeTypeOwnNamespace,
   );
@@ -250,12 +264,14 @@ export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> =
   );
   const supportsGlobal = globalInstallMode && globalInstallMode.supported;
 
-  const navigateToInstallPage = React.useCallback(() => {
-    const currentCSV = channels.find((ch) => ch.name === selectedUpdateChannel)?.currentCSV;
-    history.push(
-      `/operatorhub/install/${catalogNamespace}/${pkg}/${currentCSV}/to/${selectedTargetNamespace}`,
-    );
-  }, [catalogNamespace, channels, pkg, selectedTargetNamespace, selectedUpdateChannel]);
+  const navigateToInstallPage = React.useCallback(
+    (csvName: string) => {
+      history.push(
+        `/operatorhub/install/${catalogNamespace}/${pkg}/${csvName}/to/${selectedTargetNamespace}`,
+      );
+    },
+    [catalogNamespace, pkg, selectedTargetNamespace],
+  );
 
   if (!supportsSingle && !supportsGlobal) {
     return (
@@ -299,7 +315,7 @@ export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> =
     }
     const existingAPIs = _.flatMap(operatorGroups, providedAPIsForOperatorGroup);
     const providedAPIs = providedAPIsForChannel(props.packageManifest.data[0])(
-      selectedUpdateChannel,
+      updateChannelName,
     ).map((desc) => referenceForProvidedAPI(desc));
 
     return _.intersection(existingAPIs, providedAPIs);
@@ -322,6 +338,10 @@ export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> =
 
     const ns = _.defaultsDeep({}, defaultNS, suggestedNamespaceTemplate);
     const rbacName = `${selectedTargetNamespace}-prometheus`;
+    const currentChannel = packageManifest?.status?.channels?.find(
+      (ch) => ch.name === updateChannelName,
+    );
+    const currentCSVName = currentChannel?.entries?.find((e) => e.version === updateVersion)?.name;
     const prometheusRole = {
       kind: RoleModel.kind,
       apiVersion: `${RoleModel.apiGroup}/${RoleModel.apiVersion}`,
@@ -386,9 +406,9 @@ export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> =
         source: catalogSource,
         sourceNamespace: catalogSourceNamespace,
         name: packageName,
-        startingCSV: channels.find((ch) => ch.name === selectedUpdateChannel).currentCSV,
-        channel: selectedUpdateChannel,
-        installPlanApproval: selectedApproval,
+        startingCSV: currentCSVName,
+        channel: updateChannelName,
+        installPlanApproval: approval,
       },
     };
 
@@ -425,14 +445,14 @@ export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> =
           },
         ]);
       }
-      navigateToInstallPage();
+      navigateToInstallPage(currentCSVName);
     } catch (err) {
       setError(err.message || t('olm~Could not create Operator Subscription.'));
     }
   };
 
   const formValid = () =>
-    [selectedUpdateChannel, selectedInstallMode, selectedTargetNamespace, selectedApproval].some(
+    [updateChannelName, selectedInstallMode, selectedTargetNamespace, approval].some(
       (v) => _.isNil(v) || _.isEmpty(v),
     ) ||
     subscriptionExists(selectedTargetNamespace) ||
@@ -694,7 +714,7 @@ export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> =
     </div>
   );
 
-  const providedAPIs = providedAPIsForChannel(props.packageManifest.data[0])(selectedUpdateChannel);
+  const providedAPIs = providedAPIsForChannel(props.packageManifest.data[0])(updateChannelName);
   const manualSubscriptionsInNamespace = getManualSubscriptionsInNamespace(
     props.subscription.data,
     selectedTargetNamespace,
@@ -725,13 +745,22 @@ export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> =
                   <FieldLevelHelp>
                     {t('olm~The channel to track and receive the updates from.')}
                   </FieldLevelHelp>
-                  <RadioGroup
-                    currentValue={selectedUpdateChannel}
-                    items={channels.map((ch) => ({ value: ch.name, title: ch.name }))}
-                    onChange={(e) => {
-                      setUpdateChannel(e.currentTarget.value);
-                      setInstallMode(null);
-                    }}
+                  <OperatorChannelSelect
+                    packageManifest={props.packageManifest.data[0]}
+                    selectedUpdateChannel={updateChannelName}
+                    setUpdateChannel={setUpdateChannelName}
+                    setUpdateVersion={setUpdateVersion}
+                  />
+                </fieldset>
+              </div>
+              <div className="form-group form-group--doubled-bottom-margin">
+                <fieldset>
+                  <label className="co-required">{t('olm~Version')}</label>
+                  <OperatorVersionSelect
+                    packageManifest={props.packageManifest.data[0]}
+                    selectedUpdateChannel={updateChannelName}
+                    updateVersion={updateVersion}
+                    setUpdateVersion={setUpdateVersion}
                   />
                 </fieldset>
               </div>
@@ -793,12 +822,18 @@ export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> =
                     {t('olm~The strategy to determine either manual or automatic updates.')}
                   </FieldLevelHelp>
                   <RadioGroup
-                    currentValue={selectedApproval}
+                    currentValue={approval}
                     items={[
                       { value: InstallPlanApproval.Automatic, title: t('olm~Automatic') },
                       { value: InstallPlanApproval.Manual, title: t('olm~Manual') },
                     ]}
-                    onChange={(e) => setApproval(e.currentTarget.value)}
+                    onChange={(e) => {
+                      const value = e.currentTarget.value;
+                      setApproval(value);
+                      if (value === InstallPlanApproval.Automatic) {
+                        setUpdateVersion(currentLatestVersion);
+                      }
+                    }}
                   />
                   {approval === InstallPlanApproval.Automatic &&
                     manualSubscriptionsInNamespace?.length > 0 && (
