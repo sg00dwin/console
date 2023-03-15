@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { ActionGroup, Alert, Button, Checkbox } from '@patternfly/react-core';
+import { ActionGroup, Alert, Button, Checkbox, Select, SelectOption } from '@patternfly/react-core';
+
 import * as _ from 'lodash';
 import { Helmet } from 'react-helmet';
 import { Trans, useTranslation } from 'react-i18next';
@@ -69,13 +70,17 @@ import {
 } from '../index';
 import { installedFor, supports, providedAPIsForOperatorGroup, isGlobal } from '../operator-group';
 import { OperatorInstallStatusPage } from '../operator-install-page';
+import OperatorChannelVersionSelect from './operator-channel-version-select';
 
 export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> = (props) => {
   const [inProgress, setInProgress] = React.useState(false);
   const [targetNamespace, setTargetNamespace] = React.useState(null);
   const [installMode, setInstallMode] = React.useState(null);
   const [showInstallStatusPage, setShowInstallStatusPage] = React.useState(false);
+  const [isVersionSelectOpen, setIsVersionSelectOpen] = React.useState(false);
+  const [isChannelSelectOpen, setIsChannelSelectOpen] = React.useState(false);
   const [updateChannel, setUpdateChannel] = React.useState(null);
+  const [updateVersion, setUpdateVersion] = React.useState(null);
   const [approval, setApproval] = React.useState(InstallPlanApproval.Automatic);
   const [cannotResolve, setCannotResolve] = React.useState(false);
   const [suggestedNamespaceExists, setSuggestedNamespaceExists] = React.useState(false);
@@ -121,6 +126,7 @@ export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> =
 
   const selectedUpdateChannel =
     updateChannel || defaultChannelNameFor(props.packageManifest.data[0]);
+
   const selectedInstallMode =
     installMode ||
     supportedInstallModesFor(props.packageManifest.data[0])(selectedUpdateChannel).reduce(
@@ -707,10 +713,52 @@ export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> =
     );
   }
 
+  const defaultVersionForChannel = channels.find((ch) => ch.name === selectedUpdateChannel)
+    .currentCSVDesc.version;
+
+  console.log(defaultVersionForChannel, '<=== defaultVersionForChannel');
+
+  // SelectedUpdateVersion should default to the defaultVersionForChannel or the updateVersion (when the user selects a different version).
+  const selectedUpdateVersion = updateVersion || defaultVersionForChannel;
+
+  // Take selectedUpdateChannel and return all versions associated with it
+  const selectedChannelVersions = channels.find((ch) => ch.name === selectedUpdateChannel).entries;
+
   const manualSubscriptionsInNamespace = getManualSubscriptionsInNamespace(
     props.subscription.data,
     selectedTargetNamespace,
   );
+
+  const onToggleVersion = () => setIsVersionSelectOpen(!isVersionSelectOpen);
+
+  const handleVersionSelection = (versions, newSelection) => {
+    setUpdateVersion(newSelection);
+    setIsVersionSelectOpen(false);
+    console.log(newSelection, '<=== newSelection');
+  };
+  const versionSelectOptions = selectedChannelVersions.map((v) => (
+    <SelectOption key={v.version} id={v.version} value={v.version}>
+      {v.version}
+    </SelectOption>
+  ));
+
+  const onToggleChannel = () => setIsChannelSelectOpen(!isChannelSelectOpen);
+
+  console.log(channels, '<=== channels');
+
+  const handleChannelSelection = (channels, newSelected: string) => {
+    setUpdateChannel(newSelected);
+    setUpdateVersion(newSelected);
+    setIsChannelSelectOpen(false);
+    setInstallMode(null);
+    console.log(newSelected, '<=== newSelected');
+  };
+
+  const channelSelectOptions = channels.map((ch) => (
+    <SelectOption key={ch.name} id={ch.name} value={ch.name}>
+      {ch.name}
+    </SelectOption>
+  ));
 
   return (
     <>
@@ -737,14 +785,37 @@ export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> =
                   <FieldLevelHelp>
                     {t('olm~The channel to track and receive the updates from.')}
                   </FieldLevelHelp>
-                  <RadioGroup
-                    currentValue={selectedUpdateChannel}
-                    items={channels.map((ch) => ({ value: ch.name, title: ch.name }))}
-                    onChange={(e) => {
-                      setUpdateChannel(e.currentTarget.value);
-                      setInstallMode(null);
-                    }}
+                  <OperatorChannelVersionSelect
+                    packageManifest={props.packageManifest}
+                    selectedUpateChannel={selectedUpdateChannel}
                   />
+                  <div>
+                    <Select
+                      aria-label={t('olm~Select a channel')}
+                      onToggle={onToggleChannel}
+                      isOpen={isChannelSelectOpen}
+                      selections={selectedUpdateChannel}
+                      onSelect={handleChannelSelection}
+                    >
+                      {channelSelectOptions}
+                    </Select>
+                  </div>
+                </fieldset>
+              </div>
+              <div className="form-group form-group--doubled-bottom-margin">
+                <fieldset>
+                  <label className="co-required">{t('olm~Version')}</label>
+                  <div>
+                    <Select
+                      aria-label={t('olm~Select a version')}
+                      onToggle={onToggleVersion}
+                      isOpen={isVersionSelectOpen}
+                      selections={selectedUpdateVersion}
+                      onSelect={handleVersionSelection}
+                    >
+                      {versionSelectOptions}
+                    </Select>
+                  </div>
                 </fieldset>
               </div>
               <div className="form-group">
