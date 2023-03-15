@@ -38,6 +38,8 @@ import {
   InfraFeatures,
   ValidSubscriptionValue,
 } from './index';
+import { defaultChannelNameFor } from '../index';
+// import { PackageManifestKind } from '../../types';
 
 const osBaseLabel = 'operatorframework.io/os.';
 const targetGOOSLabel = window.SERVER_FLAGS.GOOS ? `${osBaseLabel}${window.SERVER_FLAGS.GOOS}` : '';
@@ -354,18 +356,45 @@ const setURLParams = (params) => {
   history.replace(`${url.pathname}${searchParams}`);
 };
 
-const OperatorHubTile: React.FC<OperatorHubTileProps> = ({ item, onClick }) => {
+const OperatorHubTile: React.FC<OperatorHubTileProps> = ({
+  item,
+  updateChannel,
+  onClick,
+  setDefaultVersionForChannel,
+  // setChannels,
+}) => {
   const { t } = useTranslation();
   if (!item) {
     return null;
   }
 
   const { uid, name, imgUrl, provider, description, installed } = item;
+
   const vendor = provider ? t('olm~provided by {{provider}}', { provider }) : null;
   const badges = item?.catalogSourceDisplayName
     ? [<Badge text={item.catalogSourceDisplayName} />]
     : [];
   const icon = <img className="co-catalog--logo" loading="lazy" src={imgUrl} alt="" />;
+
+  // HOW TO PASS THIS TO PARENT
+  // const { setChannels = [] } = item.obj.status;
+  // console.log(channels, '<===+1 channels in child comp');
+
+  // Get currently selected channel
+  console.log(item.obj, '<=== item.obj');
+  const { channels = [] } = item.obj.status;
+
+  // Get the selected channel default version which is
+  const selectedUpdateChannel = updateChannel || defaultChannelNameFor(item.obj);
+  console.log(selectedUpdateChannel, '<===+1 selectedUpdateChannel');
+
+  // Create state for the default version for selected channel
+  // THIS THROWS AN ERROR FOR SOME OPERATORS (eg. 3Scale)
+  React.useEffect(() => {
+    setDefaultVersionForChannel(
+      channels.find((ch) => ch.name === selectedUpdateChannel).currentCSVDesc.version,
+    );
+  }, [selectedUpdateChannel]);
 
   return (
     <CatalogTile
@@ -380,6 +409,7 @@ const OperatorHubTile: React.FC<OperatorHubTileProps> = ({ item, onClick }) => {
         if (isModifiedEvent(e)) return;
         e.preventDefault();
         onClick(item);
+        setDefaultVersionForChannel(item);
       }}
       href={getURLWithParams('details-item', item.uid)}
       footer={
@@ -402,6 +432,13 @@ export const OperatorHubTileView: React.FC<OperatorHubTileViewProps> = (props) =
   const [ignoreOperatorWarning, setIgnoreOperatorWarning, loaded] = useUserSettingsCompatibility<
     boolean
   >(userSettingsKey, storeKey, false);
+  const [updateChannel, setUpdateChannel] = React.useState('');
+  const [updateVersion, setUpdateVersion] = React.useState('');
+  // const [channels, setChannels] = React.useState('');
+  const [defaultVersionForChannel, setDefaultVersionForChannel] = React.useState('');
+
+  // console.log(channels, '<===+1 channels');
+
   const filteredItems =
     activeCluster === HUB_CLUSTER_NAME ? filterByArchAndOS(props.items) : props.items;
 
@@ -447,12 +484,20 @@ export const OperatorHubTileView: React.FC<OperatorHubTileViewProps> = (props) =
   };
 
   const renderTile = (item: OperatorHubItem) => (
-    <OperatorHubTile item={item} onClick={openOverlay} />
+    <OperatorHubTile
+      item={item}
+      onClick={openOverlay}
+      updateChannel={updateChannel}
+      setDefaultVersionForChannel={setDefaultVersionForChannel}
+      // setChannels={setChannels}
+    />
   );
+
+  console.log(defaultVersionForChannel, '<===+1 defaultVersionForChannel');
 
   const createLink =
     detailsItem &&
-    `/operatorhub/subscribe?pkg=${detailsItem.obj.metadata.name}&catalog=${detailsItem.catalogSource}&catalogNamespace=${detailsItem.catalogSourceNamespace}&targetNamespace=${props.namespace}`;
+    `/operatorhub/subscribe?pkg=${detailsItem.obj.metadata.name}&catalog=${detailsItem.catalogSource}&catalogNamespace=${detailsItem.catalogSourceNamespace}&targetNamespace=${props.namespace}&channel=${updateChannel}&version=${updateVersion}`;
 
   const uninstallLink = () =>
     detailsItem &&
@@ -533,7 +578,7 @@ export const OperatorHubTileView: React.FC<OperatorHubTileViewProps> = (props) =
                 iconImg={detailsItem.imgUrl}
                 title={detailsItem.name}
                 vendor={t('olm~{{version}} provided by {{provider}}', {
-                  version: detailsItem.version,
+                  version: updateVersion || defaultVersionForChannel,
                   provider: detailsItem.provider,
                 })}
                 data-test-id="operator-modal-header"
@@ -586,7 +631,13 @@ export const OperatorHubTileView: React.FC<OperatorHubTileViewProps> = (props) =
           onClose={closeOverlay}
           title={detailsItem.name}
         >
-          <OperatorHubItemDetails item={detailsItem} />
+          <OperatorHubItemDetails
+            item={detailsItem}
+            updateChannel={updateChannel}
+            setUpdateChannel={setUpdateChannel}
+            updateVersion={updateVersion}
+            setUpdateVersion={setUpdateVersion}
+          />
         </Modal>
       )}
     </>
@@ -596,11 +647,15 @@ export const OperatorHubTileView: React.FC<OperatorHubTileViewProps> = (props) =
 type OperatorHubTileProps = {
   item: OperatorHubItem;
   onClick: (item: OperatorHubItem) => void;
+  setDefaultVersionForChannel: (item: OperatorHubItem) => void;
+  updateChannel: string;
+  selectedUpdateChannel: string;
 };
 
 export type OperatorHubTileViewProps = {
   namespace?: string;
   items: OperatorHubItem[];
+  // packageManifest: { loaded: boolean; data: PackageManifestKind[] };
 };
 
 OperatorHubTileView.displayName = 'OperatorHubTileView';

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { ActionGroup, Alert, Button, Checkbox } from '@patternfly/react-core';
+
 import * as _ from 'lodash';
 import { Helmet } from 'react-helmet';
 import { Trans, useTranslation } from 'react-i18next';
@@ -14,6 +15,7 @@ import {
   Firehose,
   getDocumentationURL,
   getURLSearchParams,
+  getQueryArgument,
   history,
   MsgBox,
   NsDropdown,
@@ -69,12 +71,16 @@ import {
   supportedInstallModesFor,
 } from '../index';
 import { installedFor, supports, providedAPIsForOperatorGroup, isGlobal } from '../operator-group';
+import { OperatorChannelSelect, OperatorVersionSelect } from './operator-channel-version-select';
 
 export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> = (props) => {
   const { catalogNamespace, pkg } = getURLSearchParams();
   const [targetNamespace, setTargetNamespace] = React.useState(null);
   const [installMode, setInstallMode] = React.useState(null);
-  const [updateChannel, setUpdateChannel] = React.useState(null);
+  // const [isVersionSelectOpen, setIsVersionSelectOpen] = React.useState(false);
+  // const [isChannelSelectOpen, setIsChannelSelectOpen] = React.useState(false);
+  const [updateChannel, setUpdateChannel] = React.useState('');
+  const [updateVersion, setUpdateVersion] = React.useState('');
   const [approval, setApproval] = React.useState(InstallPlanApproval.Automatic);
   const [cannotResolve, setCannotResolve] = React.useState(false);
   const [suggestedNamespaceExists, setSuggestedNamespaceExists] = React.useState(false);
@@ -94,6 +100,17 @@ export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> =
   });
   const [enabledPlugins, setEnabledPlugins] = React.useState<string[]>([]);
   const { t } = useTranslation();
+
+  React.useEffect(() => {
+    const preSelectedVersion = getQueryArgument('version');
+    const preSelectedChannel = getQueryArgument('channel');
+    if (preSelectedChannel) {
+      setUpdateChannel(preSelectedChannel);
+    }
+    if (preSelectedVersion) {
+      setUpdateVersion(preSelectedVersion);
+    }
+  }, []);
 
   const setPluginEnabled = (plugin: string, enabled: boolean) => {
     if (enabled) {
@@ -120,6 +137,7 @@ export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> =
 
   const selectedUpdateChannel =
     updateChannel || defaultChannelNameFor(props.packageManifest.data[0]);
+
   const selectedInstallMode =
     installMode ||
     supportedInstallModesFor(props.packageManifest.data[0])(selectedUpdateChannel).reduce(
@@ -725,13 +743,22 @@ export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> =
                   <FieldLevelHelp>
                     {t('olm~The channel to track and receive the updates from.')}
                   </FieldLevelHelp>
-                  <RadioGroup
-                    currentValue={selectedUpdateChannel}
-                    items={channels.map((ch) => ({ value: ch.name, title: ch.name }))}
-                    onChange={(e) => {
-                      setUpdateChannel(e.currentTarget.value);
-                      setInstallMode(null);
-                    }}
+                  <OperatorChannelSelect
+                    packageManifest={props.packageManifest.data[0]}
+                    selectedUpdateChannel={selectedUpdateChannel}
+                    setUpdateChannel={setUpdateChannel}
+                    setUpdateVersion={setUpdateVersion}
+                  />
+                </fieldset>
+              </div>
+              <div className="form-group form-group--doubled-bottom-margin">
+                <fieldset>
+                  <label className="co-required">{t('olm~Version')}</label>
+                  <OperatorVersionSelect
+                    packageManifest={props.packageManifest.data[0]}
+                    selectedUpdateChannel={selectedUpdateChannel}
+                    updateVersion={updateVersion}
+                    setUpdateVersion={setUpdateVersion}
                   />
                 </fieldset>
               </div>
