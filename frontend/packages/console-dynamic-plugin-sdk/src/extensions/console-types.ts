@@ -498,6 +498,8 @@ export type UseActivePerspective = () => [
   React.Dispatch<React.SetStateAction<PerspectiveType>>,
 ];
 
+export type UseActiveNamespace = () => [string, (ns: string) => void];
+
 export type QueryParams = {
   watch?: string;
   labelSelector?: string;

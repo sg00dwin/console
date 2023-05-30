@@ -10,15 +10,16 @@ import {
 } from '@patternfly/react-core';
 import { CaretDownIcon } from '@patternfly/react-icons';
 import { useK8sModel } from '@console/shared/src/hooks/useK8sModel';
-import { useActiveNamespace } from '@console/shared/src/hooks/useActiveNamespace';
-import { ALL_NAMESPACES_KEY } from '@console/shared/src/constants/common';
 import {
+  // useActiveNamespace,
   ListPageCreateProps,
   CreateWithPermissionsProps,
   ListPageCreateLinkProps,
   ListPageCreateButtonProps,
   ListPageCreateDropdownProps,
 } from '@console/dynamic-plugin-sdk';
+import { useActiveNamespace } from '@console/shared/src/hooks/useActiveNamespace';
+import { ALL_NAMESPACES_KEY } from '@console/shared/src/constants/common';
 
 import { RequireCreatePermission } from '../../utils';
 
@@ -99,6 +100,7 @@ const ListPageCreate: React.FC<ListPageCreateProps> = ({
 }) => {
   const [k8sModel] = useK8sModel(groupVersionKind);
   const [namespace] = useActiveNamespace();
+  console.log(namespace, '<=== namespace');
   let to: string;
   if (k8sModel) {
     const usedNamespace = k8sModel.namespaced
