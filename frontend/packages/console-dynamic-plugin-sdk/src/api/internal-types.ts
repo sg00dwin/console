@@ -181,6 +181,10 @@ export type Options = {
 };
 
 export type UseActiveNamespace = () => [string, (ns: string) => void];
+export type NamespaceContextType = {
+  namespace?: string;
+  setNamespace?: (ns: string) => void;
+};
 
 export type UseLastNamespace = () => [
   string,

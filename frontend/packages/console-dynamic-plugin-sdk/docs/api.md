@@ -1,109 +1,96 @@
 # OpenShift Console API
 
-1.  [`useActivePerspective`](#useactiveperspective)
-2.  [`GreenCheckCircleIcon`](#greencheckcircleicon)
-3.  [`RedExclamationCircleIcon`](#redexclamationcircleicon)
-4.  [`YellowExclamationTriangleIcon`](#yellowexclamationtriangleicon)
-5.  [`BlueInfoCircleIcon`](#blueinfocircleicon)
-6.  [`ErrorStatus`](#errorstatus)
-7.  [`InfoStatus`](#infostatus)
-8.  [`ProgressStatus`](#progressstatus)
-9.  [`SuccessStatus`](#successstatus)
-10.  [`checkAccess`](#checkaccess)
-11.  [`useAccessReview`](#useaccessreview)
-12.  [`useResolvedExtensions`](#useresolvedextensions)
-13.  [`HorizontalNav`](#horizontalnav)
-14.  [`VirtualizedTable`](#virtualizedtable)
-15.  [`TableData`](#tabledata)
-16.  [`useActiveColumns`](#useactivecolumns)
-17.  [`ListPageHeader`](#listpageheader)
-18.  [`ListPageCreate`](#listpagecreate)
-19.  [`ListPageCreateLink`](#listpagecreatelink)
-20.  [`ListPageCreateButton`](#listpagecreatebutton)
-21.  [`ListPageCreateDropdown`](#listpagecreatedropdown)
-22.  [`ListPageFilter`](#listpagefilter)
-23.  [`useListPageFilter`](#uselistpagefilter)
-24.  [`ResourceLink`](#resourcelink)
-25.  [`ResourceIcon`](#resourceicon)
-26.  [`useK8sModel`](#usek8smodel)
-27.  [`useK8sModels`](#usek8smodels)
-28.  [`useK8sWatchResource`](#usek8swatchresource)
-29.  [`useK8sWatchResources`](#usek8swatchresources)
-30.  [`consoleFetch`](#consolefetch)
-31.  [`consoleFetchJSON`](#consolefetchjson)
-32.  [`consoleFetchText`](#consolefetchtext)
-33.  [`getConsoleRequestHeaders`](#getconsolerequestheaders)
-34.  [`k8sGetResource`](#k8sgetresource)
-35.  [`k8sCreateResource`](#k8screateresource)
-36.  [`k8sUpdateResource`](#k8supdateresource)
-37.  [`k8sPatchResource`](#k8spatchresource)
-38.  [`k8sDeleteResource`](#k8sdeleteresource)
-39.  [`k8sListResource`](#k8slistresource)
-40.  [`k8sListResourceItems`](#k8slistresourceitems)
-41.  [`getAPIVersionForModel`](#getapiversionformodel)
-42.  [`getGroupVersionKindForResource`](#getgroupversionkindforresource)
-43.  [`getGroupVersionKindForModel`](#getgroupversionkindformodel)
-44.  [`StatusPopupSection`](#statuspopupsection)
-45.  [`StatusPopupItem`](#statuspopupitem)
-46.  [`Overview`](#overview)
-47.  [`OverviewGrid`](#overviewgrid)
-48.  [`InventoryItem`](#inventoryitem)
-49.  [`InventoryItemTitle`](#inventoryitemtitle)
-50.  [`InventoryItemBody`](#inventoryitembody)
-51.  [`InventoryItemStatus`](#inventoryitemstatus)
-52.  [`InventoryItemLoading`](#inventoryitemloading)
-53.  [`useFlag`](#useflag)
-54.  [`CodeEditor`](#codeeditor)
-55.  [`ResourceYAMLEditor`](#resourceyamleditor)
-56.  [`ResourceEventStream`](#resourceeventstream)
-57.  [`usePrometheusPoll`](#useprometheuspoll)
-58.  [`Timestamp`](#timestamp)
-59.  [`useModal`](#usemodal)
-60.  [`ActionServiceProvider`](#actionserviceprovider)
-61.  [`NamespaceBar`](#namespacebar)
-62.  [`ErrorBoundaryFallbackPage`](#errorboundaryfallbackpage)
-63. [DEPRECATED] [`PerspectiveContext`](#perspectivecontext)
-64. [DEPRECATED] [`useAccessReviewAllowed`](#useaccessreviewallowed)
-65. [DEPRECATED] [`useSafetyFirst`](#usesafetyfirst)
-66. [DEPRECATED] [`YAMLEditor`](#yamleditor)
-
----
-
-## `useActivePerspective`
-
-### Summary 
-
-Hook that provides the currently active perspective and a callback for setting the active perspective
-
-
-
-### Example
-
-
-```tsx
-const Component: React.FC = (props) => {
-   const [activePerspective, setActivePerspective] = useActivePerspective();
-   return <select
-     value={activePerspective}
-     onChange={(e) => setActivePerspective(e.target.value)}
-   >
-     {
-       // ...perspective options
-     }
-   </select>
-}
-```
-
-
-
-
-
-
-
-### Returns
-
-A tuple containing the current active perspective and setter callback.
-
+1.  [`GreenCheckCircleIcon`](#greencheckcircleicon)
+2.  [`RedExclamationCircleIcon`](#redexclamationcircleicon)
+3.  [`YellowExclamationTriangleIcon`](#yellowexclamationtriangleicon)
+4.  [`BlueInfoCircleIcon`](#blueinfocircleicon)
+5.  [`ErrorStatus`](#errorstatus)
+6.  [`InfoStatus`](#infostatus)
+7.  [`ProgressStatus`](#progressstatus)
+8.  [`SuccessStatus`](#successstatus)
+9.  [`checkAccess`](#checkaccess)
+10.  [`useAccessReview`](#useaccessreview)
+11.  [`useResolvedExtensions`](#useresolvedextensions)
+12.  [`HorizontalNav`](#horizontalnav)
+13.  [`VirtualizedTable`](#virtualizedtable)
+14.  [`TableData`](#tabledata)
+15.  [`useActiveColumns`](#useactivecolumns)
+16.  [`ListPageHeader`](#listpageheader)
+17.  [`ListPageCreate`](#listpagecreate)
+18.  [`ListPageCreateLink`](#listpagecreatelink)
+19.  [`ListPageCreateButton`](#listpagecreatebutton)
+20.  [`ListPageCreateDropdown`](#listpagecreatedropdown)
+21.  [`ListPageFilter`](#listpagefilter)
+22.  [`useListPageFilter`](#uselistpagefilter)
+23.  [`ResourceLink`](#resourcelink)
+24.  [`ResourceIcon`](#resourceicon)
+25.  [`useK8sModel`](#usek8smodel)
+26.  [`useK8sModels`](#usek8smodels)
+27.  [`useK8sWatchResource`](#usek8swatchresource)
+28.  [`useK8sWatchResources`](#usek8swatchresources)
+29.  [`consoleFetch`](#consolefetch)
+30.  [`consoleFetchJSON`](#consolefetchjson)
+31.  [`consoleFetchText`](#consolefetchtext)
+32.  [`getConsoleRequestHeaders`](#getconsolerequestheaders)
+33.  [`k8sGetResource`](#k8sgetresource)
+34.  [`k8sCreateResource`](#k8screateresource)
+35.  [`k8sUpdateResource`](#k8supdateresource)
+36.  [`k8sPatchResource`](#k8spatchresource)
+37.  [`k8sDeleteResource`](#k8sdeleteresource)
+38.  [`k8sListResource`](#k8slistresource)
+39.  [`k8sListResourceItems`](#k8slistresourceitems)
+40.  [`getAPIVersionForModel`](#getapiversionformodel)
+41.  [`getGroupVersionKindForResource`](#getgroupversionkindforresource)
+42.  [`getGroupVersionKindForModel`](#getgroupversionkindformodel)
+43.  [`StatusPopupSection`](#statuspopupsection)
+44.  [`StatusPopupItem`](#statuspopupitem)
+45.  [`Overview`](#overview)
+46.  [`OverviewGrid`](#overviewgrid)
+47.  [`InventoryItem`](#inventoryitem)
+48.  [`InventoryItemTitle`](#inventoryitemtitle)
+49.  [`InventoryItemBody`](#inventoryitembody)
+50.  [`InventoryItemStatus`](#inventoryitemstatus)
+51.  [`InventoryItemLoading`](#inventoryitemloading)
+52.  [`useFlag`](#useflag)
+53.  [`CodeEditor`](#codeeditor)
+54.  [`ResourceYAMLEditor`](#resourceyamleditor)
+55.  [`ResourceEventStream`](#resourceeventstream)
+56.  [`usePrometheusPoll`](#useprometheuspoll)
+57.  [`Timestamp`](#timestamp)
+58.  [`useModal`](#usemodal)
+59.  [`ActionServiceProvider`](#actionserviceprovider)
+60.  [`NamespaceBar`](#namespacebar)
+61.  [`ErrorBoundaryFallbackPage`](#errorboundaryfallbackpage)
+62.  [`ActivityItem`](#activityitem)
+63.  [`ActivityBody`](#activitybody)
+64.  [`NamespaceContext`](#namespacecontext)
+65.  [`RecentEventsBody`](#recenteventsbody)
+66.  [`OngoingActivityBody`](#ongoingactivitybody)
+67.  [`AlertsBody`](#alertsbody)
+68.  [`AlertItem`](#alertitem)
+69.  [`HealthItem`](#healthitem)
+70.  [`HealthBody`](#healthbody)
+71.  [`ResourceInventoryItem`](#resourceinventoryitem)
+72.  [`DetailsBody`](#detailsbody)
+73.  [`UtilizationItem`](#utilizationitem)
+74.  [`UtilizationBody`](#utilizationbody)
+75.  [`UtilizationDurationDropdown`](#utilizationdurationdropdown)
+76.  [`VirtualizedGrid`](#virtualizedgrid)
+77.  [`LazyActionMenu`](#lazyactionmenu)
+78.  [`QuickStartsLoader`](#quickstartsloader)
+79.  [`useUtilizationDuration`](#useutilizationduration)
+80.  [`useActiveNamespace`](#useactivenamespace)
+81.  [`ServicesList`](#serviceslist)
+82.  [`useDashboardResources`](#usedashboardresources)
+83.  [`useUserSettings`](#useusersettings)
+84.  [`useURLPoll`](#useurlpoll)
+85.  [`useLastNamespace`](#uselastnamespace)
+86.  [`useActivePerspective`](#useactiveperspective)
+87.  [`useActiveNamespace`](#useactivenamespace)
+88. [DEPRECATED] [`PerspectiveContext`](#perspectivecontext)
+89. [DEPRECATED] [`useAccessReviewAllowed`](#useaccessreviewallowed)
+90. [DEPRECATED] [`useSafetyFirst`](#usesafetyfirst)
+91. [DEPRECATED] [`YAMLEditor`](#yamleditor)
 
 ---
 
@@ -2182,6 +2169,394 @@ Creates full page ErrorBoundaryFallbackPage component to display the "Oh no! Som
 | `stack` | stack trace of the exception |
 | `title` | title to render as the header of the error boundary page |
 
+
+
+---
+
+## `ActivityItem`
+
+### Summary 
+
+[For more details please refer the implementation](https://github.com/openshift/console/tree/release-4.12/frontend/packages/console-shared/src/components/dashboard/activity-card/ActivityItem.tsx)
+
+
+
+
+
+
+---
+
+## `ActivityBody`
+
+### Summary 
+
+[For more details please refer the implementation](https://github.com/openshift/console/tree/release-4.12/frontend/packages/console-shared/src/components/dashboard/activity-card/ActivityBody.tsx)
+
+
+
+
+
+
+---
+
+## `NamespaceContext`
+
+### Summary 
+
+[For more details please refer the implementation](https://github.com/openshift/console/tree/release-4.12/frontend/packages/console-app/src/components/detect-namespace/namespace.ts)
+
+
+
+
+
+
+---
+
+## `RecentEventsBody`
+
+### Summary 
+
+[For more details please refer the implementation](https://github.com/openshift/console/tree/release-4.12/frontend/packages/console-shared/src/components/dashboard/activity-card/ActivityBody.tsx)
+
+
+
+
+
+
+---
+
+## `OngoingActivityBody`
+
+### Summary 
+
+[For more details please refer the implementation](https://github.com/openshift/console/tree/release-4.12/frontend/packages/console-shared/src/components/dashboard/activity-card/ActivityBody.tsx)
+
+
+
+
+
+
+---
+
+## `AlertsBody`
+
+### Summary 
+
+[For more details please refer the implementation](https://github.com/openshift/console/tree/release-4.12/frontend/packages/console-shared/src/components/dashboard/status-card/AlertsBody.tsx)
+
+
+
+
+
+
+---
+
+## `AlertItem`
+
+### Summary 
+
+[For more details please refer the implementation](https://github.com/openshift/console/tree/release-4.12/frontend/packages/console-shared/src/components/dashboard/status-card/AlertItem.tsx)
+
+
+
+
+
+
+---
+
+## `HealthItem`
+
+### Summary 
+
+[For more details please refer the implementation](https://github.com/openshift/console/tree/release-4.12/frontend/packages/console-shared/src/components/dashboard/status-card/HealthItem.tsx)
+
+
+
+
+
+
+---
+
+## `HealthBody`
+
+### Summary 
+
+[For more details please refer the implementation](https://github.com/openshift/console/tree/release-4.12/frontend/packages/console-shared/src/components/dashboard/status-card/HealthBody.tsx)
+
+
+
+
+
+
+---
+
+## `ResourceInventoryItem`
+
+### Summary 
+
+[For more details please refer the implementation](https://github.com/openshift/console/tree/release-4.12/frontend/packages/console-shared/src/components/dashboard/inventory-card/InventoryItem.tsx)
+
+
+
+
+
+
+---
+
+## `DetailsBody`
+
+### Summary 
+
+[For more details please refer the implementation](https://github.com/openshift/console/tree/release-4.12/frontend/packages/console-shared/src/components/dashboard/details-card/DetailsBody.tsx)
+
+
+
+
+
+
+---
+
+## `UtilizationItem`
+
+### Summary 
+
+[For more details please refer the implementation](https://github.com/openshift/console/tree/release-4.12/frontend/packages/console-shared/src/components/dashboard/utilization-card/UtilizationItem.tsx)
+
+
+
+
+
+
+---
+
+## `UtilizationBody`
+
+### Summary 
+
+[For more details please refer the implementation](https://github.com/openshift/console/tree/release-4.12/frontend/packages/console-shared/src/components/dashboard/utilization-card/UtilizationBody.tsx)
+
+
+
+
+
+
+---
+
+## `UtilizationDurationDropdown`
+
+### Summary 
+
+[For more details please refer the implementation](https://github.com/openshift/console/tree/release-4.12/frontend/packages/console-shared/src/components/dashboard/utilization-card/UtilizationDurationDropdown.tsx)
+
+
+
+
+
+
+---
+
+## `VirtualizedGrid`
+
+### Summary 
+
+[For more details please refer the implementation](https://github.com/openshift/console/tree/release-4.12/frontend/packages/console-shared/src/components/virtualized-grid/VirtualizedGrid.tsx)
+
+
+
+
+
+
+---
+
+## `LazyActionMenu`
+
+### Summary 
+
+[For more details please refer the implementation](https://github.com/openshift/console/tree/release-4.12/frontend/packages/console-shared/src/components/actions/LazyActionMenu.tsx)
+
+
+
+
+
+
+---
+
+## `QuickStartsLoader`
+
+### Summary 
+
+[For more details please refer the implementation](https://github.com/openshift/console/tree/release-4.12/frontend/packages/console-app/src/components/quick-starts/loader/QuickStartsLoader.tsx)
+
+
+
+
+
+
+---
+
+## `useUtilizationDuration`
+
+### Summary 
+
+[For more details please refer the implementation](https://github.com/openshift/console/tree/release-4.12/frontend/packages/console-shared/src/hooks/useUtilizationDuration.ts)
+
+
+
+
+
+
+---
+
+## `useActiveNamespace`
+
+### Summary 
+
+[For more details please refer the implementation](https://github.com/openshift/console/tree/release-4.12/frontend/packages/console-shared/src/hooks/useActiveNamespace.ts)
+
+
+
+
+
+
+---
+
+## `ServicesList`
+
+### Summary 
+
+[For more details please refer the implementation](https://github.com/openshift/console/tree/release-4.12/frontend/public/components/service.jsx)
+
+
+
+
+
+
+---
+
+## `useDashboardResources`
+
+### Summary 
+
+[For more details please refer the implementation](https://github.com/openshift/console/tree/release-4.12/frontend/packages/console-shared/src/hooks/useDashboardResources.ts)
+
+
+
+
+
+
+---
+
+## `useUserSettings`
+
+### Summary 
+
+[For more details please refer the implementation](https://github.com/openshift/console/tree/release-4.12/frontend/packages/console-shared/src/hooks/useUserSettings.ts)
+
+
+
+
+
+
+---
+
+## `useURLPoll`
+
+### Summary 
+
+[For more details please refer the implementation](https://github.com/openshift/console/tree/release-4.12/frontend/public/components/utils/url-poll-hook.ts)
+
+
+
+
+
+
+---
+
+## `useLastNamespace`
+
+### Summary 
+
+[For more details please refer the implementation](https://github.com/openshift/console/tree/release-4.12/frontend/packages/console-app/src/components/detect-namespace/useLastNamespace.ts)
+
+
+
+
+
+
+---
+
+## `useActivePerspective`
+
+### Summary 
+
+Hook that provides the currently active perspective and a callback for setting the active perspective
+
+
+
+### Example
+
+
+```tsx
+const Component: React.FC = (props) => {
+   const [activePerspective, setActivePerspective] = useActivePerspective();
+   return <select
+     value={activePerspective}
+     onChange={(e) => setActivePerspective(e.target.value)}
+   >
+     {
+       // ...perspective options
+     }
+   </select>
+}
+```
+
+
+
+
+
+
+
+### Returns
+
+A tuple containing the current active perspective and setter callback.
+
+
+---
+
+## `useActiveNamespace`
+
+### Summary 
+
+Hook that provides the currently active namespace and a callback for setting the active namespace
+
+
+
+### Example
+
+
+```tsx
+const Component: React.FC = (props) => {
+   const [activeNamespace, setActiveNamespace] = useActiveNamespace();
+   return <select
+     value={activeNamespace}
+     onChange={(e) => setActiveNamespace(e.target.value)}
+   >
+     {
+       // ...namespace options
+     }
+   </select>
+}
+```
+
+
+
+
+
+
+
+### Returns
+
+A tuple containing the current active namespace and setter callback.
 
 
 ---

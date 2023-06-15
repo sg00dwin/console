@@ -13,7 +13,8 @@ import {
   UtilizationBodyProps,
   UtilizationDurationDropdownProps,
   UseUtilizationDuration,
-  UseActiveNamespace,
+  NamespaceContextType,
+  UseActiveNamespace, // remove once the replacement is working
   VirtualizedGridProps,
   LazyActionMenuProps,
   UseDashboardResources,
@@ -27,6 +28,8 @@ export const ActivityItem: React.FC<ActivityItemProps> = require('@console/share
   .default;
 export const ActivityBody: React.FC<ActivityBodyProps> = require('@console/shared/src/components/dashboard/activity-card/ActivityBody')
   .default;
+export const NamespaceContext: React.Context<NamespaceContextType> = require('@console/app/src/components/detect-namespace/namespace')
+  .NamespaceContext;
 export const RecentEventsBody: React.FC<RecentEventsBodyProps> = require('@console/shared/src/components/dashboard/activity-card/ActivityBody')
   .RecentEventsBody;
 export const OngoingActivityBody: React.FC<OngoingActivityBodyProps> = require('@console/shared/src/components/dashboard/activity-card/ActivityBody')
@@ -69,4 +72,3 @@ export const useURLPoll: UseURLPoll = require('@console/internal/components/util
   .useURLPoll;
 export const useLastNamespace: UseLastNamespace = require('@console/app/src/components/detect-namespace/useLastNamespace')
   .useLastNamespace;
-

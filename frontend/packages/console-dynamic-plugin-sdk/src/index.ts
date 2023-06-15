@@ -12,6 +12,7 @@ export * from './api/common-types';
 export * from './extensions';
 
 export * from './perspective';
+export * from './namespace';
 
 // App init context
 export * from './app';
