@@ -5,19 +5,13 @@ import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { setActiveNamespace as setActiveNamespaceForStore } from '@console/internal/actions/ui';
 import { getNamespace } from '@console/internal/components/utils/link';
-import { flagPending } from '@console/internal/reducers/features';
-import { FLAGS } from '@console/shared';
+import { FLAGS } from '@console/shared/src/constants/common';
 import { useFlag } from '@console/shared/src/hooks/flag';
-import { usePreferredNamespace } from '../user-preferences/namespace';
+import { usePreferredNamespace } from '../user-preferences/namespace/usePreferredNamespace';
 import { getValueForNamespace } from './getValueForNamespace';
 import { useLastNamespace } from './useLastNamespace';
 
-type NamespaceContextType = {
-  namespace?: string;
-  setNamespace?: (ns: string) => void;
-};
-
-export const NamespaceContext = React.createContext<NamespaceContextType>({});
+export const NamespaceContext = React.createContext({});
 
 const useUrlNamespace = () => getNamespace(useLocation().pathname);
 
@@ -32,7 +26,7 @@ export const useValuesForNamespaceContext = () => {
   // Set namespace when all pending namespace infos are loaded.
   // Automatically check if preferred and last namespace still exist.
   const resourcesLoaded: boolean =
-    !flagPending(useProjects) && preferredNamespaceLoaded && lastNamespaceLoaded;
+    useProjects !== undefined && preferredNamespaceLoaded && lastNamespaceLoaded;
   React.useEffect(() => {
     if (!urlNamespace && resourcesLoaded) {
       getValueForNamespace(preferredNamespace, lastNamespace, useProjects)

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { NavItem } from '@patternfly/react-core';
-import { ResourceNSNavItem } from '@console/dynamic-plugin-sdk';
-import { useActiveNamespace } from '@console/dynamic-plugin-sdk/src/lib-internal';
+import { ResourceNSNavItem, useActiveNamespace } from '@console/dynamic-plugin-sdk';
 import { referenceForExtensionModel } from '@console/internal/module/k8s';
 import {
   formatNamespacedRouteForResource,

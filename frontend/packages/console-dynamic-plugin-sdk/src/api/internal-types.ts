@@ -180,8 +180,6 @@ export type Options = {
   cluster?: string;
 };
 
-export type UseActiveNamespace = () => [string, (ns: string) => void];
-
 export type UseLastNamespace = () => [
   string,
   React.Dispatch<React.SetStateAction<string>>,
@@ -294,3 +292,8 @@ export type UseURLPoll = <R>(
   delay?: number,
   ...dependencies: any[]
 ) => [R, any, boolean];
+
+export type NamespaceContextType = {
+  namespace?: string;
+  setNamespace?: (namespace: string) => void;
+};

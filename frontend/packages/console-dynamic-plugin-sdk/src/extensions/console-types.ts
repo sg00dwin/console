@@ -695,3 +695,5 @@ export type QueryBrowserProps = {
   timespan?: number;
   units?: string;
 };
+
+export type UseActiveNamespace = () => [string, (namespace: string) => void];

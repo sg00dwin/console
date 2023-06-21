@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { NavItem } from '@patternfly/react-core';
-import { HrefNavItem } from '@console/dynamic-plugin-sdk';
-import { useActiveNamespace } from '@console/dynamic-plugin-sdk/src/lib-internal';
+import { HrefNavItem, useActiveNamespace } from '@console/dynamic-plugin-sdk';
 import { formatNamespacedRouteForHref, formatNamespacedRouteForResource } from '@console/shared';
 import { useLocation } from '@console/shared/src/hooks/useLocation';
 import { NavLinkProps, NavLink } from './NavLink';
