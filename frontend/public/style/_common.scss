@@ -1,5 +1,31 @@
 $co-external-link-padding-right: 15px;
 
+.gold {
+  border: 1px solid gold;
+}
+.red {
+  border: 1px solid red;
+}
+.skyblue {
+  border: 1px solid skyblue;
+}
+.green {
+  border: 1px solid green;
+}
+
+.orange {
+  border: 2px dashed orange;
+}
+.purple {
+  border: 2px dashed purple;
+}
+.lime {
+  border: 2px dashed lime;
+}
+.violet {
+  border: 2px dashed violet;
+}
+
 .co-breadcrumb {
   padding-bottom: var(--pf-global--spacer--sm);
 }
