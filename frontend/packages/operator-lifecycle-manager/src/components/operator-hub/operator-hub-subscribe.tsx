@@ -8,7 +8,6 @@ import { Link } from 'react-router-dom';
 import { RadioGroup, RadioInput } from '@console/internal/components/radio';
 import {
   documentationURLs,
-  Dropdown,
   ExternalLink,
   FieldLevelHelp,
   Firehose,
@@ -20,7 +19,6 @@ import {
   NsDropdown,
   PageHeading,
   ResourceIcon,
-  ResourceName,
   resourcePathFromModel,
   StatusBox,
 } from '@console/internal/components/utils';
@@ -175,23 +173,18 @@ export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> =
     (props.operatorGroup?.data || ([] as OperatorGroupKind[])).find(
       (og) => og.metadata.name === 'global-operators',
     )?.metadata?.namespace || 'openshift-operators';
-  const items = {
-    [globalNS]: <ResourceName kind="Project" name={globalNS} />,
-  };
+  // const items = {
+  //   [globalNS]: <ResourceName kind="Project" name={globalNS} />,
+  // };
 
   let selectedTargetNamespace = targetNamespace || props.targetNamespace;
   const operatorSuggestedNamespace = suggestedNamespaceTemplateName || suggestedNamespace;
+
   if (selectedInstallMode === InstallModeType.InstallModeTypeAllNamespaces) {
     if (operatorSuggestedNamespace) {
-      items[operatorSuggestedNamespace] = (
-        <ResourceName
-          kind="Project"
-          name={`${operatorSuggestedNamespace} (Operator recommended)`}
-        />
-      );
       selectedTargetNamespace = targetNamespace || operatorSuggestedNamespace;
     } else {
-      selectedTargetNamespace = globalNS;
+      selectedTargetNamespace = targetNamespace || globalNS;
     }
   }
   if (
@@ -256,7 +249,7 @@ export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> =
     if (version !== currentLatestVersion || manualSubscriptionsInNamespace?.length > 0) {
       setApproval(InstallPlanApproval.Manual);
     } else setApproval(InstallPlanApproval.Automatic);
-  }, [version, currentLatestVersion, manualSubscriptionsInNamespace]);
+  }, [version, currentLatestVersion, manualSubscriptionsInNamespace?.length]);
 
   const singleInstallMode = installModes.find(
     (m) => m.type === InstallModeType.InstallModeTypeOwnNamespace,
@@ -622,7 +615,13 @@ export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> =
 
   const globalNamespaceInstallMode = (
     <>
-      <div className="form-group">
+      {/* <div className="form-group gold">
+        <NsDropdown
+          id="dropdown-selectbox"
+          selectedKey={selectedTargetNamespace}
+          onChange={(ns) => setTargetNamespace(ns)}
+          dataTest="dropdown-selectbox"
+        />
         <Dropdown
           id="dropdown-selectbox"
           dataTest="dropdown-selectbox"
@@ -646,75 +645,143 @@ export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> =
             setCannotResolve(false);
           }}
         />
-      </div>
-      {suggestedNamespaceDetails}
-      {operatorSuggestedNamespace && operatorSuggestedNamespace !== selectedTargetNamespace && (
-        <Alert
-          isInline
-          className="co-alert pf-c-alert--top-margin"
-          variant="warning"
-          title={t(
-            'olm~Not installing the Operator into the recommended namespace can cause unexpected behavior.',
-          )}
-        />
-      )}
-    </>
-  );
+      </div> */}
 
-  const singleNamespaceInstallMode = !suggestedNamespace ? (
-    <NsDropdown
-      id="dropdown-selectbox"
-      selectedKey={selectedTargetNamespace}
-      onChange={(ns) => setTargetNamespace(ns)}
-      dataTest="dropdown-selectbox"
-    />
-  ) : (
-    <div className="form-group">
-      <RadioInput
-        onChange={() => {
-          setUseSuggestedNSForSingleInstallMode(true);
-          setTargetNamespace(operatorSuggestedNamespace);
-        }}
-        value={operatorSuggestedNamespace}
-        checked={useSuggestedNSForSingleInstallMode}
-        title={t('olm~Operator recommended Namespace:')}
-      >
-        {' '}
-        <ResourceIcon kind="Project" />
-        <b>{operatorSuggestedNamespace}</b>
-      </RadioInput>
-      {useSuggestedNSForSingleInstallMode && suggestedNamespaceDetails}
-      <RadioInput
-        onChange={() => {
-          setUseSuggestedNSForSingleInstallMode(false);
-          setTargetNamespace(null);
-        }}
-        value={operatorSuggestedNamespace}
-        checked={!useSuggestedNSForSingleInstallMode}
-        title={t('olm~Select a Namespace')}
-      />
-      {!useSuggestedNSForSingleInstallMode && (
-        <>
+      {operatorSuggestedNamespace ? (
+        <div className="form-group red">
+          <RadioInput
+            onChange={() => {
+              setUseSuggestedNSForSingleInstallMode(true);
+              setTargetNamespace(operatorSuggestedNamespace);
+            }}
+            value={operatorSuggestedNamespace}
+            checked={useSuggestedNSForSingleInstallMode}
+            title={t('olm~Operator recommended Namespace:')}
+          >
+            {' '}
+            <ResourceIcon kind="Project" />
+            <b>{operatorSuggestedNamespace}</b>
+          </RadioInput>
+          <RadioInput
+            onChange={() => {
+              setUseSuggestedNSForSingleInstallMode(false);
+              setTargetNamespace(null);
+            }}
+            value={operatorSuggestedNamespace}
+            checked={!useSuggestedNSForSingleInstallMode}
+            title={t('olm~Select a Namespace')}
+          />
+          {!useSuggestedNSForSingleInstallMode && (
+            <>
+              <div className="green">
+                <NsDropdown
+                  id="dropdown-selectbox"
+                  selectedKey={selectedTargetNamespace}
+                  onChange={(ns) => setTargetNamespace(ns)}
+                  dataTest="dropdown-selectbox"
+                />
+              </div>
+
+              <Alert
+                isInline
+                className="co-alert pf-c-alert--top-margin"
+                variant="warning"
+                title={t(
+                  'olm~Not installing the Operator into the recommended namespace can cause unexpected behavior. YEEET!!!!',
+                )}
+              />
+              {/* {suggestedNamespace !== selectedTargetNamespace && (
+              )} */}
+            </>
+          )}
+        </div>
+      ) : (
+        <div className="form-group purple">
           <NsDropdown
             id="dropdown-selectbox"
             selectedKey={selectedTargetNamespace}
             onChange={(ns) => setTargetNamespace(ns)}
             dataTest="dropdown-selectbox"
           />
-
-          {suggestedNamespace !== selectedTargetNamespace && (
-            <Alert
-              isInline
-              className="co-alert pf-c-alert--top-margin"
-              variant="warning"
-              title={t(
-                'olm~Not installing the Operator into the recommended namespace can cause unexpected behavior.',
-              )}
-            />
-          )}
-        </>
+        </div>
       )}
+
+      {/* // Show only when recommended namespace radio is selected */}
+      {useSuggestedNSForSingleInstallMode && suggestedNamespaceDetails}
+
+      {/* {operatorSuggestedNamespace && operatorSuggestedNamespace !== selectedTargetNamespace && (
+        <Alert
+          isInline
+          className="co-alert pf-c-alert--top-margin"
+          variant="warning"
+          title={t(
+            'olm~Not installing the Operator into the recommended namespace can cause unexpected behavior. PUPPIES!!!!',
+          )}
+        />
+      )} */}
+    </>
+  );
+
+  const singleNamespaceInstallMode = !suggestedNamespace ? (
+    <div className="blue">
+      <NsDropdown
+        id="dropdown-selectbox"
+        selectedKey={selectedTargetNamespace}
+        onChange={(ns) => setTargetNamespace(ns)}
+        dataTest="dropdown-selectbox"
+      />
     </div>
+  ) : (
+    <>
+      <div className="form-group wheat">
+        <RadioInput
+          onChange={() => {
+            setUseSuggestedNSForSingleInstallMode(true);
+            setTargetNamespace(operatorSuggestedNamespace);
+          }}
+          value={operatorSuggestedNamespace}
+          checked={useSuggestedNSForSingleInstallMode}
+          title={t('olm~Operator recommended Namespace:')}
+        >
+          {' '}
+          <ResourceIcon kind="Project" />
+          <b>{operatorSuggestedNamespace}</b>
+        </RadioInput>
+        <RadioInput
+          onChange={() => {
+            setUseSuggestedNSForSingleInstallMode(false);
+            setTargetNamespace(null);
+          }}
+          value={operatorSuggestedNamespace}
+          checked={!useSuggestedNSForSingleInstallMode}
+          title={t('olm~Select a Namespace')}
+        />
+        {!useSuggestedNSForSingleInstallMode && (
+          <>
+            <div className="green">
+              <NsDropdown
+                id="dropdown-selectbox"
+                selectedKey={selectedTargetNamespace}
+                onChange={(ns) => setTargetNamespace(ns)}
+                dataTest="dropdown-selectbox"
+              />
+            </div>
+
+            {suggestedNamespace !== selectedTargetNamespace && (
+              <Alert
+                isInline
+                className="co-alert pf-c-alert--top-margin"
+                variant="warning"
+                title={t(
+                  'olm~Not installing the Operator into the recommended namespace can cause unexpected behavior. CATSSSS!',
+                )}
+              />
+            )}
+          </>
+        )}
+      </div>
+      {useSuggestedNSForSingleInstallMode && suggestedNamespaceDetails}
+    </>
   );
 
   const providedAPIs = providedAPIsForChannel(props.packageManifest.data[0])(updateChannelName);
@@ -809,10 +876,15 @@ export const OperatorHubSubscribeForm: React.FC<OperatorHubSubscribeFormProps> =
                 <label className="co-required" htmlFor="dropdown-selectbox">
                   {t('olm~Installed Namespace')}
                 </label>
-                {selectedInstallMode === InstallModeType.InstallModeTypeAllNamespaces &&
-                  globalNamespaceInstallMode}
-                {selectedInstallMode === InstallModeType.InstallModeTypeOwnNamespace &&
-                  singleNamespaceInstallMode}
+                <div className="lime">
+                  {selectedInstallMode === InstallModeType.InstallModeTypeAllNamespaces &&
+                    globalNamespaceInstallMode}
+                </div>
+
+                <div className="violet">
+                  {selectedInstallMode === InstallModeType.InstallModeTypeOwnNamespace &&
+                    singleNamespaceInstallMode}
+                </div>
               </div>
               <div className="form-group">
                 <fieldset>
