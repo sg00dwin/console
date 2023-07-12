@@ -585,9 +585,9 @@ export { useFlag } from '../utils/flags';
  * @param {YAMLEditorProps['onSave']} onSave - Callback called when the command CTRL / CMD + S is triggered.
  * @param {YAMLEditorRef} ref - React reference to `{ editor?: IStandaloneCodeEditor }`. Using the 'editor' property, you are able to access to all methods to control the editor. For more information, visit https://microsoft.github.io/monaco-editor/api/interfaces/monaco.editor.IStandaloneCodeEditor.html.
  */
-export const YAMLEditor: React.ForwardRefExoticComponent<CodeEditorProps &
-  React.RefAttributes<CodeEditorRef>> = require('@console/internal/components/AsyncCodeEditor')
-  .AsyncCodeEditor;
+export const YAMLEditor: React.ForwardRefExoticComponent<
+  CodeEditorProps & React.RefAttributes<CodeEditorRef>
+> = require('@console/internal/components/AsyncCodeEditor').AsyncCodeEditor;
 
 /**
  * A basic lazy loaded Code editor with hover help and completion.
@@ -610,9 +610,9 @@ export const YAMLEditor: React.ForwardRefExoticComponent<CodeEditorProps &
  * @param {CodeEditorProps['onSave']} onSave - Callback called when the command CTRL / CMD + S is triggered.
  * @param {CodeEditorRef} ref - React reference to `{ editor?: IStandaloneCodeEditor }`. Using the 'editor' property, you are able to access to all methods to control the editor. For more information, visit https://microsoft.github.io/monaco-editor/api/interfaces/monaco.editor.IStandaloneCodeEditor.html.
  */
-export const CodeEditor: React.ForwardRefExoticComponent<CodeEditorProps &
-  React.RefAttributes<CodeEditorRef>> = require('@console/internal/components/AsyncCodeEditor')
-  .AsyncCodeEditor;
+export const CodeEditor: React.ForwardRefExoticComponent<
+  CodeEditorProps & React.RefAttributes<CodeEditorRef>
+> = require('@console/internal/components/AsyncCodeEditor').AsyncCodeEditor;
 
 /**
  * A lazy loaded YAML editor for Kubernetes resources with hover help and completion.
@@ -776,8 +776,6 @@ export const ErrorBoundaryFallbackPage: React.FC<ErrorBoundaryFallbackProps> = r
  * @param {boolean} showStackedControl - Flag to enable displaying a graph control for switching between stacked graph mode and line graph mode.
  * @param {number} timespan - (optional) The timespan that should be covered by the graph in milliseconds.
  * @param {string} units - (optional) Units to display on the Y-axis and in the tooltip.
-
-
  * @example
  * ```tsx
  * <QueryBrowser
