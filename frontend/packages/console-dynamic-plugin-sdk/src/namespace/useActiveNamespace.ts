@@ -1,0 +1,10 @@
+import { useContext } from 'react';
+import { NamespaceContext } from '../api/internal-api';
+import { UseActiveNamespace } from '../extensions/console-types';
+
+export const useActiveNamespace: UseActiveNamespace = () => {
+  const { namespace, setNamespace } = useContext(NamespaceContext);
+  return [namespace, setNamespace];
+};
+
+export default useActiveNamespace;

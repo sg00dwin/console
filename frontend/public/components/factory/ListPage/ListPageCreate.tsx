@@ -99,6 +99,7 @@ const ListPageCreate: React.FC<ListPageCreateProps> = ({
 }) => {
   const [k8sModel] = useK8sModel(groupVersionKind);
   const [namespace] = useActiveNamespace();
+  console.log('namespace ===>', namespace);
   let to: string;
   if (k8sModel) {
     const usedNamespace = k8sModel.namespaced

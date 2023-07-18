@@ -13,6 +13,7 @@ import {
   UtilizationBodyProps,
   UtilizationDurationDropdownProps,
   UseUtilizationDuration,
+  NamespaceContextType,
   UseActiveNamespace,
   VirtualizedGridProps,
   LazyActionMenuProps,
@@ -75,3 +76,5 @@ export const ModalWrapper: React.FC<ModalWrapperProps> = require('@console/inter
   .ModalWrapper;
 export const AnnotationsModal: React.FC<AnnotationsModalProps> = require('@console/internal/components/modals/tags')
   .AnnotationsModal;
+export const NamespaceContext: React.Context<NamespaceContextType> = require('@console/app/src/components/detect-namespace/namespace')
+  .NamespaceContext;

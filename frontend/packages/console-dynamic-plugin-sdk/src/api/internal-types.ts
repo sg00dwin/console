@@ -312,3 +312,8 @@ export type TagsModalProps = {
 };
 
 export type AnnotationsModalProps = Omit<TagsModalProps, 'path' | 'tags' | 'titleKey'>;
+
+export type NamespaceContextType = {
+  namespace?: string;
+  setNamespace?: (namespace: string) => void;
+};
