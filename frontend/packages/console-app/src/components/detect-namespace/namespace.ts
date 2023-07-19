@@ -3,6 +3,10 @@ import * as React from 'react';
 // @ts-ignore: FIXME missing exports due to out-of-sync @types/react-redux version
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
+import {
+  UseValuesForNamespaceContext,
+  NamespaceContextType,
+} from '@console/dynamic-plugin-sdk/src/extensions/console-types';
 import { setActiveNamespace as setActiveNamespaceForStore } from '@console/internal/actions/ui';
 import { getNamespace } from '@console/internal/components/utils/link';
 import { flagPending } from '@console/internal/reducers/features';
@@ -12,16 +16,11 @@ import { usePreferredNamespace } from '../user-preferences/namespace';
 import { getValueForNamespace } from './getValueForNamespace';
 import { useLastNamespace } from './useLastNamespace';
 
-type NamespaceContextType = {
-  namespace?: string;
-  setNamespace?: (ns: string) => void;
-};
-
 export const NamespaceContext = React.createContext<NamespaceContextType>({});
 
 const useUrlNamespace = () => getNamespace(useLocation().pathname);
 
-export const useValuesForNamespaceContext = () => {
+export const useValuesForNamespaceContext: UseValuesForNamespaceContext = () => {
   const urlNamespace = useUrlNamespace();
   const [activeNamespace, setActiveNamespace] = React.useState<string>(urlNamespace);
   const [preferredNamespace, , preferredNamespaceLoaded] = usePreferredNamespace();

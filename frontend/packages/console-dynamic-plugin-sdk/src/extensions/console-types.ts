@@ -703,3 +703,16 @@ export type StorageClass = K8sResourceCommon & {
   volumeBindingMode?: string;
   allowVolumeExpansion?: boolean;
 };
+
+export type UseValuesForNamespaceContext = () => {
+  namespace: string;
+  setNamespace: (ns: string) => void;
+  loaded: boolean;
+};
+
+export type NamespaceContextType = {
+  namespace?: string;
+  setNamespace?: (ns: string) => void;
+};
+
+export type UseActiveNamespace = () => [string, (ns: string) => void];
