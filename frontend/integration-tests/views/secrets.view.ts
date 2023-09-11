@@ -88,7 +88,7 @@ export const checkSecret = async (
   jsonOutput: boolean = false,
 ) => {
   await browser.wait(until.urlContains(`/k8s/ns/${ns}/secrets/${name}`));
-  await browser.wait(until.textToBePresentInElement($('.co-m-pane__heading'), name));
+  await browser.wait(until.textToBePresentInElement(await $('.co-m-pane__heading'), name));
   await clickRevealValues();
   const renderedKeyValues = await dt.reduce(async (acc, el, index) => {
     const key = await el.getAttribute('textContent');
@@ -123,7 +123,7 @@ export const addSecretToWorkloadAsVol = async (workloadname: string, MntPath: st
   await clickAddSecretToWorkload();
   await browser.wait(until.presenceOf(selectWorkloadBtn));
   await selectWorkloadBtn.click();
-  await browser.wait(until.presenceOf($('li[role=option]')), 5000);
+  await browser.wait(until.presenceOf(await $('li[role=option]')), 5000);
   await element(by.cssContainingText('li[role=option] a', workloadname)).click();
   await addSecretAsVol.click();
   await addSecretAsVolMntPathInput.sendKeys(MntPath);

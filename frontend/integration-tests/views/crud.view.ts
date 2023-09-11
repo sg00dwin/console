@@ -3,7 +3,7 @@ import { safeDump, safeLoad } from 'js-yaml';
 import { $, $$, browser, by, ExpectedConditions as until, element } from 'protractor';
 
 import * as yamlView from './yaml.view';
-import { appHost, testName, waitForNone } from '../protractor.conf';
+import { BROWSER_TIMEOUT, appHost, testName, waitForNone } from '../protractor.conf';
 import { waitForCount } from '@console/shared/src/test-utils/utils';
 
 export const createYAMLButton = $('#yaml-create');
@@ -18,12 +18,22 @@ export const cancelBtn = $('#cancel');
 /**
  * Returns a promise that resolves after the loading spinner is not present.
  */
-export const untilLoadingBoxLoaded = until.presenceOf($('.loading-box__loaded'));
 export const untilNoLoadersPresent = waitForNone($$('.co-m-loader'));
-export const isLoaded = () =>
-  browser
-    .wait(until.and(untilNoLoadersPresent, untilLoadingBoxLoaded))
-    .then(() => browser.sleep(1000));
+export const isLoaded = async (...additionalElements) => {
+  await untilNoLoadersPresent();
+  await browser
+    .wait(
+      additionalElements?.length > 0
+        ? until.and(
+            until.presenceOf($('#content')),
+            ...additionalElements.map((additionalElement) => until.presenceOf(additionalElement)),
+          )
+        : until.presenceOf($('#content')),
+      BROWSER_TIMEOUT,
+    )
+    .then(() => browser.sleep(2000));
+};
+
 export const resourceRowsPresent = () =>
   browser.wait(until.presenceOf($('.co-m-resource-icon + a')), 20000);
 export const errorPage = $('[data-test-id="error-page"]');
@@ -143,7 +153,7 @@ export const actionsDropdownMenu = actionsMenu.$('[data-test-id="action-items"]'
 
 export const resourceTitle = $('[data-test-id="resource-title"]');
 
-export const nameFilter = $('.pf-c-form-control.co-text-filter');
+export const nameFilter = $('[data-test-id="item-filter"]');
 export const messageLbl = $('.cos-status-box');
 
 export const isDetailsPageLoaded = () =>
@@ -195,10 +205,10 @@ export const checkResourceExists = async (resource: string, name: string) => {
   expect(resourceTitle.getText()).toEqual(name);
 };
 
-export const emptyState = $('.cos-status-box').$('.pf-u-text-align-center');
+export const emptyState = $('.cos-status-box').$('.pf-v5-u-text-align-center');
 
-export const errorMessage = $('.pf-c-alert.pf-m-inline.pf-m-danger');
-export const successMessage = $('.pf-c-alert.pf-m-inline.pf-m-success');
+export const errorMessage = $('.pf-v5-c-alert.pf-m-inline.pf-m-danger');
+export const successMessage = $('.pf-v5-c-alert.pf-m-inline.pf-m-success');
 
 export const clickListPageCreateYAMLButton = async () => {
   const createDropdownIsPresent = await createItemButton.isPresent();

@@ -136,7 +136,6 @@ export class SelectorInput extends React.Component {
           className={classNames('co-label tag-item-content', this.props.labelClassName)}
           key={key}
           onClose={() => onRemove(key)}
-          isTruncated
         >
           {getTagDisplayValue(tag)}
         </PfLabel>
@@ -144,7 +143,7 @@ export class SelectorInput extends React.Component {
     };
 
     return (
-      <div className="pf-c-form-control">
+      <div className="pf-v5-c-form-control">
         <tags-input>
           <TagsInput
             ref={this.setRef}

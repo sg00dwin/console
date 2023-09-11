@@ -1,6 +1,6 @@
 import { $$, by, browser, element, ExpectedConditions as until } from 'protractor';
 
-const navItemPath = '.pf-c-nav .pf-c-nav__item';
+const navItemPath = '.pf-v5-c-nav .pf-v5-c-nav__item';
 
 export const navSectionFor = (name: string) => element(by.cssContainingText(navItemPath, name));
 
@@ -21,7 +21,7 @@ export enum Perspective {
   Administrator = ' Administrator Perspective',
 }
 
-export const activeLink = $$('.pf-c-nav__link.pf-m-current');
+export const activeLink = $$('.pf-v5-c-nav__link.pf-m-current');
 
 export const clickNavLink = async (path: [string, string]) => {
   const navSection = await navSectionFor(path[0]);

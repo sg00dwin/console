@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FileUpload, Text, TextVariants } from '@patternfly/react-core';
+import { DropEvent, FileUpload, Text, TextVariants } from '@patternfly/react-core';
 import { isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -31,12 +31,15 @@ const SysprepFileField: React.FC<SysprepFileFieldProps> = ({ id }) => {
   });
 
   const onChange = React.useCallback(
-    (value: string, fileName: string) => {
+    async (_event: DropEvent, file: File) => {
+      const { name } = file;
+      const value = await file.text();
+
       setData((currentSysprepFile) => ({
         ...currentSysprepFile,
         validated: ValidatedOptions.default,
         value,
-        fileName,
+        name,
       }));
 
       xml.parseString(value, (parseError) => {
@@ -61,7 +64,7 @@ const SysprepFileField: React.FC<SysprepFileFieldProps> = ({ id }) => {
         type="text"
         value={data.value}
         filename={data.fileName}
-        onChange={onChange}
+        onFileInputChange={onChange}
         onReadStarted={() =>
           setData((currentData: SysprepFile) => ({ ...currentData, isLoading: true }))
         }

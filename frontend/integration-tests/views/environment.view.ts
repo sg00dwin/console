@@ -2,7 +2,8 @@ import { $, $$, browser, ExpectedConditions as until, by, element } from 'protra
 
 const BROWSER_TIMEOUT = 15000;
 
-const inputs = $$('.pf-c-form-control');
+export const nameInputs = $$('[data-test="pairs-list-name"');
+export const valueInputs = $$('[data-test="pairs-list-value"');
 export const rowsKey = $('[placeholder="Name"]');
 export const rowsValue = $('[placeholder="Value"]');
 export const deleteBtn = $$('[data-test="delete-button"]').first();
@@ -15,14 +16,17 @@ const option = $$('[role="option"]');
 const dropDownBtn = $$('.value-from');
 const textFilter = $('[placeholder="ConfigMap or Secret"]');
 
-export const isLoaded = () => browser.wait(until.presenceOf(inputs.first()), BROWSER_TIMEOUT);
+export const isLoaded = () => browser.wait(until.presenceOf(nameInputs.first()), BROWSER_TIMEOUT);
 
 export const addVariable = async (key: string, value: string) => {
   await isLoaded();
-  await inputs.get(0).clear();
-  await inputs.get(0).sendKeys(key);
-  await inputs.get(1).clear();
-  await inputs.get(1).sendKeys(value);
+
+  await nameInputs.get(0).clear();
+  await nameInputs.get(0).sendKeys(key);
+
+  await valueInputs.get(0).clear();
+  await valueInputs.get(0).sendKeys(value);
+
   await browser.wait(until.elementToBeClickable(saveBtn), BROWSER_TIMEOUT);
   await saveBtn.click();
 };

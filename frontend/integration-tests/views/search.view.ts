@@ -2,8 +2,8 @@ import { $, $$, browser, ExpectedConditions as until } from 'protractor';
 
 const BROWSER_TIMEOUT = 15000;
 
-export const dropdown = $('.co-type-selector .pf-c-dropdown__toggle');
-export const dropdownLinks = $$('.pf-c-dropdown__menu a');
+export const dropdown = $('.co-type-selector .pf-v5-c-dropdown__toggle');
+export const dropdownLinks = $$('.pf-v5-c-dropdown__menu a');
 export const labelFilter = $('.co-search-input input');
 export const linkForType = (type) => $(`#${type}-link`);
 

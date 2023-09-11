@@ -5,7 +5,7 @@ export const nameInput = $('#inputUsername');
 export const passwordInput = $('#inputPassword');
 export const submitButton = $('button[type=submit]');
 export const logOutButton = element(by.buttonText('Log out'));
-export const userDropdown = $('[data-test=user-dropdown] .pf-c-app-launcher__toggle');
+export const userDropdown = $('[data-test=user-dropdown] .pf-v5-c-app-launcher__toggle');
 export const pf3Login = until.presenceOf($('.login-pf'));
 export const pf4Login = until.presenceOf($('[data-test-id="login"]'));
 
