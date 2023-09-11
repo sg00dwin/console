@@ -100,7 +100,7 @@ const GitImportForm: React.FC<FormikProps<FormikValues> & GitImportFormProps> = 
         </FlexItem>
         <FlexItem
           flex={{ default: 'flex_1' }}
-          className="pf-u-display-none pf-u-display-flex-on-lg"
+          className="pf-v5-u-display-none pf-v5-u-display-flex-on-lg"
         >
           {showExtensionCards && <ExtensionCards />}
         </FlexItem>
