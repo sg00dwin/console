@@ -3,13 +3,13 @@
 $serverless-extension-item-icon-size: 40px;
 
 .odc-serverless-extensions-card {
-  margin-top: var(--pf-global--spacer--lg);
-  padding: 0 var(--pf-global--spacer--md) var(--pf-global--spacer--md) 0;
+  margin-top: var(--pf-v5-global--spacer--lg);
+  padding: 0 var(--pf-v5-global--spacer--md) var(--pf-v5-global--spacer--md) 0;
 }
 
 .odc-serverless-extension-provider {
-  font-weight: var(--pf-global--FontWeight--normal);
-  font-family: var(--pf-global--FontFamily--sans-serif);
+  font-weight: var(--pf-v5-global--FontWeight--normal);
+  font-family: var(--pf-v5-global--FontFamily--sans-serif);
 }
 
 .odc-serverless-extensions-card-title {
@@ -21,28 +21,28 @@ $serverless-extension-item-icon-size: 40px;
     display: flex;
     flex: 0 0 auto;
     justify-content: center;
-    margin: 0 var(--pf-global--spacer--md) var(--pf-global--spacer--form-element) 0;
+    margin: 0 var(--pf-v5-global--spacer--md) var(--pf-v5-global--spacer--form-element) 0;
   }
   &__name {
     display: flex;
     flex-direction: column;
     justify-content: center;
     &__link {
-      font-size: var(--pf-global--FontSize--md);
-      margin-bottom: var(--pf-global--spacer--sm);
+      font-size: var(--pf-v5-global--FontSize--md);
+      margin-bottom: var(--pf-v5-global--spacer--sm);
     }
   }
 }
 
 .odc-serverless-extensions-logo {
   @include catalog-logo-background();
-  margin-right: var(--pf-global--spacer--md);
+  margin-right: var(--pf-v5-global--spacer--md);
   &__bg {
     align-items: center;
     display: flex;
     min-height: 40px;
     min-width: 40px; // prevent Firefox from collapsing the img since it assigns base64 encoded svg without height and width values to 0 https://bugzilla.mozilla.org/show_bug.cgi?id=1328124 and https://jsbin.com/kuzovihumo/edit?js,console
-  }  
+  }
   &__img {
     max-height: $serverless-extension-item-icon-size;
     max-width: $serverless-extension-item-icon-size;
