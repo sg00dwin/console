@@ -870,6 +870,23 @@
     "type": "console.navigation/resource-ns",
     "properties": {
       "perspective": "admin",
+      "section": "workloads",
+      "id": "verticalpodautoscalers",
+      "insertAfter": "verticalpodautoscalers",
+      "name": "%console-app~VerticalPodAutoscalers%",
+      "model": {
+        // "group": "autoscaling.k8s.io",
+        "group": "autoscaling.k8s.io",
+        // "version": "v1",
+        "version": "v2",
+        "kind": "VerticalPodAutoscaler"
+      }
+    }
+  },
+  {
+    "type": "console.navigation/resource-ns",
+    "properties": {
+      "perspective": "admin",
       "section": "networking",
       "id": "services",
       "name": "%console-app~Services%",

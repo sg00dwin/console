@@ -75,7 +75,7 @@ export const ResourceSummary: React.FC<ResourceSummaryProps> = ({
   const canUpdate = canUpdateAccess && canUpdateResource;
 
   return (
-    <dl data-test-id="resource-summary" className="co-m-pane__details">
+    <dl data-test-id="resource-summary" className="co-m-pane__details gold">
       <DetailsItem
         label={t('public~Name')}
         obj={resource}

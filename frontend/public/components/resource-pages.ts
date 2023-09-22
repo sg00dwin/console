@@ -57,6 +57,7 @@ import {
   StorageClassModel,
   TemplateInstanceModel,
   UserModel,
+  VerticalPodAutoscalerModel,
   VolumeSnapshotModel,
   VolumeSnapshotClassModel,
   ClusterRoleBindingModel,
@@ -259,6 +260,11 @@ export const baseDetailsPages = ImmutableMap<ResourceMapKey, ResourceMapValue>()
   .set(referenceForModel(HorizontalPodAutoscalerModel), () =>
     import('./hpa' /* webpackChunkName: "hpa" */).then(
       (m) => m.HorizontalPodAutoscalersDetailsPage,
+    ),
+  )
+  .set(referenceForModel(VerticalPodAutoscalerModel), () =>
+    import('./vertical-pod-autoscaler' /* webpackChunkName: "vertical-pod-autoscaler" */).then(
+      (m) => m.VerticalPodAutoscalersDetailsPage,
     ),
   )
   .set(referenceForModel(PersistentVolumeModel), () =>
@@ -477,6 +483,9 @@ export const baseListPages = ImmutableMap<ResourceMapKey, ResourceMapValue>()
   )
   .set(referenceForModel(HorizontalPodAutoscalerModel), () =>
     import('./hpa' /* webpackChunkName: "hpa" */).then((m) => m.HorizontalPodAutoscalersPage),
+  )
+  .set(referenceForModel(VerticalPodAutoscalerModel), () =>
+    import('./vertical-pod-autoscaler' /* webpackChunkName: "vertical-pod-autoscaler" */).then((m) => m.VerticalPodAutoscalersPage),
   )
   .set(referenceForModel(PersistentVolumeModel), () =>
     import('./persistent-volume' /* webpackChunkName: "persistent-volume" */).then(

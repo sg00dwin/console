@@ -483,6 +483,16 @@ export type HorizontalPodAutoscalerKind = K8sResourceCommon & {
   };
 };
 
+export type VerticalPodAutoscalerKind = K8sResourceCommon & {
+  spec: {
+    scaleTargetRef: {
+      apiVersion: string;
+      kind: string;
+      name: string;
+    };
+  };
+};
+
 export type StorageClassResourceKind = {
   provisioner: string;
   reclaimPolicy: string;

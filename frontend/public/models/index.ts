@@ -161,6 +161,22 @@ export const HorizontalPodAutoscalerModel: K8sKind = {
   labelPluralKey: 'public~HorizontalPodAutoscalers',
 };
 
+export const VerticalPodAutoscalerModel: K8sKind = {
+    label: 'VerticalPodAutoscaler',
+    // t('public~VerticalPodAutoscaler')
+    labelKey: 'public~VerticalPodAutoscaler',
+    plural: 'Verticalpodautoscalers',
+    apiVersion: 'v1',
+    apiGroup: 'autoscaling.k8s.io',
+    abbr: 'VPA',
+    namespaced: true,
+    kind: 'VerticalPodAutoscaler',
+    id: 'Verticalpodautoscaler',
+    labelPlural: 'VerticalPodAutoscalers',
+    // t('public~VerticalPodAutoscalers')
+    labelPluralKey: 'public~VerticalPodAutoscalers',
+  };
+
 export const ServiceAccountModel: K8sKind = {
   apiVersion: 'v1',
   label: 'ServiceAccount',
