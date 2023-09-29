@@ -8,9 +8,7 @@ import FunctionRow from './FunctionRow';
 const FunctionsList: React.FC<TableProps> = (props) => {
   const { t } = useTranslation();
   const EmptyMsg = () => (
-    <EmptyState variant={EmptyStateVariant.large}>
-      {t('knative-plugin~No Functions found')}
-    </EmptyState>
+    <EmptyState variant={EmptyStateVariant.lg}>{t('knative-plugin~No Functions found')}</EmptyState>
   );
   return (
     <Table
