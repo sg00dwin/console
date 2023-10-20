@@ -5,7 +5,7 @@ module.exports = defineConfig({
   viewportWidth: 1920,
   viewportHeight: 1080,
   animationDistanceThreshold: 20,
-  execTimeout: 150000,
+  execTimeout: 90000,
   pageLoadTimeout: 90000,
   requestTimeout: 15000,
   responseTimeout: 15000,
@@ -23,7 +23,7 @@ module.exports = defineConfig({
   },
   chromeWebSecurity: false,
   retries: {
-    runMode: 0,
+    runMode: 1,
     openMode: 0,
   },
   e2e: {
