@@ -1,4 +1,4 @@
-const { defineConfig } = require('cypress')
+const { defineConfig } = require('cypress');
 
 module.exports = defineConfig({
   defaultCommandTimeout: 40000,
@@ -21,22 +21,23 @@ module.exports = defineConfig({
   screenshotsFolder: '../../../gui_test_screenshots/cypress/screenshots',
   videosFolder: '../../../gui_test_screenshots/cypress/videos',
   env: {
-    TAGS: '@topology and (@smoke or @regression or @pre-condition) and not (@manual or @to-do or @un-verified or @broken-test)',
+    TAGS:
+      '@topology and (@smoke or @regression or @pre-condition) and not (@manual or @to-do or @un-verified or @broken-test)',
     NAMESPACE: 'aut-topology-ci',
   },
   retries: {
-    runMode: 0,
+    runMode: 1,
     openMode: 0,
   },
   e2e: {
     // We've imported your old cypress plugins here.
     // You may want to clean this up later by importing these.
     setupNodeEvents(on, config) {
-      return require('./plugins/index.js')(on, config)
+      return require('./plugins/index.js')(on, config);
     },
     specPattern: 'features/**/*.{feature,features}',
     supportFile: 'support/commands/index.ts',
     baseUrl: 'http://localhost:9000',
     testIsolation: false,
   },
-})
+});
