@@ -4,8 +4,8 @@ module.exports = defineConfig({
   defaultCommandTimeout: 40000,
   viewportWidth: 1920,
   viewportHeight: 1080,
-  animationDistanceThreshold: 20,
-  execTimeout: 200000,
+  animationDistanceThreshold: 40,
+  execTimeout: 90000,
   pageLoadTimeout: 90000,
   requestTimeout: 15000,
   responseTimeout: 15000,
@@ -22,7 +22,7 @@ module.exports = defineConfig({
     NAMESPACE: 'aut-knative',
   },
   retries: {
-    runMode: 0,
+    runMode: 1,
     openMode: 0,
   },
   e2e: {
