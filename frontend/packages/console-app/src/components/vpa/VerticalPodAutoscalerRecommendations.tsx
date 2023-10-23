@@ -3,11 +3,22 @@ import { useTranslation } from 'react-i18next';
 import { useK8sWatchResource } from '@console/internal/components/utils/k8s-watch-hook';
 import { K8sResourceCommon } from '@console/internal/module/k8s';
 
+export const filterVerticalPodAutoscaler = (vpas, obj) =>
+  (vpas ?? []).find((vpa) => {
+    const { targetRef } = vpa.spec;
+    return (
+      targetRef &&
+      targetRef.apiVersion === obj?.apiVersion &&
+      targetRef.kind === obj?.kind &&
+      targetRef.name === obj?.metadata?.name
+    );
+  });
+
 export const VerticalPodAutoscalerRecommendations: React.FC<VerticalPodAutoscalerRecommendationsProps> = ({
   obj,
 }) => {
   const { t } = useTranslation();
-  const [vpas] = useK8sWatchResource<any[]>({
+  const [vpas] = useK8sWatchResource<K8sResourceCommon[]>({
     groupVersionKind: {
       group: 'autoscaling.k8s.io',
       version: 'v1',
@@ -18,15 +29,8 @@ export const VerticalPodAutoscalerRecommendations: React.FC<VerticalPodAutoscale
     namespaced: true,
   });
 
-  const verticalPodAutoscaler = (vpas ?? []).find((vpa) => {
-    const { targetRef } = vpa.spec;
-    return (
-      targetRef &&
-      targetRef.apiVersion === obj?.apiVersion &&
-      targetRef.kind === obj?.kind &&
-      targetRef.name === obj?.metadata?.name
-    );
-  });
+  const verticalPodAutoscaler = filterVerticalPodAutoscaler(vpas, obj);
+  console.log('vpas ===>', vpas);
 
   const targetCPU =
     verticalPodAutoscaler?.status?.recommendation?.containerRecommendations?.[0]?.target?.cpu;

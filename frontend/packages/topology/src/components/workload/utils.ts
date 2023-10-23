@@ -72,6 +72,26 @@ export const podsAdapterForWorkloads = (
   return { resource, provider: usePodsAdapterForWorkloads };
 };
 
+// export const vpaAdapterForWorkloads = (
+//   element: GraphElement,
+// ): AdapterDataType<VerticalPodAutoscalerAdapterDataType> => {
+//   const resource = getResource(element);
+//   if (!resource) {
+//     return undefined;
+//   }
+//   if (
+//     !resource ||
+//     ![
+//       DeploymentConfigModel.kind,
+//       DeploymentModel.kind,
+//       DaemonSetModel.kind,
+//       // ???
+//     ].includes(resource.kind)
+//   )
+//     return undefined;
+//   return { resource };
+// };
+
 export const buildsAdapterForWorkloads = (
   element: GraphElement,
 ): AdapterDataType<BuildConfigData> | undefined => {

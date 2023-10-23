@@ -67,7 +67,7 @@ export const mapLimitsRequests = (
   if (requested) {
     const reqData = getRangeVectorStats(
       requested,
-      i18n.t('public~total requested'),
+      i18n.t('public~total requested'),// ===> HAS A CHART LINE?
       {
         type: 'dash',
         fill: requestedColor.value,

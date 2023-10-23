@@ -146,6 +146,10 @@ export const isNetworkAdapter = (e: Extension): e is NetworkAdapter => {
   return e.type === 'console.topology/adapter/network';
 };
 
+// export const isVerticalPodAutoscalerAdapter = (e: Extension): e is verticalPodAutoscalerAdapter => {
+//   return e.type === 'console.topology/adapter/vpa';
+// };
+
 export type DetailsResourceAlertContent = {
   /** The title of the alert */
   title: string;
