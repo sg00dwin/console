@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button } from '@patternfly/react-core';
-import { TerminalIcon } from '@patternfly/react-icons';
+import { TerminalIcon } from '@patternfly/react-icons/dist/esm/icons/terminal-icon';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import isMultiClusterEnabled from '@console/app/src/utils/isMultiClusterEnabled';

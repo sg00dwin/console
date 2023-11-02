@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Button, Flex, FlexItem } from '@patternfly/react-core';
-import { DownloadIcon, CompressIcon, ExpandIcon } from '@patternfly/react-icons';
+import { DownloadIcon } from '@patternfly/react-icons/dist/esm/icons/download-icon';
+import { CompressIcon } from '@patternfly/react-icons/dist/esm/icons/compress-icon';
+import { ExpandIcon } from '@patternfly/react-icons/dist/esm/icons/expand-icon';
 import * as classNames from 'classnames';
 import { saveAs } from 'file-saver';
 import { useTranslation } from 'react-i18next';
