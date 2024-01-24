@@ -48,6 +48,7 @@ import {
   getCatalogSourceDisplayName,
   isAWSSTSCluster,
   isAzureWIFCluster,
+  isGCPWIFCluster,
 } from './operator-hub-utils';
 import {
   OperatorHubItem,
@@ -165,11 +166,11 @@ export const OperatorHubList: React.FC<OperatorHubListProps> = ({
             [OperatorHubCSVAnnotationKey.cni]: cni,
             [OperatorHubCSVAnnotationKey.csi]: csi,
             // tlsProfiles requires addtional changes
-            // [OperatorHubCSVAnnotationKey.tlsProfiles]: tlsProfiles,
+            [OperatorHubCSVAnnotationKey.tlsProfiles]: tlsProfiles,
             [OperatorHubCSVAnnotationKey.tokenAuthAWS]: tokenAuthAWS,
             [OperatorHubCSVAnnotationKey.tokenAuthAzure]: tokenAuthAzure,
             // tokenAuthGCP requires additional changes
-            // [OperatorHubCSVAnnotationKey.tokenAuthGCP]: tokenAuthGCP,
+            [OperatorHubCSVAnnotationKey.tokenAuthGCP]: tokenAuthGCP,
             [OperatorHubCSVAnnotationKey.actionText]: marketplaceActionText,
             [OperatorHubCSVAnnotationKey.remoteWorkflow]: marketplaceRemoteWorkflow,
             [OperatorHubCSVAnnotationKey.supportWorkflow]: marketplaceSupportWorkflow,
@@ -189,7 +190,10 @@ export const OperatorHubList: React.FC<OperatorHubListProps> = ({
             (key) => InfraFeatures[key],
           );
 
+          console.log('infrastructureFeatures ===> ', infrastructureFeatures);
+
           // new infra feature annotation
+          // Add new infra feature annotation to this list
           const featuresAnnotationsObjects = [
             { key: InfraFeatures.Disconnected, value: disconnected },
             { key: InfraFeatures.FipsMode, value: fipsCompliant },
@@ -197,7 +201,10 @@ export const OperatorHubList: React.FC<OperatorHubListProps> = ({
             { key: InfraFeatures.cnf, value: cnf },
             { key: InfraFeatures.cni, value: cni },
             { key: InfraFeatures.csi, value: csi },
+            { key: InfraFeatures.tlsProfiles, value: tlsProfiles },
           ];
+
+          console.log('featuresAnnotationsObjects ===> ', featuresAnnotationsObjects);
 
           // override old with new
           featuresAnnotationsObjects.forEach(({ key, value }) => {
@@ -212,6 +219,8 @@ export const OperatorHubList: React.FC<OperatorHubListProps> = ({
           if (tokenAuthAWS === 'true' && isAWSSTSCluster(cloudCredential, infra, auth)) {
             infrastructureFeatures.push(InfraFeatures.TokenAuth);
           } else if (tokenAuthAzure === 'true' && isAzureWIFCluster(cloudCredential, infra, auth)) {
+            infrastructureFeatures.push(InfraFeatures.TokenAuth);
+          } else if (tokenAuthGCP === 'true' && isGCPWIFCluster(cloudCredential, infra, auth)) {
             infrastructureFeatures.push(InfraFeatures.TokenAuth);
           }
 
