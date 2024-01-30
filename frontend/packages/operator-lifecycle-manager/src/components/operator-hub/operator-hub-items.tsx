@@ -32,6 +32,7 @@ import { SubscriptionModel } from '../../models';
 import { communityOperatorWarningModal } from './operator-hub-community-provider-modal';
 import { OperatorHubItemDetails } from './operator-hub-item-details';
 import { isAWSSTSCluster, isAzureWIFCluster } from './operator-hub-utils';
+// import { isAWSSTSCluster, isAzureWIFCluster, isGCPWIFCluster } from './operator-hub-utils';
 import {
   OperatorHubItem,
   InstalledState,
@@ -219,8 +220,10 @@ const infraFeaturesSort = (infrastructure) => {
       return 2;
     case InfraFeatures.TokenAuth:
       return 3;
-    default:
+    case InfraFeatures.tlsProfiles:
       return 4;
+    default:
+      return 5;
   }
 };
 
@@ -440,6 +443,17 @@ export const OperatorHubTileView: React.FC<OperatorHubTileViewProps> = (props) =
     ) {
       setTokenizedAuth('Azure');
     }
+    // if (
+    //   currentItem &&
+    //   isGCPWIFCluster(
+    //     currentItem.cloudCredentials,
+    //     currentItem.infrastructure,
+    //     currentItem.authentication,
+    //   ) &&
+    //   currentItem.infraFeatures?.find((i) => i === InfraFeatures.TokenAuth)
+    // ) {
+    //   setTokenizedAuth('GCP');
+    // }
   }, [filteredItems]);
 
   const showCommunityOperator = (item: OperatorHubItem) => (ignoreWarning = false) => {

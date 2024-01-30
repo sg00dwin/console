@@ -48,6 +48,7 @@ import {
   getCatalogSourceDisplayName,
   isAWSSTSCluster,
   isAzureWIFCluster,
+  // isGCPWIFCluster,
 } from './operator-hub-utils';
 import {
   OperatorHubItem,
@@ -164,8 +165,7 @@ export const OperatorHubList: React.FC<OperatorHubListProps> = ({
             [OperatorHubCSVAnnotationKey.cnf]: cnf,
             [OperatorHubCSVAnnotationKey.cni]: cni,
             [OperatorHubCSVAnnotationKey.csi]: csi,
-            // tlsProfiles requires addtional changes
-            // [OperatorHubCSVAnnotationKey.tlsProfiles]: tlsProfiles,
+            [OperatorHubCSVAnnotationKey.tlsProfiles]: tlsProfiles,
             [OperatorHubCSVAnnotationKey.tokenAuthAWS]: tokenAuthAWS,
             [OperatorHubCSVAnnotationKey.tokenAuthAzure]: tokenAuthAzure,
             // tokenAuthGCP requires additional changes
@@ -189,6 +189,8 @@ export const OperatorHubList: React.FC<OperatorHubListProps> = ({
             (key) => InfraFeatures[key],
           );
 
+          // console.log('infrastructureFeatures ===> ', infrastructureFeatures);
+
           // new infra feature annotation
           const featuresAnnotationsObjects = [
             { key: InfraFeatures.Disconnected, value: disconnected },
@@ -197,7 +199,11 @@ export const OperatorHubList: React.FC<OperatorHubListProps> = ({
             { key: InfraFeatures.cnf, value: cnf },
             { key: InfraFeatures.cni, value: cni },
             { key: InfraFeatures.csi, value: csi },
+            { key: InfraFeatures.tlsProfiles, value: tlsProfiles },
+            // { key: InfraFeatures.tokenAuthGCP, value: tokenAuthGCP },
           ];
+
+          // console.log('featuresAnnotationsObjects ===> ', featuresAnnotationsObjects);
 
           // override old with new
           featuresAnnotationsObjects.forEach(({ key, value }) => {
@@ -214,6 +220,9 @@ export const OperatorHubList: React.FC<OperatorHubListProps> = ({
           } else if (tokenAuthAzure === 'true' && isAzureWIFCluster(cloudCredential, infra, auth)) {
             infrastructureFeatures.push(InfraFeatures.TokenAuth);
           }
+          // else if (tokenAuthGCP === 'true' && isGCPWIFCluster(cloudCredential, infra, auth)) {
+          //   infrastructureFeatures.push(InfraFeatures.TokenAuth);
+          // }
 
           const infraFeatures = _.uniq(_.compact(infrastructureFeatures));
 
