@@ -197,6 +197,7 @@ const EditYAMLInner = (props) => {
           setNotAllowed(notAll);
           if (monacoRef.current) {
             monacoRef.current.editor?.updateOptions({ readOnly: notAll });
+            // monacoRef.current.editor.updateOptions({ readOnly: notAll });
           }
         })
         .catch((e) => {
@@ -640,6 +641,7 @@ const EditYAMLInner = (props) => {
   });
 
   monacoRef.current?.editor?.updateOptions({ hover: showTooltips });
+  // monacoRef.current?.editor.updateOptions({ hover: showTooltips });
 
   if (displayResults) {
     return (

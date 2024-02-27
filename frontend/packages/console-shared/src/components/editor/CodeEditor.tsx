@@ -25,6 +25,7 @@ const CodeEditor = React.forwardRef<MonacoEditor, CodeEditorProps>((props, ref) 
   const editorDidMount = React.useCallback(
     (editor, monaco) => {
       const currentLanguage = editor.getModel()?.getModeId();
+      // const currentLanguage = editor.getModel().getModeId();
       editor.layout();
       editor.focus();
       switch (currentLanguage) {
@@ -38,6 +39,7 @@ const CodeEditor = React.forwardRef<MonacoEditor, CodeEditorProps>((props, ref) 
           break;
       }
       monaco.editor.getModels()[0]?.updateOptions({ tabSize: 2 });
+      // monaco.editor.getModels()[0].updateOptions({ tabSize: 2 });
       onSave && editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, onSave); // eslint-disable-line no-bitwise
     },
     [onSave, usesValue],

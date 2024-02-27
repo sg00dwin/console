@@ -23,6 +23,9 @@ const createDocument = (model) => {
     model?.getValue(),
   );
 };
+// const createDocument = (model) => {
+//   return TextDocument.create(MODEL_URI, model.getModeId(), model.getVersionId(), model.getValue());
+// };
 
 // Unfortunately, `editor.focus()` doesn't work when hiding the shortcuts
 // popover. We need to find the actual DOM element.
@@ -188,6 +191,7 @@ export const enableYAMLValidation = (
   const pendingValidationRequests = new Map();
 
   const getModel = () => monaco.editor?.getModels()[0];
+  // const getModel = () => monaco.editor.getModels()[0];
 
   const cleanPendingValidation = (document) => {
     const request = pendingValidationRequests.get(document.uri);
