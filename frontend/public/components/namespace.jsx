@@ -43,6 +43,7 @@ import {
   REQUESTER_FILTER,
   useFlag,
   usePrometheusGate,
+  useCreateProject,
 } from '@console/shared';
 import { ByteDataTypes } from '@console/shared/src/graph-helper/data-utils';
 import * as k8sActions from '@console/dynamic-plugin-sdk/src/app/k8s/actions/k8s';
@@ -845,6 +846,13 @@ export const ProjectsPage = (props) => {
   // `FLAGS.CAN_CREATE_PROJECT` determines if the user can create projects.
   const canGetNS = useFlag(FLAGS.CAN_GET_NS);
   const canCreateProject = useFlag(FLAGS.CAN_CREATE_PROJECT);
+
+  // Call this if no extensions are defined
+  const defaultCreateHandler = () => createProjectModal({ blocking: true });
+
+  // Pass default action to useCreateProjectAction
+  const createHandler = useCreateProject(defaultCreateHandler);
+
   const [tableColumns] = useUserSettingsCompatibility(
     COLUMN_MANAGEMENT_CONFIGMAP_KEY,
     COLUMN_MANAGEMENT_LOCAL_STORAGE_KEY,
@@ -860,7 +868,7 @@ export const ProjectsPage = (props) => {
       rowFilters={getFilters()}
       ListComponent={ProjectList}
       canCreate={canCreateProject}
-      createHandler={() => createProjectModal({ blocking: true })}
+      createHandler={createHandler}
       filterLabel={t('public~by name or display name')}
       skipAccessReview
       textFilter="project-name"

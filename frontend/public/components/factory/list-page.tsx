@@ -349,7 +349,7 @@ export type ListPageProps<L = any, C = any> = PageCommonProps<L, C> & {
   helpText?: React.ReactNode;
   selector?: Selector;
   fieldSelector?: string;
-  createHandler?: () => void;
+  createHandler?: () => void; // Create Project button -> MultilistPage -> FireMan props -> createProps: { onClick: createHandler() }
   name?: string;
   filters?: any;
   limit?: number;
