@@ -388,23 +388,6 @@
   {
     "type": "console.page/route",
     "properties": {
-      "path": "/test-create-project-callback",
-      "component": { "$codeRef": "createProjectCallbackPage.TestCreateProjectCallbackPage" }
-    }
-  },
-  {
-    "type": "console.navigation/href",
-    "properties": {
-      "id": "test-create-project-callback-page",
-      "perspective": "admin",
-      "section": "admin-demo-section",
-      "name": "%plugin__console-demo-plugin~create-project-callback Launchers%",
-      "href": "/test-create-project-callback"
-    }
-  },
-  {
-    "type": "console.page/route",
-    "properties": {
       "path": "/sample-error-boundary-page",
       "component": { "$codeRef": "sampleErrorBoundaryPage.default" }
     }

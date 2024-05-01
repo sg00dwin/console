@@ -322,7 +322,7 @@ This extension can be used to pass a callback to override the create project for
 
 | Name | Value Type | Optional | Description |
 | ---- | ---------- | -------- | ----------- |
-| `callback` | `CodeRef<() => void>` | no | A callback that performs an action on click |
+| `provider` | `CodeRef<ExtensionHook<CreateProjectCallback, any>>` | no | A hook that provides a callback, which will be executed when any create project button is<br/>clicked in the UI |
 
 ---
 
