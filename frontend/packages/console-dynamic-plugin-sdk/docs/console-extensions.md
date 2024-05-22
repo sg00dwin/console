@@ -322,7 +322,7 @@ This extension can be used to pass a component that will be rendered in place of
 
 | Name | Value Type | Optional | Description |
 | ---- | ---------- | -------- | ----------- |
-| `component` | `CodeRef<React.ComponentType<{}>>` | no | A component to render in place of the create project modal |
+| `component` | `CodeRef<ModalComponent<CreateProjectModalProps>>` | no | A component to render in place of the create project modal |
 
 ---
 

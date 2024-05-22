@@ -3,11 +3,11 @@ import { Popover, Modal, ModalVariant, Button, Alert } from '@patternfly/react-c
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom-v5-compat';
+import { CreateProjectModalProps } from '@console/dynamic-plugin-sdk/src';
 import { ModalComponent } from '@console/dynamic-plugin-sdk/src/app/modal-support/ModalProvider';
 import { SelectorInput, resourceObjPath, LoadingInline } from '@console/internal/components/utils';
 import { NamespaceModel } from '@console/internal/models';
 import { k8sCreate, referenceFor } from '@console/internal/module/k8s';
-import { CreateProjectModalProps } from './CreateProjectModal';
 
 export const CreateNamespaceModal: ModalComponent<CreateProjectModalProps> = ({
   closeModal,
