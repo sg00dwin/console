@@ -5,9 +5,25 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { CreateProjectModalProps } from '@console/dynamic-plugin-sdk/src';
 import { ModalComponent } from '@console/dynamic-plugin-sdk/src/app/modal-support/ModalProvider';
-import { SelectorInput, resourceObjPath, LoadingInline } from '@console/internal/components/utils';
-import { NamespaceModel } from '@console/internal/models';
+import {
+  Dropdown,
+  SelectorInput,
+  resourceObjPath,
+  LoadingInline,
+} from '@console/internal/components/utils';
+import { NamespaceModel, NetworkPolicyModel } from '@console/internal/models';
 import { k8sCreate, referenceFor } from '@console/internal/module/k8s';
+
+const allow = 'allow';
+const deny = 'deny';
+
+const defaultDeny = {
+  apiVersion: 'networking.k8s.io/v1',
+  kind: 'NetworkPolicy',
+  spec: {
+    podSelector: null,
+  },
+};
 
 export const CreateNamespaceModal: ModalComponent<CreateProjectModalProps> = ({
   closeModal,
@@ -18,6 +34,7 @@ export const CreateNamespaceModal: ModalComponent<CreateProjectModalProps> = ({
 
   const [inProgress, setInProgress] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
+  const [networkPolicy, setNetworkPolicy] = React.useState(allow);
   const [name, setName] = React.useState('');
   const [labels, setLabels] = React.useState([]);
 
@@ -53,9 +70,20 @@ export const CreateNamespaceModal: ModalComponent<CreateProjectModalProps> = ({
     return k8sCreate(NamespaceModel, namespace);
   };
 
+  const create = async () => {
+    const namespace = await createNamespace();
+    if (networkPolicy === deny) {
+      const policy = Object.assign({}, defaultDeny, {
+        metadata: { namespace: name, name: 'default-deny' },
+      });
+      await k8sCreate(NetworkPolicyModel, policy);
+    }
+    return namespace;
+  };
+
   const submit = (event) => {
     event.preventDefault();
-    handlePromise(createNamespace())
+    handlePromise(create())
       .then((obj) => {
         closeModal();
         if (onSubmit) {
@@ -68,6 +96,11 @@ export const CreateNamespaceModal: ModalComponent<CreateProjectModalProps> = ({
         // eslint-disable-next-line no-console
         console.error(`Failed to create Namespace:`, err);
       });
+  };
+
+  const defaultNetworkPolicies = {
+    [allow]: t('console-shared~No restrictions'),
+    [deny]: t('console-shared~Deny all inbound traffic'),
   };
 
   const popoverText = () => {
@@ -92,10 +125,23 @@ export const CreateNamespaceModal: ModalComponent<CreateProjectModalProps> = ({
       isOpen
       onClose={closeModal}
       actions={[
-        <Button disabled={inProgress} onClick={submit}>
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={inProgress}
+          onClick={submit}
+          data-test="confirm-action"
+          id="confirm-action"
+        >
           {t('console-shared~Create')}
         </Button>,
-        <Button disabled={inProgress} onClick={closeModal}>
+        <Button
+          type="button"
+          variant="secondary"
+          disabled={inProgress}
+          onClick={closeModal}
+          data-test-id="modal-cancel-action"
+        >
           {t('console-shared~Cancel')}
         </Button>,
         ...(inProgress ? [<LoadingInline />] : []),
@@ -137,6 +183,20 @@ export const CreateNamespaceModal: ModalComponent<CreateProjectModalProps> = ({
               labelClassName="co-m-namespace"
               onChange={(value) => setLabels(value)}
               tags={labels}
+            />
+          </div>
+        </div>
+        <div className="form-group">
+          <label htmlFor="network-policy" className="control-label">
+            {t('console-shared~Default network policy')}
+          </label>
+          <div className="modal-body__field ">
+            <Dropdown
+              selectedKey={networkPolicy}
+              items={defaultNetworkPolicies}
+              dropDownClassName="dropdown--full-width"
+              id="dropdown-selectbox"
+              onChange={(value) => setNetworkPolicy(value)}
             />
           </div>
         </div>

@@ -17,27 +17,14 @@ import {
   documentationURLs,
   ExternalLink,
   getDocumentationURL,
-  Dropdown,
   isManaged,
   resourceObjPath,
-  SelectorInput,
   LoadingInline,
 } from '@console/internal/components/utils';
-import { ProjectRequestModel, NetworkPolicyModel } from '@console/internal/models';
+import { ProjectRequestModel } from '@console/internal/models';
 import { k8sCreate, referenceFor } from '@console/internal/module/k8s';
 import { FLAGS } from '@console/shared';
 import { ModalComponent } from 'packages/console-dynamic-plugin-sdk/src/app/modal-support/ModalProvider';
-
-const allow = 'allow';
-const deny = 'deny';
-
-const defaultDeny = {
-  apiVersion: 'networking.k8s.io/v1',
-  kind: 'NetworkPolicy',
-  spec: {
-    podSelector: null,
-  },
-};
 
 const DefaultCreateProjectModal: ModalComponent<CreateProjectModalProps> = ({
   closeModal,
@@ -47,9 +34,7 @@ const DefaultCreateProjectModal: ModalComponent<CreateProjectModalProps> = ({
   const dispatch = useDispatch();
   const [inProgress, setInProgress] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
-  const [networkPolicy, setNetworkPolicy] = React.useState(allow);
   const [name, setName] = React.useState('');
-  const [labels, setLabels] = React.useState([]);
   const [displayName, setDisplayName] = React.useState('');
   const [description, setDescription] = React.useState('');
   const hideStartGuide = React.useCallback(
@@ -97,20 +82,9 @@ const DefaultCreateProjectModal: ModalComponent<CreateProjectModalProps> = ({
     });
   };
 
-  const create = async () => {
-    const project = await createProject();
-    if (networkPolicy === deny) {
-      const policy = Object.assign({}, defaultDeny, {
-        metadata: { namespace: name, name: 'default-deny' },
-      });
-      await k8sCreate(NetworkPolicyModel, policy);
-    }
-    return project;
-  };
-
   const submit = async (event) => {
     event.preventDefault();
-    handlePromise(create())
+    handlePromise(createProject())
       .then((obj) => {
         closeModal();
         if (onSubmit) {
@@ -123,11 +97,6 @@ const DefaultCreateProjectModal: ModalComponent<CreateProjectModalProps> = ({
         // eslint-disable-next-line no-console
         console.error(`Failed to create Project:`, err);
       });
-  };
-
-  const defaultNetworkPolicies = {
-    [allow]: t('console-shared~No restrictions'),
-    [deny]: t('console-shared~Deny all inbound traffic'),
   };
 
   const popoverText = () => {
@@ -154,10 +123,23 @@ const DefaultCreateProjectModal: ModalComponent<CreateProjectModalProps> = ({
       isOpen
       onClose={closeModal}
       actions={[
-        <Button disabled={inProgress} onClick={submit}>
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={inProgress}
+          onClick={submit}
+          data-test="confirm-action"
+          id="confirm-action"
+        >
           {t('console-shared~Create')}
         </Button>,
-        <Button disabled={inProgress} onClick={closeModal}>
+        <Button
+          type="button"
+          variant="secondary"
+          disabled={inProgress}
+          onClick={closeModal}
+          data-test-id="modal-cancel-action"
+        >
           {t('console-shared~Cancel')}
         </Button>,
         ...(inProgress ? [<LoadingInline />] : []),
@@ -228,32 +210,6 @@ const DefaultCreateProjectModal: ModalComponent<CreateProjectModalProps> = ({
               className="pf-v5-c-form-control"
               onChange={(e) => setDescription(e.target.value)}
               value={description || ''}
-            />
-          </div>
-        </div>
-        <div className="form-group">
-          <label htmlFor="tags-input" className="control-label">
-            {t('console-shared~Labels')}
-          </label>
-          <div className="modal-body__field">
-            <SelectorInput
-              labelClassName="co-m-namespace"
-              onChange={(value) => setLabels(value)}
-              tags={labels}
-            />
-          </div>
-        </div>
-        <div className="form-group">
-          <label htmlFor="network-policy" className="control-label">
-            {t('console-shared~Default network policy')}
-          </label>
-          <div className="modal-body__field ">
-            <Dropdown
-              selectedKey={networkPolicy}
-              items={defaultNetworkPolicies}
-              dropDownClassName="dropdown--full-width"
-              id="dropdown-selectbox"
-              onChange={(value) => setNetworkPolicy(value)}
             />
           </div>
         </div>
