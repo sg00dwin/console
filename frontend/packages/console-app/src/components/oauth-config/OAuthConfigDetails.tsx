@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { formatPrometheusDuration } from '@openshift-console/plugin-shared/src/datetime/prometheus';
-import { Alert } from '@patternfly/react-core';
 import {
-  Dropdown as DropdownDeprecated,
-  DropdownItem as DropdownItemDeprecated,
-  DropdownToggle as DropdownToggleDeprecated,
-} from '@patternfly/react-core/deprecated';
-import { CaretDownIcon } from '@patternfly/react-icons/dist/esm/icons/caret-down-icon';
+  Alert,
+  Dropdown,
+  DropdownItem,
+  DropdownList,
+  MenuToggle,
+  MenuToggleElement,
+} from '@patternfly/react-core';
 import * as _ from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom-v5-compat';
@@ -27,7 +28,6 @@ const tokenDuration = (seconds: number) =>
 
 export const OAuthConfigDetails: React.FC<OAuthDetailsProps> = ({ obj }: { obj: OAuthKind }) => {
   const navigate = useNavigate();
-  const [isIDPOpen, setIDPOpen] = React.useState(false);
   const { identityProviders, tokenConfig } = obj.spec;
   const { t } = useTranslation();
   const queryParams = useQueryParams();
@@ -58,21 +58,56 @@ export const OAuthConfigDetails: React.FC<OAuthDetailsProps> = ({ obj }: { obj: 
     }
   };
 
-  const IDPDropdownItems = Object.entries(IDP_TYPES).map((idp) => {
-    const [key, value] = idp;
+  const IDPDropdown: React.FunctionComponent = () => {
+    const [isOpen, setIsOpen] = React.useState(false);
+
+    const onToggleClick = () => {
+      setIsOpen(!isOpen);
+    };
+
+    const onSelect = () => {
+      setIsOpen(false);
+    };
+
+    const IDPDropdownItems = Object.entries(IDP_TYPES).map((idp) => {
+      const [key, value] = idp;
+
+      return (
+        <DropdownItem
+          key={`idp-${key}`}
+          component="button"
+          id={key}
+          data-test-id={key}
+          onClick={(e) => navigate(`/settings/idp/${e.currentTarget.id}`)}
+        >
+          {getAddIDPItemLabels(value)}
+        </DropdownItem>
+      );
+    });
 
     return (
-      <DropdownItemDeprecated
-        key={`idp-${key}`}
-        component="button"
-        id={key}
-        data-test-id={key}
-        onClick={(e) => navigate(`/settings/idp/${e.currentTarget.id}`)}
+      <Dropdown
+        id="idp"
+        isOpen={isOpen}
+        onSelect={onSelect}
+        onOpenChange={() => setIsOpen(isOpen)}
+        shouldFocusToggleOnSelect
+        toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+          <MenuToggle
+            ref={toggleRef}
+            onClick={onToggleClick}
+            isExpanded={isOpen}
+            id="idp-dropdown"
+            data-test-id="dropdown-button"
+          >
+            {t('console-app~Add')}
+          </MenuToggle>
+        )}
       >
-        {getAddIDPItemLabels(value)}
-      </DropdownItemDeprecated>
+        <DropdownList>{IDPDropdownItems}</DropdownList>
+      </Dropdown>
     );
-  });
+  };
 
   return (
     <>
@@ -113,23 +148,7 @@ export const OAuthConfigDetails: React.FC<OAuthDetailsProps> = ({ obj }: { obj: 
             </>
           </Alert>
         )}
-        <DropdownDeprecated
-          className="co-m-pane__dropdown"
-          toggle={
-            <DropdownToggleDeprecated
-              id="idp-dropdown"
-              onToggle={() => setIDPOpen(!isIDPOpen)}
-              toggleIndicator={CaretDownIcon}
-              data-test-id="dropdown-button"
-            >
-              {t('console-app~Add')}
-            </DropdownToggleDeprecated>
-          }
-          isOpen={isIDPOpen}
-          dropdownItems={IDPDropdownItems}
-          onSelect={() => setIDPOpen(false)}
-          id="idp"
-        />
+        <IDPDropdown />
         <IdentityProviders identityProviders={identityProviders} />
       </div>
     </>
