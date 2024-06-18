@@ -80,7 +80,10 @@ const sharedPluginModulesTest = getVendorModuleRegExp(
 const config: Configuration = {
   entry: {
     main: ['./public/components/app.jsx', 'monaco-editor-core/esm/vs/editor/editor.worker.js'],
-    'vendor-patternfly-4-shared': './public/vendor-patternfly-4-shared.scss',
+    'vendor-patternfly-4-shared': [
+      './public/vendor-patternfly-4-shared.scss',
+      './public/vendor-patternfly-6.scss',
+    ],
   },
   output: {
     path: path.resolve(__dirname, 'public/dist'),
