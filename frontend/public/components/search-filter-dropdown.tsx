@@ -1,11 +1,6 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Dropdown as DropdownDeprecated,
-  DropdownToggle as DropdownToggleDeprecated,
-  DropdownItem as DropdownItemDeprecated,
-} from '@patternfly/react-core/deprecated';
-import { CaretDownIcon } from '@patternfly/react-icons/dist/esm/icons/caret-down-icon';
+import { SelectOption, MenuToggle, Select } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons/dist/esm/icons/filter-icon';
 import { TextFilter } from './factory';
 
@@ -16,7 +11,7 @@ export enum searchFilterValues {
   Name = 'Name',
 }
 
-export const SearchFilterDropdown: React.SFC<SearchFilterDropdownProps> = (props) => {
+export const SearchFilterSelect: React.SFC<SearchFilterDropdownProps> = (props) => {
   const [isOpen, setOpen] = React.useState(false);
   const [selected, setSelected] = React.useState(searchFilterValues.Label);
 
@@ -24,29 +19,12 @@ export const SearchFilterDropdown: React.SFC<SearchFilterDropdownProps> = (props
 
   const { t } = useTranslation();
 
-  const onToggle = (_event, open: boolean) => setOpen(open);
-  const onSelect = (event: React.SyntheticEvent) => {
-    setSelected((event.target as HTMLInputElement).name as searchFilterValues);
+  const onToggle = () => setOpen(!isOpen);
+  const onSelect = (_event, value) => {
+    setSelected(value);
     setOpen(!isOpen);
   };
-  const dropdownItems = [
-    <DropdownItemDeprecated
-      key="label-action"
-      data-test="label-filter"
-      name={searchFilterValues.Label}
-      component="button"
-    >
-      {t(searchFilterValues.Label)}
-    </DropdownItemDeprecated>,
-    <DropdownItemDeprecated
-      key="name-action"
-      data-test="name-filter"
-      name={searchFilterValues.Name}
-      component="button"
-    >
-      {t(searchFilterValues.Name)}
-    </DropdownItemDeprecated>,
-  ];
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       const { value } = e.target as HTMLInputElement;
@@ -60,22 +38,39 @@ export const SearchFilterDropdown: React.SFC<SearchFilterDropdownProps> = (props
 
   return (
     <div className="pf-v5-c-input-group">
-      <DropdownDeprecated
+      <Select
         onSelect={onSelect}
         toggle={
-          <DropdownToggleDeprecated
+          <MenuToggle
             id="toggle-id"
-            onToggle={onToggle}
-            toggleIndicator={CaretDownIcon}
+            onClick={onToggle}
+            icon={<FilterIcon className="span--icon__right-margin" />}
           >
-            <>
-              <FilterIcon className="span--icon__right-margin" /> {t(selected)}
-            </>
-          </DropdownToggleDeprecated>
+            {t(selected)}
+          </MenuToggle>
         }
         isOpen={isOpen}
-        dropdownItems={dropdownItems}
-      />
+      >
+        <SelectList>
+          <SelectOption
+            key="label-action"
+            data-test="label-filter"
+            name={searchFilterValues.Label}
+            component="button"
+          >
+            {t(searchFilterValues.Label)}
+          </SelectOption>
+          ,
+          <SelectOption
+            key="name-action"
+            data-test="name-filter"
+            name={searchFilterValues.Name}
+            component="button"
+          >
+            {t(searchFilterValues.Name)}
+          </SelectOption>
+        </SelectList>
+      </Select>
       <TextFilter
         parentClassName="co-search__filter-input"
         onChange={handleInputValue}

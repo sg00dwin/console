@@ -239,7 +239,6 @@ export const LogControls: React.FC<LogControlsProps> = ({
           Log type
         </span>
         <SelectDeprecated
-          variant={SelectVariantDeprecated.single}
           onToggle={(_event, isOpen: boolean) => {
             setLogTypeOpen(isOpen);
           }}
