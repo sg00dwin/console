@@ -1,13 +1,6 @@
 import * as React from 'react';
 import { formatPrometheusDuration } from '@openshift-console/plugin-shared/src/datetime/prometheus';
-import {
-  Alert,
-  Dropdown,
-  DropdownItem,
-  DropdownList,
-  MenuToggle,
-  MenuToggleElement,
-} from '@patternfly/react-core';
+import { Alert, DropdownItem } from '@patternfly/react-core';
 import * as _ from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom-v5-compat';
@@ -18,6 +11,7 @@ import {
 } from '@console/internal/components/utils';
 import { ClusterOperatorModel } from '@console/internal/models';
 import { OAuthKind } from '@console/internal/module/k8s';
+import { Dropdown, DropdownToggle } from '@console/shared/src/components/dropdown';
 import { IDP_TYPES } from '@console/shared/src/constants/auth';
 import { useQueryParams } from '@console/shared/src/hooks/useQueryParams';
 import { IdentityProviders } from './IdentityProviders';
@@ -32,6 +26,7 @@ export const OAuthConfigDetails: React.FC<OAuthDetailsProps> = ({ obj }: { obj: 
   const { t } = useTranslation();
   const queryParams = useQueryParams();
   const idpAdded = queryParams.get('idpAdded');
+  const [isIDPOpen, setIDPOpen] = React.useState(false);
 
   const getAddIDPItemLabels = (type: string) => {
     switch (type) {
@@ -58,56 +53,21 @@ export const OAuthConfigDetails: React.FC<OAuthDetailsProps> = ({ obj }: { obj: 
     }
   };
 
-  const IDPDropdown: React.FunctionComponent = () => {
-    const [isOpen, setIsOpen] = React.useState(false);
-
-    const onToggleClick = () => {
-      setIsOpen(!isOpen);
-    };
-
-    const onSelect = () => {
-      setIsOpen(false);
-    };
-
-    const IDPDropdownItems = Object.entries(IDP_TYPES).map((idp) => {
-      const [key, value] = idp;
-
-      return (
-        <DropdownItem
-          key={`idp-${key}`}
-          component="button"
-          id={key}
-          data-test-id={key}
-          onClick={(e) => navigate(`/settings/idp/${e.currentTarget.id}`)}
-        >
-          {getAddIDPItemLabels(value)}
-        </DropdownItem>
-      );
-    });
+  const IDPDropdownItems = Object.entries(IDP_TYPES).map((idp) => {
+    const [key, value] = idp;
 
     return (
-      <Dropdown
-        id="idp"
-        isOpen={isOpen}
-        onSelect={onSelect}
-        onOpenChange={() => setIsOpen(isOpen)}
-        shouldFocusToggleOnSelect
-        toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
-          <MenuToggle
-            ref={toggleRef}
-            onClick={onToggleClick}
-            isExpanded={isOpen}
-            id="idp-dropdown"
-            data-test-id="dropdown-button"
-          >
-            {t('console-app~Add')}
-          </MenuToggle>
-        )}
+      <DropdownItem
+        key={`idp-${key}`}
+        component="button"
+        id={key}
+        data-test-id={key}
+        onClick={(e) => navigate(`/settings/idp/${e.currentTarget.id}`)}
       >
-        <DropdownList>{IDPDropdownItems}</DropdownList>
-      </Dropdown>
+        {getAddIDPItemLabels(value)}
+      </DropdownItem>
     );
-  };
+  });
 
   return (
     <>
@@ -148,7 +108,22 @@ export const OAuthConfigDetails: React.FC<OAuthDetailsProps> = ({ obj }: { obj: 
             </>
           </Alert>
         )}
-        <IDPDropdown />
+        <Dropdown
+          toggle={
+            <DropdownToggle
+              id="idp-dropdown"
+              onClick={() => setIDPOpen(!isIDPOpen)}
+              data-test-id="dropdown-button"
+            >
+              {t('console-app~Add')}
+            </DropdownToggle>
+          }
+          onOpenChange={() => setIDPOpen(!isIDPOpen)}
+          isOpen={isIDPOpen}
+          dropdownItems={IDPDropdownItems}
+          onSelect={() => setIDPOpen(false)}
+          id="idp"
+        />
         <IdentityProviders identityProviders={identityProviders} />
       </div>
     </>
