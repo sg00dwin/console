@@ -11,7 +11,7 @@ import {
 } from '@console/internal/components/utils';
 import { ClusterOperatorModel } from '@console/internal/models';
 import { OAuthKind } from '@console/internal/module/k8s';
-import { Dropdown } from '@console/shared/src/components/dropdown';
+import { Dropdown, DropdownToggle } from '@console/shared/src/components/dropdown';
 import { IDP_TYPES } from '@console/shared/src/constants/auth';
 import { useQueryParams } from '@console/shared/src/hooks/useQueryParams';
 import { IdentityProviders } from './IdentityProviders';
@@ -107,9 +107,21 @@ export const OAuthConfigDetails: React.FC<OAuthDetailsProps> = ({ obj }: { obj: 
             </>
           </Alert>
         )}
-        <Dropdown id="idp" dropdownItems={IDPDropdownItems}>
-          {t('console-app~Add')}
-        </Dropdown>
+        <Dropdown
+          toggle={
+            <DropdownToggle
+              id="idp-dropdown"
+              onToggle={() => setIDPOpen(!isIDPOpen)}
+              data-test-id="dropdown-button"
+            >
+              {t('console-app~Add')}
+            </DropdownToggle>
+          }
+          isOpen={isIDPOpen}
+          dropdownItems={IDPDropdownItems}
+          onSelect={() => setIDPOpen(false)}
+          id="idp"
+        />
         <IdentityProviders identityProviders={identityProviders} />
       </div>
     </>

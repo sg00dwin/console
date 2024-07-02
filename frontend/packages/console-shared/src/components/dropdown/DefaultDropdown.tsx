@@ -1,41 +1,23 @@
 import * as React from 'react';
-import {
-  MenuToggle as PFMenuToggle,
-  MenuToggleElement as PFMenuToggleElement,
-  Dropdown as PFDropdown,
-  DropdownList as PFDropdownList,
-} from '@patternfly/react-core';
+import { Dropdown as PFDropdown, DropdownList, MenuToggleElement } from '@patternfly/react-core';
 
-const Dropdown: React.FC<DropdownProps> = ({ dropdownItems, id, children }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
-
-  const onToggleClick = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const onSelect = () => {
-    setIsOpen(false);
-  };
-
+const Dropdown: React.FC<DropdownProps> = ({ dropdownItems, children, ...props }) => {
+  const toggle = React.useCallback(
+    (ref: React.RefObject<MenuToggleElement>) => React.cloneElement(props.toggle, { ref }),
+    [props.toggle],
+  );
   return (
-    <PFDropdown
-      onSelect={onSelect}
-      isOpen={isOpen}
-      id={id}
-      onOpenChange={(isDropdownOpen: boolean) => setIsOpen(isDropdownOpen)}
-      toggle={(toggleRef: React.Ref<PFMenuToggleElement>) => (
-        <PFMenuToggle ref={toggleRef} onClick={onToggleClick} isExpanded={isOpen}>
-          {children}
-        </PFMenuToggle>
-      )}
-    >
-      <PFDropdownList>{dropdownItems}</PFDropdownList>
+    <PFDropdown toggle={toggle} {...props}>
+      {dropdownItems ? <DropdownList>{dropdownItems}</DropdownList> : children}
     </PFDropdown>
   );
 };
 
 type DropdownProps = {
-  dropdownItems: any[];
+  onSelect: (e: React.MouseEvent<Element, MouseEvent>) => void;
+  isOpen: boolean;
+  toggle: React.ReactElement;
+  dropdownItems?: React.ReactNode[]; // Optional so that we can also use children as dropdown content
   id: string;
 };
 
