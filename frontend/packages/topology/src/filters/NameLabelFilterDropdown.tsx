@@ -51,7 +51,7 @@ const NameLabelFilterDropdown: React.FC<NameLabelFilterDropdownProps> = (props) 
   };
 
   return (
-    <div className="pf-v5-c-input-group">
+    <div className="pf-v5-c-input-group cyan">
       <DropdownDeprecated
         onSelect={onSelect}
         toggle={

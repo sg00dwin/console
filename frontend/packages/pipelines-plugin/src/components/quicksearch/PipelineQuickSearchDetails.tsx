@@ -146,7 +146,7 @@ const PipelineQuickSearchDetails: React.FC<QuickSearchDetailsRendererProps> = ({
 
   const hubLink = getHubUIPath(loadedVersion?.hubURLPath, selectedItem.attributes.uiURL);
   return (
-    <div className="opp-quick-search-details">
+    <div className="opp-quick-search-details red">
       <Level hasGutter>
         <LevelItem>
           <Title data-test="task-name" headingLevel="h4">

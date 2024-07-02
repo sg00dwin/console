@@ -526,6 +526,7 @@ class Dropdown_ extends DropdownMixin {
       <div className={className} ref={this.dropdownElement} style={this.props.style}>
         <div
           className={classNames(
+            'magenta',
             { 'pf-v5-c-dropdown': true, 'pf-m-expanded': this.state.active },
             dropDownClassName,
           )}
@@ -596,13 +597,15 @@ export const Dropdown = (props) => {
   );
 
   return (
-    <Dropdown_
-      {...props}
-      bookmarks={bookmarks}
-      onBookmark={onBookmark}
-      favoriteKey={favoriteKey}
-      onFavorite={setFavoriteKey}
-    />
+    <div className="custom-dropdown">
+      <Dropdown_
+        {...props}
+        bookmarks={bookmarks}
+        onBookmark={onBookmark}
+        favoriteKey={favoriteKey}
+        onFavorite={setFavoriteKey}
+      />
+    </div>
   );
 };
 

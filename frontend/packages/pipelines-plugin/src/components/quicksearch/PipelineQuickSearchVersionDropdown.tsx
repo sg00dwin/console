@@ -42,7 +42,7 @@ const PipelineQuickSearchVersionDropdown: React.FC<PipelineQuickSearchVersionDro
   return (
     <DropdownDeprecated
       data-test="task-version"
-      className="opp-quick-search-details__version-dropdown"
+      className="opp-quick-search-details__version-dropdown cyan"
       dropdownItems={Object.keys(versionItems).map((key) => (
         <DropdownItemDeprecated
           component="button"

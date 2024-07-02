@@ -198,7 +198,7 @@ const PipelineBuilderForm: React.FC<PipelineBuilderFormProps> = (props) => {
           >
             <PipelineBuilderHeader namespace={namespace} />
             <FlexForm className="opp-pipeline-builder-form" onSubmit={handleSubmit}>
-              <div className="opp-pipeline-builder-form__content">
+              <div className="opp-pipeline-builder-form__content lime">
                 <FormBody
                   flexLayout
                   disablePaneBody
