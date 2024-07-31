@@ -4,7 +4,7 @@ import { Button } from '@patternfly/react-core';
 import { Link } from 'react-router-dom-v5-compat';
 import {
   DropdownToggle as DropdownToggleDeprecated,
-  Dropdown as DropdownDeprecated,
+  // Dropdown as DropdownDeprecated,
   DropdownItem as DropdownItemDeprecated,
 } from '@patternfly/react-core/deprecated';
 import { CaretDownIcon } from '@patternfly/react-icons/dist/esm/icons/caret-down-icon';
@@ -21,6 +21,7 @@ import {
 
 import { RequireCreatePermission } from '../../utils';
 import { transformGroupVersionKindToReference } from '@console/dynamic-plugin-sdk/src/utils/k8s';
+import DropdownDeprecated from '@console/shared/src/components/dropdown/DropdownDeprecated';
 
 const CreateWithPermissions: React.FC<CreateWithPermissionsProps> = ({
   createAccessReview,

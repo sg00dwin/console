@@ -7,6 +7,8 @@ type DropdownToggleProps = Partial<MenuToggleProps> & {
   id?: string;
   'data-test-id'?: string;
   children?: React.ReactNode;
+  isOpen?: boolean;
+  onToggle?: (isOpen: boolean) => void;
 };
 
 export default DropdownToggle;
