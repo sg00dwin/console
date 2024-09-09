@@ -1,6 +1,25 @@
 @import '~@patternfly/patternfly/sass-utilities/all';
 @import '~@console/internal/style/vars';
 
+.pf-v5-c-nav .oc-nav-header {
+  .oc-perpective-toggle {
+    &:focus,
+    &:active {
+      background-color: purple !important;
+    }
+  }
+  .pf-v5-c-menu {
+    // --pf-v5-c-menu--BackgroundColor: orange;
+    // --pf-v5-c-menu--BackgroundColor: var(--pf-v5-global--BackgroundColor--100);
+    --pf-v5-c-menu--BackgroundColor: skyblue;
+    //  --pf-v5-c-menu--BackgroundColor: var(--pf-v5-c-nav--c-menu--BackgroundColor)
+  }
+  .pf-v5-c-menu-toggle:hover {
+    background-color: yellow;
+    // --pf-v5-c-menu-toggle--BackgroundColor: var(--pf-v5-c-menu-toggle--hover--BackgroundColor);
+  }
+}
+
 .oc-nav-header {
   border-bottom: 1px solid var(--pf-v5-global--BackgroundColor--dark-200);
   padding: 0.6rem var(--pf-v5-global--spacer--sm);
@@ -19,6 +38,13 @@
   &__icon {
     margin-right: var(--pf-v5-global--spacer--sm);
   }
+
+
+  .pf-v5-c-menu-toggle::after, .pf-v5-c-menu-toggle::before {
+    border-style: hidden;
+  }
+
+  
 
   &__dropdown-toggle--is-empty {
     cursor: default !important;
