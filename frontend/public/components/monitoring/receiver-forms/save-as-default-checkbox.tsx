@@ -16,6 +16,7 @@ export const SaveAsDefaultCheckbox: React.FC<SaveAsDefaultCheckboxProps> = ({
     <label className={saveAsDefaultLabelClass} htmlFor={formField}>
       <input
         type="checkbox"
+        className="pf-v6-c-check__input"
         id={formField}
         data-test-id="save-as-default"
         onChange={(e) =>

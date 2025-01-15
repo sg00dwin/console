@@ -8,6 +8,7 @@ export const SendResolvedAlertsCheckbox = ({ formField, formValues, dispatchForm
       <label className="control-label" htmlFor={formField}>
         <input
           type="checkbox"
+          className="pf-v6-c-check__input"
           id={formField}
           data-test-id="send-resolved-alerts"
           onChange={(e) =>

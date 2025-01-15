@@ -67,7 +67,7 @@ export const RoutingLabelEditor = ({ formValues, dispatchFormChange, isDefaultRe
             <div className="form-group">
               <input
                 type="text"
-                className="pf-v5-c-form-control"
+                className="pf-v6-c-form-control"
                 data-test-id="label-default"
                 value={DEFAULT_RECEIVER_LABEL}
                 disabled
@@ -84,7 +84,7 @@ export const RoutingLabelEditor = ({ formValues, dispatchFormChange, isDefaultRe
               <div className="form-group">
                 <input
                   type="text"
-                  className="pf-v5-c-form-control"
+                  className="pf-v6-c-form-control"
                   data-test-id={`label-${i}`}
                   onChange={onRoutingLabelChange(i)}
                   placeholder={t('public~Matcher')}

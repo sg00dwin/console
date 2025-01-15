@@ -45,7 +45,7 @@ class TranslatedLabelList extends React.Component<LabelListProps> {
           </div>
         ) : (
           <PfLabelGroup
-            className="co-label-group"
+            className="pf-m-category co-label-group"
             defaultIsOpen={true}
             numLabels={20}
             data-test="label-list"
