@@ -95,7 +95,7 @@ export const ResourceSummary: React.FC<ResourceSummaryProps> = ({
         label={t('public~Labels')}
         obj={resource}
         path="metadata.labels"
-        valueClassName="details-item__value--labels"
+        valueClassName="details-item__value--labels pf-v6-c-form-control pf-m-textarea pf-m-readonly pf-m-plain"
         onEdit={labelsModalLauncher}
         canEdit={showLabelEditor && canUpdate}
         editAsGroup
