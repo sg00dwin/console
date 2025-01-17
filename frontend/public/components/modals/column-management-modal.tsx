@@ -37,11 +37,12 @@ const DataListRow: React.FC<DataListRowProps> = ({
   >
     <DataListItemRow>
       <DataListCheck
+        className="co-datalist-control"
         isDisabled={
           (disableUncheckedRow && !checkedColumns.has(column.id)) || readOnlyColumns.has(column.id)
         }
         aria-labelledby={`table-column-management-item-${column.id}`}
-        checked={checkedColumns.has(column.id)}
+        isChecked={checkedColumns.has(column.id)}
         name={column.title}
         id={column.id}
         onChange={onChange}
