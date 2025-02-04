@@ -64,7 +64,7 @@ const AttachStorageInner: React.FC<AttachStorageFormProps> = (props) => {
       </Helmet>
       <div className="co-storage-heading__wrapper">
         <Trans t={t} ns="public">
-          <h1 className="co-m-pane__heading">Add Storage</h1>
+          <h1 className="co-m-pane__heading pf-v6-c-content--h1">Add Storage</h1>
           <div className="co-m-pane__explanation co-storage-heading__subtitle">
             {' '}
             to{' '}

@@ -34,7 +34,7 @@ const TopologyEdgePanel: React.FC<TopologyEdgePanelProps> = ({ edge }) => {
   return (
     <div className="overview__sidebar-pane resource-overview">
       <div className="overview__sidebar-pane-head resource-overview__heading">
-        <h1 className="co-m-pane__heading">
+        <h1 className="pf-v6-c-content--h1 co-m-pane__heading">
           <div className="co-m-pane__name co-resource-item">
             {t(connectorTypeToTitleKey(edge.getType()))}
           </div>

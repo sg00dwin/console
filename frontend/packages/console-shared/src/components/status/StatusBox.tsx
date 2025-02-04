@@ -46,7 +46,9 @@ export const StatusBox: React.FC<StatusBoxProps> = (props) => {
     if (status === 404) {
       return (
         <div className="co-m-pane__body">
-          <h1 className="co-m-pane__heading co-m-pane__heading--center">{t('404: Not Found')}</h1>
+          <h1 className="pf-v6-c-content--h1 co-m-pane__heading co-m-pane__heading--center">
+            {t('404: Not Found')}
+          </h1>
         </div>
       );
     }

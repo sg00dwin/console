@@ -60,7 +60,7 @@ export const CommandLineTools: React.FC<CommandLineToolsProps> = ({ obj }) => {
         <title>{t('public~Command Line Tools')}</title>
       </Helmet>
       <div className="co-m-pane__body">
-        <h1 className="co-m-pane__heading">
+        <h1 className="co-m-pane__heading pf-v6-c-content--h1">
           <div className="co-m-pane__name">{t('public~Command Line Tools')}</div>
         </h1>
         {showCopyLoginCommand && (

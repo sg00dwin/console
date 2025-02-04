@@ -31,7 +31,7 @@ const AlertmanagerPage: React.FC<{ match: { url: string } }> = ({ match }) => {
         </Breadcrumb>
       </div>
       <div className="co-m-nav-title co-m-nav-title--detail co-m-nav-title--breadcrumbs">
-        <h1 className="co-m-pane__heading">
+        <h1 className="pf-v6-c-content--h1 co-m-pane__heading">
           <div className="co-m-pane__name co-resource-item">
             <span className="co-resource-item__resource-name" data-test-id="resource-title">
               {t('public~Alertmanager')}

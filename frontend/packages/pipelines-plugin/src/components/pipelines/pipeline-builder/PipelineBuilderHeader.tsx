@@ -15,7 +15,7 @@ const PipelineBuilderHeader: React.FC<{ namespace: string }> = ({ namespace }) =
       <Flex className="odc-pipeline-builder-header__content">
         <FlexItem grow={{ default: 'grow' }}>
           <div className="co-m-nav-title">
-            <h1 className="co-m-pane__heading odc-pipeline-builder-header__title">
+            <h1 className="pf-v6-c-content--h1 co-m-pane__heading odc-pipeline-builder-header__title">
               {t('pipelines-plugin~Pipeline builder')}
             </h1>
           </div>

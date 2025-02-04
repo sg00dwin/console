@@ -22,7 +22,7 @@ const AddBareMetalHostPage: React.FunctionComponent = () => {
       <div className="co-m-pane__body co-m-pane__form">
         {/* TODO(jtomasek): Turn this to PageHeading alternative for create forms (e.g.
         CreateResourceFormPageHeading) */}
-        <h1 className="co-m-pane__heading co-m-pane__heading--baseline">
+        <h1 className="pf-v6-c-content--h1 co-m-pane__heading co-m-pane__heading--baseline">
           <div className="co-m-pane__name">{title}</div>
         </h1>
         {!isEditing && (

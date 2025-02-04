@@ -19,7 +19,7 @@ const TaskSidebarHeader: React.FC<TaskSidebarHeaderProps> = ({ removeThisTask, t
   return (
     <div className="opp-task-sidebar-header">
       <div className="opp-task-sidebar-header__title">
-        <h1 className="co-m-pane__heading">
+        <h1 className="pf-v6-c-content--h1 co-m-pane__heading">
           <div className="co-m-pane__name co-resource-item">
             <PipelineResourceRef
               resourceKind={taskResource.kind}

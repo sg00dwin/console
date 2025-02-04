@@ -367,7 +367,7 @@ const ReceiverBaseForm: React.FC<ReceiverBaseFormProps> = ({
         <title>{t('public~{{titleVerb}} Receiver', { titleVerb })}</title>
       </Helmet>
       <form className="co-m-pane__body-group" onSubmit={save}>
-        <h1 className="co-m-pane__heading">
+        <h1 className="co-m-pane__heading pf-v6-c-content--h1">
           {t('public~{{titleVerb}} {{receiverTypeLabel}} {{defaultString}} Receiver', {
             titleVerb,
             receiverTypeLabel,

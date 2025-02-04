@@ -36,7 +36,7 @@ const GitOpsDetailsPageHeading: React.FC<GitOpsDetailsPageHeadingProps> = ({
       </div>
       <div className="gop-gitops-details-page-heading co-m-nav-title co-m-nav-title--breadcrumbs">
         <h1
-          className="co-m-pane__heading"
+          className="pf-v6-c-content--h1 co-m-pane__heading"
           style={{ marginRight: 'var(--pf-t--global--spacer--sm)' }}
         >
           <div className="co-m-pane__name co-resource-item">
