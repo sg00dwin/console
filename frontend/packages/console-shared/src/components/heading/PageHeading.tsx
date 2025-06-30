@@ -83,7 +83,7 @@ export const PageHeading = ({
         }
         icon={icon}
         label={badge}
-        linkProps={linkProps}
+        linkProps={linkProps ? { ...linkProps, label: String(linkProps.label) } : undefined}
         subtitle={helpText}
       >
         {helpAlert && helpAlert}

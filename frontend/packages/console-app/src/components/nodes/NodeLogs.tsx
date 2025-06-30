@@ -399,7 +399,7 @@ const NodeLogs: React.FC<NodeLogsProps> = ({ obj: node }) => {
             isTextWrapped={isWrapLines}
             data={trimmedContent || content}
             toolbar={logControls}
-            theme={theme}
+            theme={theme as 'dark' | 'light'}
             initialIndexWidth={7}
           />
         )}

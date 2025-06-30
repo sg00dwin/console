@@ -840,7 +840,7 @@ export const ResourceLog: React.FC<ResourceLogProps> = ({
                 <HeaderBanner lines={lines} />
               </div>
             }
-            theme={theme}
+            theme={theme as 'dark' | 'light'}
             data={content}
             ref={logViewerRef}
             height="100%"
