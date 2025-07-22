@@ -83,23 +83,19 @@ export const RoutingLabelEditor = ({ formValues, dispatchFormChange, isDefaultRe
           sent to this receiver.
         </Trans>
       </Content>
-      {isDefaultReceiver && (
-        <FormGroup>
-          <Stack hasGutter>
+      <FormGroup>
+        <Stack hasGutter>
+          {isDefaultReceiver && (
             <InputGroup>
               <InputGroupItem isFill>
                 <TextInput type="text" value={DEFAULT_RECEIVER_LABEL} isDisabled isRequired />
               </InputGroupItem>
             </InputGroup>
-          </Stack>
-        </FormGroup>
-      )}
-      {_.map(formValues.routeLabels, (routeLabel, i: number) => {
-        return (
-          <FormGroup key={i}>
-            <Stack hasGutter>
+          )}
+          {_.map(formValues.routeLabels, (routeLabel, i: number) => {
+            return (
               <InputGroup>
-                <InputGroupItem isFill>
+                <InputGroupItem isFill key={i}>
                   <TextInput
                     id={`routing-label-${i}`}
                     type="text"
@@ -123,33 +119,35 @@ export const RoutingLabelEditor = ({ formValues, dispatchFormChange, isDefaultRe
                   </Tooltip>
                 </InputGroupItem>
               </InputGroup>
-            </Stack>
-          </FormGroup>
-        );
-      })}
+            );
+          })}
+        </Stack>
+      </FormGroup>
       {formValues.routeLabelDuplicateNamesError && (
-        <FormGroup>
-          <FormHelperText className="pf-v6-u-mb-0">
-            <HelperText>
-              <HelperTextItem
-                icon={<ExclamationCircleIcon />}
-                variant="error"
-                id="routing-labels-help"
-                aria-live="polite"
-                aria-invalid={formValues.routeLabelDuplicateNamesError}
-              >
-                {t('public~Routing label names must be unique.')}
-              </HelperTextItem>
-            </HelperText>
-          </FormHelperText>
-        </FormGroup>
+        <FormHelperText className="pf-v6-u-mb-0">
+          <HelperText>
+            <HelperTextItem
+              icon={<ExclamationCircleIcon />}
+              variant="error"
+              id="routing-labels-help"
+              aria-live="polite"
+              aria-invalid={formValues.routeLabelDuplicateNamesError}
+            >
+              {t('public~Routing label names must be unique.')}
+            </HelperTextItem>
+          </HelperText>
+        </FormHelperText>
       )}
       {!isDefaultReceiver && (
-        <FormGroup>
-          <Button icon={<PlusCircleIcon />} onClick={addRoutingLabel} type="button" variant="link">
-            {t('public~Add label')}
-          </Button>
-        </FormGroup>
+        <Button
+          icon={<PlusCircleIcon />}
+          onClick={addRoutingLabel}
+          type="button"
+          variant="link"
+          isInline
+        >
+          {t('public~Add label')}
+        </Button>
       )}
     </FormSection>
   );
