@@ -183,8 +183,8 @@ const CatalogView: React.FC<CatalogViewProps> = ({
     const typeCounts = getCatalogTypeCounts(filteredBySearchItems, catalogTypes);
     setCatalogTypeCounts(typeCounts);
 
-    // Console table for final filtered results (only for operators)
-    if (filteredByAttributes.length > 0 && filteredByAttributes[0]?.type === 'operator') {
+    // Console table for final filtered results
+    if (filteredByAttributes.length > 0) {
       // Check if we have active filters beyond just search and category
       const hasAttributeFilters = Object.values(activeFilters).some((filterGroup) =>
         Object.values(filterGroup).some((filter) => filter.active),
