@@ -12,6 +12,7 @@ import {
 import { normalizeIconClass } from '@console/internal/components/catalog/catalog-item-icon';
 import { history } from '@console/internal/components/utils';
 import catalogImg from '@console/internal/imgs/logos/catalog-icon.svg';
+import { logKeywordCompareCall } from './catalog-test-utils';
 import { CatalogType, CatalogTypeCounts } from './types';
 
 enum CatalogVisibilityState {
@@ -81,8 +82,6 @@ export const calculateCatalogItemRelevanceScore = (
     const keywords = item.tags.map((k) => k.toLowerCase());
     if (keywords.includes(searchTerm)) {
       score += SCORE.KEYWORD_MATCH;
-      // eslint-disable-next-line no-console
-      console.log(`🔍 Match found: "${searchTerm}" in "${item.name}" tags:`, item.tags);
     }
   }
 
@@ -91,12 +90,6 @@ export const calculateCatalogItemRelevanceScore = (
     const attributeKeywords = item.attributes.keywords.map((k) => k.toLowerCase());
     if (attributeKeywords.includes(searchTerm)) {
       score += SCORE.KEYWORD_MATCH;
-      // Debug logging for keyword matches
-      // eslint-disable-next-line no-console
-      console.log(
-        `🔍 Match found: "${searchTerm}" in "${item.name}" keywords:`,
-        item.attributes.keywords,
-      );
     }
   }
 
@@ -136,6 +129,9 @@ export const getRedHatPriority = (item: CatalogItem): number => {
 
 // Enhanced keyword comparison with relevance scoring and Red Hat prioritization
 export const keywordCompare = (filterString: string, items: CatalogItem[]): CatalogItem[] => {
+  // Test logging for keyword comparison calls
+  logKeywordCompareCall(filterString, items.length, items[0]?.type || 'unknown');
+
   if (!filterString) {
     // No search term - sort by Red Hat priority and then alphabetically
     const sortedItems = [...items].sort((a, b) => {
