@@ -1,26 +1,60 @@
 import { CatalogItem } from '@console/dynamic-plugin-sdk/src/extensions';
-
-// Red Hat priority constants for testing display
-const REDHAT_PRIORITY = {
-  EXACT_MATCH: 2,
-  CONTAINS_REDHAT: 1,
-  NON_REDHAT: 0,
-} as const;
+import {
+  calculateCatalogItemRelevanceScore,
+  getRedHatPriority,
+  keywordCompare,
+  REDHAT_PRIORITY,
+} from './catalog-utils';
 
 /**
- * Test logging for enhanced keywordCompare function
+ * Enhanced search function that preserves computed scores for testing and debugging.
+ *
+ * @param items - The catalog items to search
+ * @param searchTerm - The search term to filter by
+ * @returns Object containing filtered items and a map of pre-computed scores
  */
-export const logKeywordCompareCall = (
-  filterString: string,
-  itemCount: number,
-  catalogType: string,
-): void => {
-  // eslint-disable-next-line no-console
-  console.log('🔍 Enhanced keywordCompare called:', {
-    filterString,
-    itemCount,
-    catalogType,
+export const searchWithPreservedScores = (
+  items: CatalogItem[],
+  searchTerm: string,
+): {
+  filteredItems: CatalogItem[];
+  scoresMap: Map<string, { relevanceScore: number; redHatPriority: number }>;
+} => {
+  if (!searchTerm) {
+    // No search term - just calculate Red Hat priorities for sorting
+    const scoresMap = new Map<string, { relevanceScore: number; redHatPriority: number }>();
+
+    items.forEach((item) => {
+      scoresMap.set(item.uid, {
+        relevanceScore: 0, // No relevance score for non-search
+        redHatPriority: getRedHatPriority(item),
+      });
+    });
+
+    const filteredItems = keywordCompare(searchTerm, items);
+    return { filteredItems, scoresMap };
+  }
+
+  // With search term - capture scores before they get stripped
+  const itemsWithScores = items.map((item) => ({
+    ...item,
+    relevanceScore: calculateCatalogItemRelevanceScore(searchTerm, item),
+    redHatPriority: getRedHatPriority(item),
+  }));
+
+  // Create scores map from computed values
+  const scoresMap = new Map<string, { relevanceScore: number; redHatPriority: number }>();
+  itemsWithScores.forEach((item) => {
+    scoresMap.set(item.uid, {
+      relevanceScore: item.relevanceScore,
+      redHatPriority: item.redHatPriority,
+    });
   });
+
+  // Use the regular keywordCompare which will strip scores but apply filtering/sorting
+  const filteredItems = keywordCompare(searchTerm, items);
+
+  return { filteredItems, scoresMap };
 };
 
 /**
@@ -30,19 +64,36 @@ export const displayCatalogResultsTable = (
   items: CatalogItem[],
   searchTerm: string,
   filterDescription: string,
+  preComputedScores?: Map<string, { relevanceScore: number; redHatPriority: number }>,
 ): void => {
   if (items.length === 0) {
     return;
   }
 
   const tableData = items.map((item) => {
-    // Get relevance score (already calculated and attached to item during filtering)
-    const relevanceScore = searchTerm
-      ? (item as any).relevanceScore ?? 'Not calculated'
-      : 'N/A (No search)';
+    // Use pre-computed scores if available, otherwise calculate (fallback for compatibility)
+    let relevanceScore: number | string;
+    let redHatPriority: number;
 
-    // Get Red Hat priority (already calculated and attached to item during filtering)
-    const redHatPriority = (item as any).redHatPriority ?? 0;
+    if (preComputedScores && preComputedScores.has(item.uid)) {
+      const scores = preComputedScores.get(item.uid);
+      if (scores) {
+        relevanceScore = searchTerm ? scores.relevanceScore : 'N/A (No search)';
+        redHatPriority = scores.redHatPriority;
+      } else {
+        // Fallback if scores is unexpectedly undefined
+        relevanceScore = searchTerm
+          ? calculateCatalogItemRelevanceScore(searchTerm, item)
+          : 'N/A (No search)';
+        redHatPriority = getRedHatPriority(item);
+      }
+    } else {
+      // Fallback: Check if scores are still attached to items or recalculate
+      relevanceScore = searchTerm
+        ? (item as any).relevanceScore ?? calculateCatalogItemRelevanceScore(searchTerm, item)
+        : 'N/A (No search)';
+      redHatPriority = (item as any).redHatPriority ?? getRedHatPriority(item);
+    }
 
     // Format Red Hat priority display
     const isRedHatProvider =

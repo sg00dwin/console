@@ -6,7 +6,11 @@ import { CatalogItem } from '@console/dynamic-plugin-sdk/src/extensions';
 import { isModalOpen } from '@console/internal/components/modals';
 import { useQueryParams } from '../../../hooks/useQueryParams';
 import PaneBody from '../../layout/PaneBody';
-import { displayCatalogResultsTable, buildFilterDescription } from '../utils/catalog-test-utils';
+import {
+  displayCatalogResultsTable,
+  buildFilterDescription,
+  searchWithPreservedScores,
+} from '../utils/catalog-test-utils';
 import { setURLParams, updateURLParams, getCatalogTypeCounts } from '../utils/catalog-utils';
 import {
   categorize,
@@ -149,7 +153,11 @@ const CatalogView: React.FC<CatalogViewProps> = ({
   const catalogCategories = React.useMemo<CatalogCategory[]>(() => {
     const allCategory = { id: ALL_CATEGORY, label: t('console-shared~All items') };
     const otherCategory = { id: OTHER_CATEGORY, label: t('console-shared~Other') };
-    return [allCategory, ...(categories ?? []), otherCategory];
+
+    // Sort categories alphabetically by label
+    const sortedCategories = [...(categories ?? [])].sort((a, b) => a.label.localeCompare(b.label));
+
+    return [allCategory, ...sortedCategories, otherCategory];
   }, [categories, t]);
 
   const categorizedIds = React.useMemo(() => categorize(items, catalogCategories), [
@@ -166,10 +174,27 @@ const CatalogView: React.FC<CatalogViewProps> = ({
 
   const filteredItems: CatalogItem[] = React.useMemo(() => {
     const filteredByCategoryItems = filterByCategory(items, activeCategoryId, categorizedIds);
-    const filteredBySearchItems = filterBySearchKeyword(
-      filteredByCategoryItems,
-      activeSearchKeyword,
+
+    // Check if we need debug table (to decide whether to use optimized search)
+    const hasAttributeFilters = Object.values(activeFilters).some((filterGroup) =>
+      Object.values(filterGroup).some((filter) => filter.active),
     );
+    const hasCategoryFilter = activeCategoryId !== ALL_CATEGORY;
+    const needsDebugTable = activeSearchKeyword || hasAttributeFilters || hasCategoryFilter;
+
+    let filteredBySearchItems: CatalogItem[];
+    let scoresMap: Map<string, { relevanceScore: number; redHatPriority: number }> | undefined;
+
+    if (needsDebugTable && activeSearchKeyword) {
+      // Use optimized search that preserves scores for debugging
+      const searchResult = searchWithPreservedScores(filteredByCategoryItems, activeSearchKeyword);
+      filteredBySearchItems = searchResult.filteredItems;
+      scoresMap = searchResult.scoresMap;
+    } else {
+      // Use standard search (no debug overhead)
+      filteredBySearchItems = filterBySearchKeyword(filteredByCategoryItems, activeSearchKeyword);
+    }
+
     const filteredByAttributes = filterByAttributes(filteredBySearchItems, activeFilters);
 
     const filterCounts = getFilterGroupCounts(filteredBySearchItems, activeFilters, filterGroups);
@@ -178,22 +203,19 @@ const CatalogView: React.FC<CatalogViewProps> = ({
     const typeCounts = getCatalogTypeCounts(filteredBySearchItems, catalogTypes);
     setCatalogTypeCounts(typeCounts);
 
-    // Testing console table for filtered results
-    if (filteredByAttributes.length > 0) {
-      // Check if we have active filters beyond just search and category
-      const hasAttributeFilters = Object.values(activeFilters).some((filterGroup) =>
-        Object.values(filterGroup).some((filter) => filter.active),
+    // Testing console table for filtered results (now with pre-computed scores when available)
+    if (filteredByAttributes.length > 0 && needsDebugTable) {
+      const filterDescription = buildFilterDescription(
+        activeSearchKeyword,
+        activeCategoryId,
+        activeFilters,
       );
-
-      // Only show console.table if we have search term or attribute filters
-      if (activeSearchKeyword || hasAttributeFilters) {
-        const filterDescription = buildFilterDescription(
-          activeSearchKeyword,
-          activeCategoryId,
-          activeFilters,
-        );
-        displayCatalogResultsTable(filteredByAttributes, activeSearchKeyword, filterDescription);
-      }
+      displayCatalogResultsTable(
+        filteredByAttributes,
+        activeSearchKeyword,
+        filterDescription,
+        scoresMap,
+      );
     }
 
     // Always use filteredByAttributes since keywordCompare handles both cases:

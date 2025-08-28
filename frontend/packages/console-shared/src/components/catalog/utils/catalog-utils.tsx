@@ -12,7 +12,6 @@ import {
 import { normalizeIconClass } from '@console/internal/components/catalog/catalog-item-icon';
 import { history } from '@console/internal/components/utils';
 import catalogImg from '@console/internal/imgs/logos/catalog-icon.svg';
-import { logKeywordCompareCall } from './catalog-test-utils';
 import { CatalogType, CatalogTypeCounts } from './types';
 
 enum CatalogVisibilityState {
@@ -36,14 +35,14 @@ const SCORE = {
 } as const;
 
 // Red Hat priority constants
-const REDHAT_PRIORITY = {
+export const REDHAT_PRIORITY = {
   EXACT_MATCH: 2,
   CONTAINS_REDHAT: 1,
   NON_REDHAT: 0,
 } as const;
 
 // Sorting thresholds
-const SORTING_THRESHOLDS = {
+export const SORTING_THRESHOLDS = {
   REDHAT_PRIORITY_DELTA: 100, // Score difference threshold for Red Hat prioritization
 } as const;
 
@@ -130,7 +129,12 @@ export const getRedHatPriority = (item: CatalogItem): number => {
 // Enhanced keyword comparison with relevance scoring and Red Hat prioritization
 export const keywordCompare = (filterString: string, items: CatalogItem[]): CatalogItem[] => {
   // Test logging for keyword comparison calls
-  logKeywordCompareCall(filterString, items.length, items[0]?.type || 'unknown');
+  // eslint-disable-next-line no-console
+  console.log('🔍 Enhanced keywordCompare called:', {
+    filterString,
+    itemCount: items.length,
+    catalogType: items[0]?.type || 'unknown',
+  });
 
   if (!filterString) {
     // No search term - sort by Red Hat priority and then alphabetically
