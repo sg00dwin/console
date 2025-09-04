@@ -24,9 +24,14 @@ export class SelectorInput extends Component {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (!_.isEqual(prevProps.tags, this.props.tags)) {
       this.setState({ tags: this.props.tags });
+    }
+
+    // Call onValidationChange callback when isInputValid changes
+    if (prevState.isInputValid !== this.state.isInputValid && this.props.onValidationChange) {
+      this.props.onValidationChange(this.state.isInputValid);
     }
   }
   static arrayify(obj) {
@@ -77,11 +82,22 @@ export class SelectorInput extends Component {
 
     // If the user deletes an existing inputValue, set isInputValid back to true
     if (inputValue === '') {
-      this.setState({ inputValue, isInputValid: true });
+      this.setState({ inputValue, isInputValid: true }, () => {
+        // Call onValidationChange callback after state update
+        if (this.props.onValidationChange) {
+          this.props.onValidationChange(true);
+        }
+      });
       return;
     }
 
-    this.setState({ inputValue, isInputValid: this.isTagValid(inputValue) });
+    const isValid = this.isTagValid(inputValue);
+    this.setState({ inputValue, isInputValid: isValid }, () => {
+      // Call onValidationChange callback after state update
+      if (this.props.onValidationChange) {
+        this.props.onValidationChange(isValid);
+      }
+    });
   }
 
   handleChange(tags, changed) {
@@ -89,7 +105,12 @@ export class SelectorInput extends Component {
     const newTag = changed[0];
 
     if (!this.isTagValid(newTag)) {
-      this.setState({ isInputValid: false });
+      this.setState({ isInputValid: false }, () => {
+        // Call onValidationChange callback after state update
+        if (this.props.onValidationChange) {
+          this.props.onValidationChange(false);
+        }
+      });
       return;
     }
 
@@ -100,12 +121,22 @@ export class SelectorInput extends Component {
     // Note that TagsInput accepts an onlyUnique property, but we handle this logic ourselves so that we can set a
     // custom error class
     if (_.filter(tags, (tag) => tag === cleanNewTag).length > 1) {
-      this.setState({ isInputValid: false });
+      this.setState({ isInputValid: false }, () => {
+        // Call onValidationChange callback after state update
+        if (this.props.onValidationChange) {
+          this.props.onValidationChange(false);
+        }
+      });
       return;
     }
 
     const newTags = cleanTags(tags);
-    this.setState({ inputValue: '', isInputValid: true, tags: newTags });
+    this.setState({ inputValue: '', isInputValid: true, tags: newTags }, () => {
+      // Call onValidationChange callback after state update
+      if (this.props.onValidationChange) {
+        this.props.onValidationChange(true);
+      }
+    });
     this.props.onChange(newTags);
   }
 
