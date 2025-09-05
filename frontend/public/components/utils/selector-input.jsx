@@ -24,14 +24,9 @@ export class SelectorInput extends Component {
     };
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (!_.isEqual(prevProps.tags, this.props.tags)) {
       this.setState({ tags: this.props.tags });
-    }
-
-    // Call onValidationChange callback when isInputValid changes
-    if (prevState.isInputValid !== this.state.isInputValid && this.props.onValidationChange) {
-      this.props.onValidationChange(this.state.isInputValid);
     }
   }
   static arrayify(obj) {
@@ -70,6 +65,12 @@ export class SelectorInput extends Component {
     this.ref_ && this.ref_.focus();
   }
 
+  notifyValidationChange = (isValid) => {
+    if (this.props.onValidationChange) {
+      this.props.onValidationChange(isValid);
+    }
+  };
+
   isTagValid(tag) {
     const requirement = k8sSelectorRequirement.requirementFromString(tag);
     return !!(requirement && (!this.isBasic || requirement.operator === 'Equals'));
@@ -83,20 +84,14 @@ export class SelectorInput extends Component {
     // If the user deletes an existing inputValue, set isInputValid back to true
     if (inputValue === '') {
       this.setState({ inputValue, isInputValid: true }, () => {
-        // Call onValidationChange callback after state update
-        if (this.props.onValidationChange) {
-          this.props.onValidationChange(true);
-        }
+        this.notifyValidationChange(true);
       });
       return;
     }
 
     const isValid = this.isTagValid(inputValue);
     this.setState({ inputValue, isInputValid: isValid }, () => {
-      // Call onValidationChange callback after state update
-      if (this.props.onValidationChange) {
-        this.props.onValidationChange(isValid);
-      }
+      this.notifyValidationChange(isValid);
     });
   }
 
@@ -106,10 +101,7 @@ export class SelectorInput extends Component {
 
     if (!this.isTagValid(newTag)) {
       this.setState({ isInputValid: false }, () => {
-        // Call onValidationChange callback after state update
-        if (this.props.onValidationChange) {
-          this.props.onValidationChange(false);
-        }
+        this.notifyValidationChange(false);
       });
       return;
     }
@@ -122,20 +114,14 @@ export class SelectorInput extends Component {
     // custom error class
     if (_.filter(tags, (tag) => tag === cleanNewTag).length > 1) {
       this.setState({ isInputValid: false }, () => {
-        // Call onValidationChange callback after state update
-        if (this.props.onValidationChange) {
-          this.props.onValidationChange(false);
-        }
+        this.notifyValidationChange(false);
       });
       return;
     }
 
     const newTags = cleanTags(tags);
     this.setState({ inputValue: '', isInputValid: true, tags: newTags }, () => {
-      // Call onValidationChange callback after state update
-      if (this.props.onValidationChange) {
-        this.props.onValidationChange(true);
-      }
+      this.notifyValidationChange(true);
     });
     this.props.onChange(newTags);
   }
