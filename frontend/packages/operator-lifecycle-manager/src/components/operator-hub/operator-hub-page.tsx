@@ -11,6 +11,7 @@ import {
   PageHeading,
   skeletonCatalog,
   StatusBox,
+  useAccessReview,
 } from '@console/internal/components/utils';
 import {
   referenceForModel,
@@ -52,6 +53,10 @@ import {
   isGCPWIFCluster,
 } from './operator-hub-utils';
 import { OperatorHubItem, InstalledState, OLMAnnotation, CSVAnnotations } from './index';
+import { ALL_NAMESPACES_KEY } from '@console/shared';
+import { GLOBAL_COPIED_CSV_NAMESPACE } from '../../const';
+
+const ENABLE_GLOBAL_INSTALL_VIEW = true;  // Set to false to disable
 
 const clusterServiceVersionFor = (
   clusterServiceVersions: ClusterServiceVersionKind[],
@@ -96,6 +101,11 @@ export const OperatorHubList: React.FC<OperatorHubListProps> = ({
   ...props
 }) => {
   const { t } = useTranslation();
+  const canListClusterPackageManifests = useAccessReview({
+    group: PackageManifestModel.apiGroup,
+    resource: PackageManifestModel.plural,
+    verb: 'list',
+  });
   const items: OperatorHubItem[] = React.useMemo(() => {
     if (!loaded || loadError) {
       return [];
@@ -103,12 +113,34 @@ export const OperatorHubList: React.FC<OperatorHubListProps> = ({
     const operatorGroups = props.operatorGroups?.data ?? [];
     const subscriptions = props.subscriptions?.data ?? [];
     const clusterServiceVersions = props.clusterServiceVersions?.data ?? [];
+    console.log('Namespace CSVs:', clusterServiceVersions.length);
+    let allClusterServiceVersions = clusterServiceVersions;
+    if (ENABLE_GLOBAL_INSTALL_VIEW && (namespace === undefined || namespace === ALL_NAMESPACES_KEY)) {
+      const globalCSVs = Array.isArray(props.globalClusterServiceVersions?.data) ? props.globalClusterServiceVersions.data : [];
+      console.log('Global CSVs:', globalCSVs.length);
+      allClusterServiceVersions = [...clusterServiceVersions, ...globalCSVs].filter(
+        (csv, index, self) => index === self.findIndex((c) => c.metadata.uid === csv.metadata.uid)
+      );
+    }
+    const globalCSVs = Array.isArray(props.globalClusterServiceVersions?.data) ? props.globalClusterServiceVersions.data : [];
+    const nfdCSVs = props.nfdClusterServiceVersions?.data ?? [];
+    allClusterServiceVersions = [...clusterServiceVersions, ...globalCSVs, ...nfdCSVs].filter(
+      (csv, index, self) => index === self.findIndex((c) => c.metadata.uid === csv.metadata.uid)
+    );
+    console.log('Merged CSVs:', allClusterServiceVersions.length);
+    const hasNFD = allClusterServiceVersions.some(csv => csv.metadata.name.includes('nfd'));
+    console.log('Has NFD CSV:', hasNFD);
     const cloudCredentials = props.cloudCredentials?.data ?? null;
     const authentication = props.authentication?.data ?? null;
     const infrastructure = props.infrastructure?.data ?? null;
     const packageManifests = props.packageManifests?.data ?? [];
     const marketplacePackageManifests = props.marketplacePackageManifests?.data ?? [];
-    const allPackageManifests = [...marketplacePackageManifests, ...packageManifests];
+    const globalPackageManifests = props.globalPackageManifests?.data ?? [];
+    const nfdPackageManifests = props.nfdPackageManifests?.data ?? [];
+    console.log('NFD PackageManifests from marketplace:', nfdPackageManifests.length);
+    console.log('NFD PackageManifest details:', nfdPackageManifests);
+    const allPackageManifests = [...marketplacePackageManifests, ...packageManifests, ...(canListClusterPackageManifests ? globalPackageManifests : []), ...nfdPackageManifests];
+    console.log('All PackageManifests:', allPackageManifests.length);
     const clusterIsAWSSTS = isAWSSTSCluster(cloudCredentials, infrastructure, authentication);
     const clusterIsAzureWIF = isAzureWIFCluster(cloudCredentials, infrastructure, authentication);
     const clusterIsGCPWIF = isGCPWIFCluster(cloudCredentials, infrastructure, authentication);
@@ -137,7 +169,7 @@ export const OperatorHubList: React.FC<OperatorHubListProps> = ({
             loaded && subscriptionFor(subscriptions)(operatorGroups)(pkg)(namespace);
           const clusterServiceVersion =
             loaded &&
-            clusterServiceVersionFor(clusterServiceVersions, subscription?.status?.installedCSV);
+            clusterServiceVersionFor(allClusterServiceVersions, subscription?.status?.installedCSV);
           const { channels, defaultChannel } = pkg.status ?? {};
           const { currentCSVDesc } = (channels || []).find(({ name }) => name === defaultChannel);
           const currentCSVAnnotations: CSVAnnotations = currentCSVDesc?.annotations ?? {};
@@ -225,6 +257,10 @@ export const OperatorHubList: React.FC<OperatorHubListProps> = ({
     props.operatorGroups?.data,
     props.packageManifests?.data,
     props.subscriptions?.data,
+    props.globalClusterServiceVersions?.data,
+    props.nfdClusterServiceVersions?.data,
+    props.globalPackageManifests?.data,
+    props.nfdPackageManifests?.data,
   ]);
 
   const uniqueItems = _.uniqBy(items, 'uid');
@@ -253,6 +289,12 @@ export const OperatorHubPage = withFallback((props) => {
   const isOperatorBackedServiceEnabled = isCatalogTypeEnabled(
     OPERATOR_BACKED_SERVICE_CATALOG_TYPE_ID,
   );
+  const canListClusterCSVs = useAccessReview({
+    group: ClusterServiceVersionModel.apiGroup,
+    resource: ClusterServiceVersionModel.plural,
+    verb: 'list',
+  });
+
   return (
     <>
       <Helmet>
@@ -320,6 +362,32 @@ export const OperatorHubPage = withFallback((props) => {
                   namespace: params.ns,
                   prop: 'clusterServiceVersions',
                 },
+                ...(ENABLE_GLOBAL_INSTALL_VIEW && (params.ns === undefined || params.ns === ALL_NAMESPACES_KEY) ? [
+                  {  // Existing global fetch
+                    kind: referenceForModel(ClusterServiceVersionModel),
+                    prop: 'globalClusterServiceVersions',
+                    ...(canListClusterCSVs ? { isList: true } : { namespace: GLOBAL_COPIED_CSV_NAMESPACE, isList: true }),
+                  },
+                  {  // NFD-specific CSV fetch
+                    kind: referenceForModel(ClusterServiceVersionModel),
+                    namespace: 'openshift-nfd',
+                    isList: true,
+                    prop: 'nfdClusterServiceVersions',
+                  },
+                  { // Updated NFD-specific PackageManifest fetch from openshift-marketplace with selector for NFD
+                    kind: referenceForModel(PackageManifestModel),
+                    namespace: 'openshift-marketplace',
+                    isList: true,
+                    prop: 'nfdPackageManifests',
+                    selector: { matchLabels: { 'name': 'nfd' } }, // Assuming the PackageManifest name is 'nfd'; adjust if needed
+                  },
+                  { 
+                    kind: referenceForModel(PackageManifestModel),
+                    isList: true,
+                    prop: 'globalPackageManifests',
+                    selector: fromRequirements([{ key: 'opsrc-owner-name', operator: 'DoesNotExist' }, { key: 'csc-owner-name', operator: 'DoesNotExist' }]),
+                  },
+                ] : []),
                 {
                   kind: referenceForModel(CloudCredentialModel),
                   prop: 'cloudCredentials',
@@ -359,6 +427,10 @@ export type OperatorHubListProps = {
   loaded: boolean;
   loadError?: string;
   clusterServiceVersions: { loaded: boolean; data?: ClusterServiceVersionKind[] };
+  globalClusterServiceVersions: { loaded: boolean; data?: ClusterServiceVersionKind[] };
+  nfdClusterServiceVersions?: { loaded: boolean; data?: ClusterServiceVersionKind[] };
+  globalPackageManifests?: { loaded: boolean; data?: PackageManifestKind[] };
+  nfdPackageManifests?: { loaded: boolean; data?: PackageManifestKind[] };
 };
 
 OperatorHubList.displayName = 'OperatorHubList';

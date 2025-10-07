@@ -40,6 +40,7 @@ xdescribe('[https://issues.redhat.com/browse/CONSOLE-2136] OperatorHubList', () 
           {...operatorHubListPageProps}
           marketplacePackageManifests={null}
           subscriptions={{ loaded: false, data: [] }}
+          globalClusterServiceVersions={{ loaded: false, data: [] }}
         />
       </MemoryRouter>,
     );

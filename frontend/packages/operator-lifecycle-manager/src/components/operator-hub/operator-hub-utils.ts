@@ -8,7 +8,8 @@ import {
 import { parseJSONAnnotation } from '@console/shared/src/utils/annotations';
 import { DefaultCatalogSource, PackageSource } from '../../const';
 import { PackageManifestKind } from '../../types';
-import { InfrastructureFeature, OLMAnnotation, ValidSubscriptionValue } from './index';
+import { InfrastructureFeature, OLMAnnotation, CSVAnnotations } from './index';
+import * as _ from 'lodash';
 
 export const defaultPackageSourceMap = {
   [DefaultCatalogSource.RedHatOperators]: PackageSource.RedHatOperators,
@@ -138,53 +139,29 @@ export const getInitializationResource: AnnotationParser<K8sResourceKind> = (
     ...options,
   });
 
-const parseValidSubscriptionAnnotation: AnnotationParser<string[]> = (annotations, options) =>
-  parseJSONAnnotation<string[]>(annotations, OLMAnnotation.ValidSubscription, {
-    validate: isArrayOfStrings,
-    ...options,
-  }) ?? [];
+export const getValidSubscription = (annotations: CSVAnnotations, { onError = _.noop } = {}) => {
+  const annotation = annotations?.['operators.openshift.io/valid-subscription'];
+  if (!annotation) {
+    return [null, []];
+  }
 
-export const getValidSubscription: AnnotationParser<[string[], string[]]> = (
-  annotations,
-  options,
-) => {
-  const validSubscriptionMap = parseValidSubscriptionAnnotation(annotations, options).reduce<{
-    [key: string]: string[];
-  }>((acc, value) => {
-    switch (value) {
-      case ValidSubscriptionValue.OpenShiftContainerPlatform:
-      case ValidSubscriptionValue.OpenShiftPlatformPlus:
-        return {
-          ...acc,
-          [value]: [value],
-        };
-      case ValidSubscriptionValue.OpenShiftKubernetesEngine:
-      case ValidSubscriptionValue.OpenShiftVirtualizationEngine:
-        return {
-          ...acc,
-          [ValidSubscriptionValue.OpenShiftKubernetesEngine]: [
-            ValidSubscriptionValue.OpenShiftKubernetesEngine,
-          ],
-          [ValidSubscriptionValue.OpenShiftVirtualizationEngine]: [
-            ValidSubscriptionValue.OpenShiftVirtualizationEngine,
-          ],
-        };
-      default:
-        return {
-          ...acc,
-          [ValidSubscriptionValue.RequiresSeparateSubscription]: [
-            ...(acc?.[ValidSubscriptionValue.RequiresSeparateSubscription] ?? []),
-            value,
-          ],
-        };
+  const trimmed = annotation.trim();
+  let parsed;
+  if (trimmed.startsWith('[')) {
+    try {
+      parsed = JSON.parse(trimmed);
+      if (!Array.isArray(parsed)) {
+        throw new Error('Parsed value is not an array');
+      }
+    } catch (error) {
+      onError(error);
+      parsed = [];
     }
-  }, {});
+  } else {
+    parsed = [trimmed];
+  }
 
-  const validSubscriptions = Object.values(validSubscriptionMap).reduce(
-    (acc, subscriptions) => [...acc, ...subscriptions],
-    [],
-  );
-  return [validSubscriptions, Object.keys(validSubscriptionMap)];
+  return [parsed, parsed];
 };
 
 const parseInfrastructureFeaturesAnnotation: AnnotationParser<string[]> = (annotations, options) =>
