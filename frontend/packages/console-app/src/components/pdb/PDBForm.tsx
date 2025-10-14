@@ -11,8 +11,6 @@ import {
   Select,
   SelectList,
   SelectOption,
-  Stack,
-  StackItem,
   Split,
   SplitItem,
   HelperTextItem,
@@ -164,151 +162,132 @@ const PDBForm: React.FC<PodDisruptionBudgetFormProps> = ({
   return (
     <PaneBody className="co-m-pane__form">
       <Form onSubmit={handleSubmit}>
-        <Stack hasGutter>
-          <StackItem>
-            <FormGroup label={t('console-app~Name')} isRequired fieldId="pdb-name">
-              <TextInput
-                isRequired
-                type="text"
-                name="name"
-                id="pdb-name"
-                placeholder="example"
-                value={formValues.name}
-                onChange={handleNameChange}
-                isDisabled={!!existingResource}
-                autoFocus
-              />
-            </FormGroup>
-          </StackItem>
-          <StackItem>
-            <FormGroup
-              label={t('console-app~Labels')}
-              fieldId="pdb-labels"
-              labelHelp={
-                <FieldLevelHelp>
-                  <Title headingLevel="h3">{t('console-app~Selector')}</Title>
-                  <Content component="p" className="pdb-form-popover__description">
-                    {t(
-                      'console-app~Label query over pods whose evictions are managed by the disruption budget. Anull selector will match no pods, while an empty ({}) selector will select all pods within the namespace.',
-                    )}
-                  </Content>
-                </FieldLevelHelp>
-              }
-            >
-              <SelectorInput
-                onChange={(l) => handleSelectorChange(l)}
-                tags={[
-                  ...SelectorInput.arrayify(formValues.selector.matchLabels),
-                  ...SelectorInput.arrayObjectsToArrayStrings(formValues.selector.matchExpressions),
-                ]}
-                labelClassName="labelClassName"
-              />
-              {matchingSelector && (
-                <StackItem>
-                  <FormHelperText>
-                    <HelperText>
-                      <HelperTextItem variant="warning">
-                        {t(
-                          'console-app~Resource is already covered by another PodDisruptionBudget',
-                        )}
-                      </HelperTextItem>
-                    </HelperText>
-                  </FormHelperText>
-                </StackItem>
-              )}
-            </FormGroup>
-          </StackItem>
-          <StackItem>
-            <FormGroup
-              fieldId="pdb-requirement"
-              label={t('console-app~Availability requirement')}
-              labelHelp={<AvailabilityRequirementPopover />}
-            />
-            <Split hasGutter>
-              <SplitItem isFilled>
-                <Select
-                  isOpen={isOpen}
-                  onOpenChange={(open) => setIsOpen(open)}
-                  selected={selectedRequirement}
-                  onSelect={(_e, value: string) => handleAvailabilityRequirementKeyChange(value)}
-                  toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
-                    <MenuToggle
-                      ref={toggleRef}
-                      isExpanded={isOpen}
-                      isFullWidth
-                      onClick={() => setIsOpen(!isOpen)}
-                    >
-                      {selectedRequirement}
-                    </MenuToggle>
-                  )}
-                >
-                  <SelectList>
-                    {Object.keys(items).map((key) => (
-                      <SelectOption
-                        key={key}
-                        value={key}
-                        onClick={() => handleAvailabilityRequirementKeyChange(key)}
-                      >
-                        {items[key]}
-                      </SelectOption>
-                    ))}
-                  </SelectList>
-                </Select>
-              </SplitItem>
-              <SplitItem isFilled>
-                <TextInput
-                  type="text"
-                  aria-label={t('console-app~Availability requirement value')}
-                  onChange={handleAvailabilityRequirementValueChange}
-                  value={
-                    formValues?.minAvailable?.toString() || formValues?.maxUnavailable?.toString()
-                  }
-                  placeholder={t('console-app~Value (% or number)')}
-                  name="availability requirement value"
-                  isDisabled={isDisabled}
-                  validated={
-                    checkAvailabilityRequirementValue(formValues, replicasCount)
-                      ? ValidatedOptions.warning
-                      : ValidatedOptions.default
-                  }
-                />
-              </SplitItem>
-            </Split>
-          </StackItem>
-          {checkAvailabilityRequirementValue(formValues, replicasCount) && (
-            <StackItem>
-              <FormAlert>
-                <Alert
-                  variant="warning"
-                  title={t('console-app~Availability requirement value warning')}
-                  aria-live="polite"
-                  isInline
-                >
-                  {t(
-                    'console-app~A maxUnavailable of 0% or 0 or a minAvailable of 100% or greater than or equal to the number of replicas is permitted but can block nodes from being drained.',
-                  )}
-                </Alert>
-              </FormAlert>
-            </StackItem>
+        <FormGroup label={t('console-app~Name')} isRequired fieldId="pdb-name">
+          <TextInput
+            isRequired
+            type="text"
+            name="name"
+            id="pdb-name"
+            placeholder="example"
+            value={formValues.name}
+            onChange={handleNameChange}
+            isDisabled={!!existingResource}
+            autoFocus
+          />
+        </FormGroup>
+
+        <FormGroup
+          label={t('console-app~Labels')}
+          fieldId="pdb-labels"
+          labelHelp={
+            <FieldLevelHelp>
+              <Title headingLevel="h3">{t('console-app~Selector')}</Title>
+              <Content component="p" className="pdb-form-popover__description">
+                {t(
+                  'console-app~Label query over pods whose evictions are managed by the disruption budget. Anull selector will match no pods, while an empty ({}) selector will select all pods within the namespace.',
+                )}
+              </Content>
+            </FieldLevelHelp>
+          }
+        >
+          <SelectorInput
+            onChange={(l) => handleSelectorChange(l)}
+            tags={[
+              ...SelectorInput.arrayify(formValues.selector.matchLabels),
+              ...SelectorInput.arrayObjectsToArrayStrings(formValues.selector.matchExpressions),
+            ]}
+            labelClassName="labelClassName"
+          />
+          {matchingSelector && (
+            <FormHelperText>
+              <HelperText>
+                <HelperTextItem variant="warning">
+                  {t('console-app~Resource is already covered by another PodDisruptionBudget')}
+                </HelperTextItem>
+              </HelperText>
+            </FormHelperText>
           )}
-          <StackItem>
-            <ButtonBar errorMessage={error} inProgress={inProgress}>
-              <ActionGroup className="pf-v6-c-form">
-                <Button
-                  type="submit"
-                  id="save-changes"
-                  variant="primary"
-                  isDisabled={!formValues.name}
-                >
-                  {existingResource ? t('console-app~Save') : t('console-app~Create')}
-                </Button>
-                <Button onClick={history.goBack} id="cancel" variant="secondary">
-                  {t('console-app~Cancel')}
-                </Button>
-              </ActionGroup>
-            </ButtonBar>
-          </StackItem>
-        </Stack>
+        </FormGroup>
+        <FormGroup
+          fieldId="pdb-requirement"
+          label={t('console-app~Availability requirement')}
+          labelHelp={<AvailabilityRequirementPopover />}
+        >
+          <Split hasGutter>
+            <SplitItem isFilled>
+              <Select
+                isOpen={isOpen}
+                onOpenChange={(open) => setIsOpen(open)}
+                selected={selectedRequirement}
+                onSelect={(_e, value: string) => handleAvailabilityRequirementKeyChange(value)}
+                toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
+                  <MenuToggle
+                    ref={toggleRef}
+                    isExpanded={isOpen}
+                    isFullWidth
+                    onClick={() => setIsOpen(!isOpen)}
+                  >
+                    {selectedRequirement}
+                  </MenuToggle>
+                )}
+              >
+                <SelectList>
+                  {Object.keys(items).map((key) => (
+                    <SelectOption
+                      key={key}
+                      value={key}
+                      onClick={() => handleAvailabilityRequirementKeyChange(key)}
+                    >
+                      {items[key]}
+                    </SelectOption>
+                  ))}
+                </SelectList>
+              </Select>
+            </SplitItem>
+            <SplitItem isFilled>
+              <TextInput
+                type="text"
+                aria-label={t('console-app~Availability requirement value')}
+                onChange={handleAvailabilityRequirementValueChange}
+                value={
+                  formValues?.minAvailable?.toString() || formValues?.maxUnavailable?.toString()
+                }
+                placeholder={t('console-app~Value (% or number)')}
+                name="availability requirement value"
+                isDisabled={isDisabled}
+                validated={
+                  checkAvailabilityRequirementValue(formValues, replicasCount)
+                    ? ValidatedOptions.warning
+                    : ValidatedOptions.default
+                }
+              />
+            </SplitItem>
+          </Split>
+        </FormGroup>
+        {/* {checkAvailabilityRequirementValue(formValues, replicasCount) && ()} */}
+        <FormAlert>
+          <Alert
+            variant="warning"
+            title={t('console-app~Availability requirement value warning')}
+            aria-live="polite"
+            isInline
+          >
+            {t(
+              'console-app~A maxUnavailable of 0% or 0 or a minAvailable of 100% or greater than or equal to the number of replicas is permitted but can block nodes from being drained.',
+            )}
+          </Alert>
+        </FormAlert>
+
+        <ButtonBar errorMessage={error} inProgress={inProgress}>
+          <ActionGroup className="pf-v6-c-form">
+            <Button type="submit" id="save-changes" variant="primary" isDisabled={!formValues.name}>
+              {existingResource ? t('console-app~Save') : t('console-app~Create')}
+            </Button>
+            <Button onClick={history.goBack} id="cancel" variant="secondary">
+              {t('console-app~Cancel')}
+            </Button>
+          </ActionGroup>
+        </ButtonBar>
       </Form>
     </PaneBody>
   );

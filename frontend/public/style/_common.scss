@@ -1,3 +1,35 @@
+form {
+  &:not(.pf-v6-c-form) {
+    border: 4px dashed blue !important;
+    input,
+    select,
+    textarea {
+      border: 4px solid lime !important;
+    }
+  }
+  &.gold {
+    border: 4px dashed gold !important;
+  }
+  // Target non PatternFly FormGroups
+  .pf-v6-c-form-control:not(.pf-v6-c-form__group-control .pf-v6-c-form-control) {
+    input, select, textarea {
+      border: 4px solid hotpink !important;
+    }
+  }
+}
+
+.red {
+  border: 2px solid red !important;
+}
+  
+.pf-v6-c-form__group {
+  background-color: cornflowerblue !important;
+  outline: 1px solid #000 !important
+}
+// .pf-v6-c-form-control:not(.pf-v6-c-form__group-control .pf-v6-c-form-control) {
+//   outline: 2px dashed black !important;
+// }
+
 .co-divider {
   margin-bottom: var(--pf-t--global--spacer--lg);
   margin-top: var(--pf-t--global--spacer--lg);

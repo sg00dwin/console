@@ -9,13 +9,17 @@ import {
   MenuToggleElement,
   Content,
   ContentVariants,
+  Form,
+  FormGroup,
+  FormGroupLabelHelp,
+  Popover,
+  TextInput,
 } from '@patternfly/react-core';
 import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { CreateProjectModalProps } from '@console/dynamic-plugin-sdk/src';
 import { ModalComponent } from '@console/dynamic-plugin-sdk/src/app/modal-support/ModalProvider';
-import { FieldLevelHelp } from '@console/internal/components/utils/field-level-help';
 import { resourceObjPath } from '@console/internal/components/utils/resource-link';
 import { SelectorInput } from '@console/internal/components/utils/selector-input';
 import { LoadingInline } from '@console/internal/components/utils/status-box';
@@ -179,37 +183,43 @@ export const CreateNamespaceModal: ModalComponent<CreateProjectModalProps> = ({
         ...(inProgress ? [<LoadingInline />] : []),
       ]}
     >
-      <form onSubmit={submit} name="form" className="modal-content">
-        <div className="form-group">
-          <label htmlFor="input-name" className="co-required">
-            {t('console-shared~Name')}
-          </label>
-          <FieldLevelHelp>
-            <Content component={ContentVariants.p}>
-              {t(
-                "console-shared~A Namespace name must consist of lower case alphanumeric characters or '-', and must start and end with an alphanumeric character (e.g. 'my-name' or '123-abc').",
-              )}
-            </Content>
-            <Content component={ContentVariants.p}>
-              {t(
-                "console-shared~You must create a Namespace to be able to create projects that begin with 'openshift-', 'kubernetes-', or 'kube-'.",
-              )}
-            </Content>
-          </FieldLevelHelp>
-          <div className="modal-body__field">
-            <span className="pf-v6-c-form-control">
-              <input
-                id="input-name"
-                data-test="input-name"
-                name="name"
-                type="text"
-                onChange={(e) => setName(e.target.value)}
-                value={name || ''}
-                required
-              />
-            </span>
-          </div>
-        </div>
+      <Form onSubmit={submit} name="form" className="pf-v6-c-form--no-gap">
+        <FormGroup
+          className="form-group"
+          label={t('console-shared~Name')}
+          isRequired
+          fieldId="input-name"
+          labelHelp={
+            <Popover
+              bodyContent={
+                <div>
+                  <Content component={ContentVariants.p}>
+                    {t(
+                      "console-shared~A Namespace name must consist of lower case alphanumeric characters or '-', and must start and end with an alphanumeric character (e.g. 'my-name' or '123-abc').",
+                    )}
+                  </Content>
+                  <Content component={ContentVariants.p}>
+                    {t(
+                      "console-shared~You must create a Namespace to be able to create projects that begin with 'openshift-', 'kubernetes-', or 'kube-'.",
+                    )}
+                  </Content>
+                </div>
+              }
+            >
+              <FormGroupLabelHelp aria-label={t('console-shared~More info for name field')} />
+            </Popover>
+          }
+        >
+          <TextInput
+            id="input-name"
+            data-test="input-name"
+            name="name"
+            type="text"
+            onChange={(_, value) => setName(value)}
+            value={name || ''}
+            isRequired
+          />
+        </FormGroup>
         <div className="form-group">
           <label htmlFor="tags-input">{t('console-shared~Labels')}</label>
           <div className="modal-body__field">
@@ -247,7 +257,7 @@ export const CreateNamespaceModal: ModalComponent<CreateProjectModalProps> = ({
             <div className="co-pre-line">{errorMessage}</div>
           </Alert>
         )}
-      </form>
+      </Form>
     </Modal>
   );
 };

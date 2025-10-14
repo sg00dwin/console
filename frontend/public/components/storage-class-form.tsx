@@ -1,10 +1,21 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { css } from '@patternfly/react-styles';
 import * as fuzzy from 'fuzzysearch';
 import * as _ from 'lodash-es';
-import { ActionGroup, Button, Checkbox } from '@patternfly/react-core';
+import {
+  ActionGroup,
+  Button,
+  Checkbox,
+  Form,
+  FormGroup,
+  FormHelperText,
+  FormFieldGroup,
+  HelperText,
+  HelperTextItem,
+  TextInput,
+  ValidatedOptions,
+} from '@patternfly/react-core';
 import { useTranslation } from 'react-i18next';
 import { getName } from '@console/shared';
 import {
@@ -458,10 +469,11 @@ const StorageClassFormInner: React.FC<StorageClassFormProps> = (props) => {
       }
 
       const children = parameter.values ? (
-        <>
-          <label className={css({ 'co-required': paramIsRequired(key) })} htmlFor={paramId}>
-            {_.get(parameter, 'name', key)}
-          </label>
+        <FormGroup
+          fieldId={paramId}
+          label={_.get(parameter, 'name', key)}
+          isRequired={paramIsRequired(key)}
+        >
           <ConsoleSelect
             title={parameter.hintText}
             items={parameter.values}
@@ -471,72 +483,89 @@ const StorageClassFormInner: React.FC<StorageClassFormProps> = (props) => {
             id={paramId}
             dataTest={paramId}
           />
-          <span className="help-block">{validationMsg ? validationMsg : null}</span>
-        </>
+          {validationMsg && (
+            <FormHelperText>
+              <HelperText>
+                <HelperTextItem variant="error">{validationMsg}</HelperTextItem>
+              </HelperText>
+            </FormHelperText>
+          )}
+        </FormGroup>
       ) : (
         <>
           {isCheckbox ? (
-            <Checkbox
-              label={_.get(parameter, 'name', key)}
-              onChange={(event) => setParameterHandler(key, event, isCheckbox)}
-              isChecked={_.get(newStorageClass, selectedKey, false)}
-              name={`provisioner-settings-${key}-checkbox`}
-              id={`provisioner-settings-${key}-checkbox`}
-              data-test={paramId}
-            />
-          ) : (
             <>
-              <label
-                className={css({
-                  'co-required': paramIsRequired(key),
-                })}
-                htmlFor={paramId}
-              >
-                {_.get(parameter, 'name', key)}
-              </label>
-              <span className="pf-v6-c-form-control">
-                <input
-                  type="text"
-                  value={_.get(newStorageClass, selectedKey, '')}
-                  onChange={(event) => setParameterHandler(key, event, isCheckbox)}
-                  id={paramId}
-                  data-test={paramId}
-                />
-              </span>
+              <Checkbox
+                label={_.get(parameter, 'name', key)}
+                onChange={(event) => setParameterHandler(key, event, isCheckbox)}
+                isChecked={_.get(newStorageClass, selectedKey, false)}
+                name={`provisioner-settings-${key}-checkbox`}
+                id={`provisioner-settings-${key}-checkbox`}
+                data-test={paramId}
+              />
+              {(validationMsg || parameter.hintText) && (
+                <FormHelperText>
+                  <HelperText>
+                    <HelperTextItem variant={validationMsg ? 'error' : 'default'}>
+                      {validationMsg || parameter.hintText}
+                    </HelperTextItem>
+                  </HelperText>
+                </FormHelperText>
+              )}
             </>
+          ) : (
+            <FormGroup
+              fieldId={paramId}
+              label={_.get(parameter, 'name', key)}
+              isRequired={paramIsRequired(key)}
+            >
+              <TextInput
+                type="text"
+                id={paramId}
+                name={paramId}
+                data-test={paramId}
+                value={_.get(newStorageClass, selectedKey, '')}
+                validated={validationMsg ? ValidatedOptions.error : ValidatedOptions.default}
+                onChange={(_event, value) =>
+                  setParameterHandler(key, { target: { value } }, isCheckbox)
+                }
+              />
+              {(validationMsg || parameter.hintText) && (
+                <FormHelperText>
+                  <HelperText>
+                    <HelperTextItem variant={validationMsg ? 'error' : 'default'}>
+                      {validationMsg || parameter.hintText}
+                    </HelperTextItem>
+                  </HelperText>
+                </FormHelperText>
+              )}
+            </FormGroup>
           )}
-          <span className="help-block">{validationMsg ? validationMsg : parameter.hintText}</span>
         </>
       );
 
-      return (
-        <div
-          key={key}
-          className={css('form-group', {
-            'has-error': _.get(newStorageClass.parameters, `${key}.validationMsg`, null),
-          })}
-        >
-          {children}
-        </div>
-      );
+      return <div key={key}>{children}</div>;
     });
     const documentationLink = storageTypes.current[newStorageClass.type]?.documentationLink;
     return (
       <>
         {!_.isEmpty(parameters) && dynamicContent}
 
-        <div className="form-group">
-          <label>{t('public~Additional parameters')}</label>
-          <p>
-            {t('public~Specific fields for the selected provisioner.')}
-            &nbsp;
-            {documentationLink && (
-              <ExternalLink
-                href={documentationLink()}
-                text={t('public~What should I enter here?')}
-              />
-            )}
-          </p>
+        <FormGroup fieldId="additional-parameters" label={t('public~Additional parameters')}>
+          <FormHelperText>
+            <HelperText>
+              <HelperTextItem>
+                {t('public~Specific fields for the selected provisioner.')}
+                &nbsp;
+                {documentationLink && (
+                  <ExternalLink
+                    href={documentationLink()}
+                    text={t('public~What should I enter here?')}
+                  />
+                )}
+              </HelperTextItem>
+            </HelperText>
+          </FormHelperText>
           <NameValueEditorComponent
             nameValuePairs={customParams}
             nameString={t('public~Parameter')}
@@ -545,7 +574,7 @@ const StorageClassFormInner: React.FC<StorageClassFormProps> = (props) => {
             addString={t('public~Add Parameter')}
             updateParentData={(c) => setCustomParams(c.nameValuePairs)}
           />
-        </div>
+        </FormGroup>
       </>
     );
   };
@@ -576,43 +605,46 @@ const StorageClassFormInner: React.FC<StorageClassFormProps> = (props) => {
         }}
       />
       <PaneBody>
-        <form data-test-id="storage-class-form">
-          <div className={css('form-group', { 'has-error': fieldErrors.nameValidationMsg })}>
-            <label className="co-required" htmlFor="storage-class-name">
-              {t('public~Name')}
-            </label>
-            <span className="pf-v6-c-form-control">
-              <input
-                type="text"
-                placeholder={newStorageClass.name}
-                id="storage-class-name"
-                data-test="storage-class-name"
-                onChange={(event) => setStorageHandler('name', event.target.value.trim())}
-                value={_.get(newStorageClass, 'name', '')}
-              />
-            </span>
-            <span className="help-block">
-              {fieldErrors.nameValidationMsg ? fieldErrors.nameValidationMsg : null}
-            </span>
-          </div>
+        <Form onSubmit={createStorageClass} data-test-id="storage-class-form">
+          <FormGroup fieldId="storage-class-name" label={t('public~Name')} isRequired>
+            <TextInput
+              type="text"
+              id="storage-class-name"
+              name="storage-class-name"
+              data-test="storage-class-name"
+              placeholder={newStorageClass.name}
+              onChange={(_event, value) => setStorageHandler('name', value.trim())}
+              value={_.get(newStorageClass, 'name', '')}
+              validated={
+                fieldErrors.nameValidationMsg ? ValidatedOptions.error : ValidatedOptions.default
+              }
+              isRequired
+            />
+            {fieldErrors.nameValidationMsg && (
+              <FormHelperText>
+                <HelperText>
+                  <HelperTextItem variant="error">{fieldErrors.nameValidationMsg}</HelperTextItem>
+                </HelperText>
+              </FormHelperText>
+            )}
+          </FormGroup>
 
-          <div className="form-group">
-            <label htmlFor="storage-class-description">{t('public~Description')}</label>
-            <span className="pf-v6-c-form-control">
-              <input
-                type="text"
-                id="storage-class-description"
-                data-test="storage-class-description"
-                onChange={(event) => setStorageHandler('description', event.target.value)}
-                value={_.get(newStorageClass, 'description', '')}
-              />
-            </span>
-          </div>
+          <FormGroup fieldId="storage-class-description" label={t('public~Description')}>
+            <TextInput
+              type="text"
+              id="storage-class-description"
+              name="storage-class-description"
+              data-test="storage-class-description"
+              onChange={(_event, value) => setStorageHandler('description', value)}
+              value={_.get(newStorageClass, 'description', '')}
+            />
+          </FormGroup>
 
-          <div className="form-group">
-            <label className="co-required" htmlFor="storage-class-reclaim-policy">
-              {t('public~Reclaim policy')}
-            </label>
+          <FormGroup
+            fieldId="storage-class-reclaim-policy"
+            label={t('public~Reclaim policy')}
+            isRequired
+          >
             <ConsoleSelect
               title={t('public~Select reclaim policy')}
               items={reclaimPolicies}
@@ -621,17 +653,22 @@ const StorageClassFormInner: React.FC<StorageClassFormProps> = (props) => {
               onChange={(event) => setStorageHandler('reclaim', event)}
               id="storage-class-reclaim-policy"
             />
-            <span className="help-block">
-              {t(
-                'public~Determines what happens to persistent volumes when the associated persistent volume claim is deleted. Defaults to "Delete"',
-              )}
-            </span>
-          </div>
+            <FormHelperText>
+              <HelperText>
+                <HelperTextItem>
+                  {t(
+                    'public~Determines what happens to persistent volumes when the associated persistent volume claim is deleted. Defaults to "Delete"',
+                  )}
+                </HelperTextItem>
+              </HelperText>
+            </FormHelperText>
+          </FormGroup>
 
-          <div className="form-group">
-            <label className="co-required" htmlFor="storage-class-volume-binding-mode">
-              {t('public~Volume binding mode')}
-            </label>
+          <FormGroup
+            fieldId="storage-class-volume-binding-mode"
+            label={t('public~Volume binding mode')}
+            isRequired
+          >
             <ConsoleSelect
               title={t('public~Select volume binding mode')}
               items={volumeBindingModes}
@@ -641,17 +678,18 @@ const StorageClassFormInner: React.FC<StorageClassFormProps> = (props) => {
               id="storage-class-volume-binding-mode"
               dataTest="storage-class-volume-binding-mode"
             />
-            <span className="help-block">
-              {t(
-                'public~Determines when persistent volume claims will be provisioned and bound. Defaults to "WaitForFirstConsumer"',
-              )}
-            </span>
-          </div>
+            <FormHelperText>
+              <HelperText>
+                <HelperTextItem>
+                  {t(
+                    'public~Determines when persistent volume claims will be provisioned and bound. Defaults to "WaitForFirstConsumer"',
+                  )}
+                </HelperTextItem>
+              </HelperText>
+            </FormHelperText>
+          </FormGroup>
 
-          <div className="form-group">
-            <label className="co-required" htmlFor="storage-class-provisioner">
-              {t('public~Provisioner')}
-            </label>
+          <FormGroup fieldId="storage-class-provisioner" label={t('public~Provisioner')} isRequired>
             <ConsoleSelect
               title={t('public~Select Provisioner')}
               autocompleteFilter={autocompleteFilter}
@@ -664,16 +702,20 @@ const StorageClassFormInner: React.FC<StorageClassFormProps> = (props) => {
               id="storage-class-provisioner"
               dataTest="storage-class-provisioner-dropdown"
             />
-            <span className="help-block">
-              {t(
-                'public~Determines what volume plugin is used for provisioning PersistentVolumes.',
-              )}
-            </span>
-          </div>
+            <FormHelperText>
+              <HelperText>
+                <HelperTextItem>
+                  {t(
+                    'public~Determines what volume plugin is used for provisioning PersistentVolumes.',
+                  )}
+                </HelperTextItem>
+              </HelperText>
+            </FormHelperText>
+          </FormGroup>
 
-          <div className="co-form-subsection">
-            {newStorageClass.type !== null ? getProvisionerElements() : null}
-          </div>
+          {newStorageClass.type !== null && (
+            <FormFieldGroup>{getProvisionerElements()}</FormFieldGroup>
+          )}
 
           {expansionFlag && (
             <Checkbox
@@ -690,7 +732,6 @@ const StorageClassFormInner: React.FC<StorageClassFormProps> = (props) => {
               <Button
                 id="save-changes"
                 isDisabled={!validationSuccessful}
-                onClick={createStorageClass}
                 type="submit"
                 variant="primary"
               >
@@ -706,7 +747,7 @@ const StorageClassFormInner: React.FC<StorageClassFormProps> = (props) => {
               </Button>
             </ActionGroup>
           </ButtonBar>
-        </form>
+        </Form>
       </PaneBody>
     </div>
   );

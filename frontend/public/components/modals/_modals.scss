@@ -41,13 +41,14 @@
 }
 
 .modal-content {
-  background-clip: padding-box;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  // Remove focus outline from opened modal
-  outline: 0;
-  position: relative;
+  outline: 3px solid aqua;
+  // background-clip: padding-box;
+  // display: flex;
+  // flex-direction: column;
+  // height: 100%;
+  // // Remove focus outline from opened modal
+  // outline: 0;
+  // position: relative;
 }
 
 .modal-dialog {

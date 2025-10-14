@@ -1,7 +1,7 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
 import * as fuzzy from 'fuzzysearch';
-import { Alert } from '@patternfly/react-core';
+import { Alert, FormAlert } from '@patternfly/react-core';
 import { useFlag } from '@console/shared/src/hooks/flag';
 import { FLAGS } from '@console/shared/src/constants';
 import { ActionItem, ConsoleSelect } from '@console/internal/components/utils/console-select';
@@ -185,14 +185,16 @@ const ListDropdown_: React.FCC<ListDropdownProps> = ({
         />
       )}
       {loaded && _.isEmpty(renderedItems) && (desc || props.selectedKeyKind) && (
-        <Alert
-          isInline
-          className="co-alert pf-v6-c-alert--top-margin"
-          variant="info"
-          title={t('public~No {{selection}} found', {
-            selection: desc || props.selectedKeyKind,
-          })}
-        />
+        <FormAlert>
+          <Alert
+            isInline
+            className="pf-v6-c-alert--top-margin"
+            variant="info"
+            title={t('public~No {{selection}} found', {
+              selection: desc || props.selectedKeyKind,
+            })}
+          />
+        </FormAlert>
       )}
     </div>
   );

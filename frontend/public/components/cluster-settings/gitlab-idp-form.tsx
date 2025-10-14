@@ -2,7 +2,16 @@ import { useState } from 'react';
 import { DocumentTitle } from '@console/shared/src/components/document-title/DocumentTitle';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom-v5-compat';
-import { ActionGroup, Button } from '@patternfly/react-core';
+import {
+  ActionGroup,
+  Button,
+  Form,
+  FormGroup,
+  FormHelperText,
+  HelperText,
+  HelperTextItem,
+  TextInput,
+} from '@patternfly/react-core';
 
 import PaneBody from '@console/shared/src/components/layout/PaneBody';
 import { PageHeading } from '@console/shared/src/components/heading/PageHeading';
@@ -153,64 +162,50 @@ export const AddGitLabPage = () => {
         )}
       />
       <PaneBody>
-        <form onSubmit={submit} name="form">
-          <IDPNameInput value={name} onChange={(e) => setName(e.currentTarget.value)} />
-          <div className="form-group">
-            <label className="co-required" htmlFor="url">
-              {t('public~URL')}
-            </label>
-            <span className="pf-v6-c-form-control">
-              <input
-                type="url"
-                aria-label={t('public~URL')}
-                onChange={(e) => setUrl(e.currentTarget.value)}
-                value={url}
-                id="url"
-                aria-describedby="idp-url-help"
-                required
-              />
-            </span>
-            <p className="help-block" id="idp-url-help">
-              {t('public~The OAuth server base URL.')}
-            </p>
-          </div>
-          <div className="form-group">
-            <label className="co-required" htmlFor="client-id">
-              {t('public~Client ID')}
-            </label>
-            <span className="pf-v6-c-form-control">
-              <input
-                type="text"
-                aria-label={t('public~Client ID')}
-                onChange={(e) => setClientID(e.currentTarget.value)}
-                value={clientID}
-                id="client-id"
-                required
-              />
-            </span>
-          </div>
-          <div className="form-group">
-            <label className="co-required" htmlFor="client-secret">
-              {t('public~Client secret')}
-            </label>
-            <span className="pf-v6-c-form-control">
-              <input
-                type="password"
-                aria-label={t('public~Client secret')}
-                onChange={(e) => setClientSecret(e.currentTarget.value)}
-                value={clientSecret}
-                id="client-secret"
-                required
-              />
-            </span>
-          </div>
+        <Form onSubmit={submit}>
+          <IDPNameInput value={name} onChange={(_event, value) => setName(value)} />
+          <FormGroup fieldId="url" isRequired label={t('public~URL')}>
+            <TextInput
+              type="url"
+              id="url"
+              name="url"
+              value={url}
+              onChange={(_event, value) => setUrl(value)}
+              isRequired
+            />
+            <FormHelperText>
+              <HelperText>
+                <HelperTextItem>{t('public~The OAuth server base URL.')}</HelperTextItem>
+              </HelperText>
+            </FormHelperText>
+          </FormGroup>
+          <FormGroup fieldId="client-id" isRequired label={t('public~Client ID')}>
+            <TextInput
+              type="text"
+              id="client-id"
+              name="client-id"
+              value={clientID}
+              onChange={(_event, value) => setClientID(value)}
+              isRequired
+            />
+          </FormGroup>
+          <FormGroup fieldId="client-secret" isRequired label={t('public~Client secret')}>
+            <TextInput
+              type="password"
+              id="client-secret"
+              name="client-secret"
+              value={clientSecret}
+              onChange={(_event, value) => setClientSecret(value)}
+              isRequired
+            />
+          </FormGroup>
           <IDPCAFileInput
             id="ca-file-input"
             value={caFileContent}
             onChange={(c: string) => setCaFileContent(c)}
           />
           <ButtonBar errorMessage={errorMessage} inProgress={inProgress}>
-            <ActionGroup className="pf-v6-c-form">
+            <ActionGroup>
               <Button type="submit" variant="primary" data-test-id="add-idp">
                 {t('public~Add')}
               </Button>
@@ -219,7 +214,7 @@ export const AddGitLabPage = () => {
               </Button>
             </ActionGroup>
           </ButtonBar>
-        </form>
+        </Form>
       </PaneBody>
     </div>
   );

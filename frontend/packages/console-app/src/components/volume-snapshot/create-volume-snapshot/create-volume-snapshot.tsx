@@ -11,6 +11,10 @@ import {
   DescriptionListDescription,
   Content,
   ContentVariants,
+  Form,
+  FormAlert,
+  FormGroup,
+  TextInput,
 } from '@patternfly/react-core';
 import { Trans, useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom-v5-compat';
@@ -267,19 +271,20 @@ const CreateSnapshotForm = (props: SnapshotResourceProps) => {
           }}
         />
         <PaneBody>
-          <form onSubmit={create}>
-            {pvcName ? (
-              <p>
-                <Trans ns="console-app">
-                  Creating snapshot for claim <strong>{{ pvcName }}</strong>
-                </Trans>
-              </p>
-            ) : (
-              /* eslint-disable jsx-a11y/label-has-associated-control */
-              <>
-                <label className="co-required" html-for="claimName">
-                  {t('console-app~PersistentVolumeClaim')}
-                </label>
+          {pvcName && (
+            <Content component={ContentVariants.p}>
+              <Trans ns="console-app">
+                Creating snapshot for claim <strong>{{ pvcName }}</strong>
+              </Trans>
+            </Content>
+          )}
+          <Form onSubmit={create}>
+            {!pvcName && (
+              <FormGroup
+                fieldId="claimName"
+                isRequired
+                label={t('console-app~PersistentVolumeClaim')}
+              >
                 <PVCDropdown
                   dataTest="pvc-dropdown"
                   namespace={namespace}
@@ -290,47 +295,47 @@ const CreateSnapshotForm = (props: SnapshotResourceProps) => {
                     namespace,
                   })}
                 />
-              </>
+              </FormGroup>
             )}
-            <div className="form-group co-volume-snapshot__form">
-              <label className="co-required" htmlFor="snapshot-name">
-                {t('console-app~Name')}
-              </label>
-              <span className="pf-v6-c-form-control">
-                <input
-                  type="text"
-                  onChange={handleSnapshotName}
-                  name="snapshotName"
-                  id="snapshot-name"
-                  value={snapshotName}
-                  required
-                />
-              </span>
-            </div>
+            <FormGroup fieldId="snapshot-name" isRequired label={t('console-app~Name')}>
+              <TextInput
+                type="text"
+                onChange={handleSnapshotName}
+                name="snapshotName"
+                id="snapshot-name"
+                value={snapshotName}
+                isRequired
+              />
+            </FormGroup>
             {pvcObj && (
-              <div className="form-group co-volume-snapshot__form">
-                <label className="co-required" htmlFor="snapshot-class">
-                  {t('console-app~Snapshot Class')}
-                </label>
-                {vscErr || scObjListErr ? (
-                  <Alert
-                    className="co-alert co-volume-snapshot__alert-body"
-                    variant="danger"
-                    title="Error fetching info on claim's provisioner"
-                    isInline
-                  />
-                ) : (
-                  <SnapshotClassDropdown
-                    filter={snapshotClassFilter}
-                    onChange={setSnapshotClassName}
-                    dataTest="snapshot-dropdown"
-                    selectedKey={snapshotClassName}
-                  />
-                )}
-              </div>
+              <FormGroup
+                fieldId="snapshot-class"
+                isRequired
+                label={t('console-app~Snapshot Class')}
+              >
+                <>
+                  {vscErr || scObjListErr ? (
+                    <FormAlert>
+                      <Alert
+                        className="co-alert co-volume-snapshot__alert-body"
+                        variant="danger"
+                        title="Error fetching info on claim's provisioner"
+                        isInline
+                      />
+                    </FormAlert>
+                  ) : (
+                    <SnapshotClassDropdown
+                      filter={snapshotClassFilter}
+                      onChange={setSnapshotClassName}
+                      dataTest="snapshot-dropdown"
+                      selectedKey={snapshotClassName}
+                    />
+                  )}
+                </>
+              </FormGroup>
             )}
             <ButtonBar errorMessage={errorMessage || loadError} inProgress={inProgress}>
-              <ActionGroup className="pf-v6-c-form">
+              <ActionGroup>
                 <Button
                   type="submit"
                   variant="primary"
@@ -344,7 +349,7 @@ const CreateSnapshotForm = (props: SnapshotResourceProps) => {
                 </Button>
               </ActionGroup>
             </ButtonBar>
-          </form>
+          </Form>
         </PaneBody>
       </div>
       <PaneBody className="co-volume-snapshot__info">

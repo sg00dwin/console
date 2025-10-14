@@ -1,6 +1,6 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
-import { Alert, Backdrop, Checkbox, Modal, ModalVariant } from '@patternfly/react-core';
+import { Alert, Backdrop, Checkbox, Modal, ModalVariant, Form } from '@patternfly/react-core';
 import { Trans, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom-v5-compat';
 import { createModalLauncher, ModalTitle, ModalBody, ModalSubmitFooter } from '../factory/modal';
@@ -80,7 +80,7 @@ export const DeleteModal = (props: DeleteModalProps) => {
 
   const { kind, resource, message } = props;
   return (
-    <form onSubmit={submit} name="form" className="modal-content">
+    <Form onSubmit={submit} name="form" className="pf-v6-c-form--no-gap">
       <ModalTitle>
         <YellowExclamationTriangleIcon className="co-icon-space-r" />{' '}
         {t('public~Delete {{kind}}?', {
@@ -156,7 +156,7 @@ export const DeleteModal = (props: DeleteModalProps) => {
         submitText={props.btnText || t('public~Delete')}
         cancel={props.cancel}
       />
-    </form>
+    </Form>
   );
 };
 
