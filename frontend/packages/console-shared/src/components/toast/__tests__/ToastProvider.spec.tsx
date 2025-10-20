@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, fireEvent, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import { renderWithProviders } from '../../../test-utils/unit-test-utils';
 import ToastContext, { ToastContextType, ToastVariant } from '../ToastContext';
@@ -71,7 +71,7 @@ describe('ToastProvider', () => {
 
   it('should dismiss toast on action', async () => {
     const actionFn = jest.fn();
-    renderWithProviders(
+    const { user } = renderWithProviders(
       <ToastProvider>
         <TestComponent />
       </ToastProvider>,
@@ -97,7 +97,7 @@ describe('ToastProvider', () => {
     });
 
     const actionButton = screen.getByRole('button', { name: /action 1/i });
-    fireEvent.click(actionButton);
+    await user.click(actionButton);
 
     expect(actionFn).toHaveBeenCalledTimes(1);
 
@@ -141,7 +141,7 @@ describe('ToastProvider', () => {
 
   it('should dismiss toast on action on anchor click', async () => {
     const actionFn = jest.fn();
-    renderWithProviders(
+    const { user } = renderWithProviders(
       <ToastProvider>
         <TestComponent />
       </ToastProvider>,
@@ -170,7 +170,7 @@ describe('ToastProvider', () => {
     const actionLink = await screen.findByText('action 1');
     const anchorElement = actionLink.closest('a');
     if (anchorElement) {
-      fireEvent.click(anchorElement);
+      await user.click(anchorElement);
     }
 
     expect(actionFn).toHaveBeenCalledTimes(1);
@@ -182,7 +182,7 @@ describe('ToastProvider', () => {
 
   it('should call onToastClose if provided on toast close', async () => {
     const toastClose = jest.fn();
-    renderWithProviders(
+    const { user } = renderWithProviders(
       <ToastProvider>
         <TestComponent />
       </ToastProvider>,
@@ -203,7 +203,7 @@ describe('ToastProvider', () => {
     });
 
     const closeButton = screen.getByRole('button', { name: /close/i });
-    fireEvent.click(closeButton);
+    await user.click(closeButton);
 
     expect(toastClose).toHaveBeenCalled();
   });

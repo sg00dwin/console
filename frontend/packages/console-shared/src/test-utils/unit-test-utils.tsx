@@ -11,6 +11,7 @@ import {
   BoundFunctions,
   Queries,
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Formik, FormikValues } from 'formik';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom-v5-compat';
@@ -53,7 +54,15 @@ export function renderWithProviders(
       </Provider>
     );
   }
-  return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) };
+
+  const user = userEvent;
+
+  return { store, user, ...render(ui, { wrapper: Wrapper, ...renderOptions }) } as ReturnType<
+    typeof render
+  > & {
+    store: ReturnType<typeof setupStore>;
+    user: typeof userEvent;
+  };
 }
 
 export const mockFormikRenderer = (
