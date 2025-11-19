@@ -1,7 +1,6 @@
 language: en-US
-tone_instructions: ''
+tone_instructions: "You are a principal engineer reviewing OpenShift Console code (React, TypeScript, JavaScript, Go). Focus on critical issues affecting performance, security, maintainability, and correctness. Concisely explain the 'why' behind each finding, and if applicable, provide specific examples. Test-related issues should reference React Testing Library, Jest, and Cypress best practices."
 early_access: false
-enable_free_tier: true
 reviews:
   profile: chill
   request_changes_workflow: false
@@ -28,6 +27,7 @@ reviews:
   auto_assign_reviewers: false
   in_progress_fortune: true
   poem: false
+   #paths to ignore, customize for your project
   path_filters:
     - '!vendor/**'
     - '!**/vendor/**'
@@ -40,9 +40,10 @@ reviews:
   disable_cache: false
   auto_review:
     enabled: true
-    auto_incremental_review: true
+    auto_incremental_review: false
     ignore_title_keywords:
       - WIP
+      - '[WIP]'
       - do-not-merge
       - work-in-progress
     labels:
@@ -92,72 +93,19 @@ reviews:
       level: default
     biome:
       enabled: true
-    hadolint:
-      enabled: true
-    swiftlint:
-      enabled: true
-    phpstan:
-      enabled: true
-      level: default
-    phpmd:
-      enabled: true
-    phpcs:
-      enabled: true
     golangci-lint:
+      enabled: true
+    markdownlint:
       enabled: true
     yamllint:
       enabled: true
     gitleaks:
       enabled: true
-    checkov:
-      enabled: true
-    detekt:
-      enabled: true
     eslint:
       enabled: true
-    flake8:
-      enabled: true
-    rubocop:
-      enabled: true
-    buf:
-      enabled: true
-    regal:
+    LanguageTool:
       enabled: true
     actionlint:
-      enabled: true
-    pmd:
-      enabled: true
-    clang:
-      enabled: true
-    cppcheck:
-      enabled: true
-    semgrep:
-      enabled: true
-    circleci:
-      enabled: true
-    clippy:
-      enabled: true
-    sqlfluff:
-      enabled: true
-    prismaLint:
-      enabled: true
-    pylint:
-      enabled: true
-    oxc:
-      enabled: true
-    shopifyThemeCheck:
-      enabled: true
-    luacheck:
-      enabled: true
-    brakeman:
-      enabled: true
-    dotenvLint:
-      enabled: true
-    htmlhint:
-      enabled: true
-    checkmake:
-      enabled: true
-    osvScanner:
       enabled: true
 chat:
   art: true
@@ -168,12 +116,19 @@ chat:
     linear:
       usage: disabled
 knowledge_base:
-  opt_out: true
+  opt_out: false
   web_search:
     enabled: true
+  # Coding guidelines automatically detects major coding agents, Cursor, Claude Code, Gemini, et. al. If you keep custom coding standards or other documents, add them as file patterns.
   code_guidelines:
     enabled: true
-    filePatterns: []
+    filePatterns:
+      - "AGENTS.md"
+      - "CLAUDE.md"
+      - "ARCHITECTURE.md"
+      - "CONVENTIONS.md"
+      - "TESTING.md"
+      - "INTERNATIONALIZATION.md"
   learnings:
     scope: local
   issues:
