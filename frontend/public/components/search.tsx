@@ -2,7 +2,7 @@ import * as _ from 'lodash-es';
 import * as React from 'react';
 import { DocumentTitle } from '@console/shared/src/components/document-title/DocumentTitle';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom-v5-compat';
+import { useLocation, useParams } from 'react-router-dom-v5-compat';
 import {
   Accordion,
   AccordionContent,
@@ -95,13 +95,14 @@ const SearchPage_: React.FC<SearchProps> = (props) => {
   const [pinnedResources, setPinnedResources, pinnedResourcesLoaded] = usePinnedResources();
   const { noProjectsAvailable } = props;
   const { t } = useTranslation();
+  const location = useLocation();
   const { ns: namespace } = useParams();
   // Set state variables from the URL
   React.useEffect(() => {
     let kind: string, q: string, name: string;
 
-    if (window.location.search) {
-      const sp = new URLSearchParams(window.location.search);
+    if (location.search) {
+      const sp = new URLSearchParams(location.search);
       kind = sp.get('kind');
       q = sp.get('q');
       name = sp.get('name');
@@ -110,12 +111,14 @@ const SearchPage_: React.FC<SearchProps> = (props) => {
     kind = kind || '';
     if (kind !== '') {
       setSelectedItems(new Set(kind.split(',')));
+    } else {
+      setSelectedItems(new Set([]));
     }
     const tags = split(q || '');
     const validTags = _.reject(tags, (tag) => requirementFromString(tag) === undefined);
     setLabelFilter(validTags);
     setTypeaheadNameFilter(name || '');
-  }, []);
+  }, [location.search]);
 
   const updateSelectedItems = (selection: string) => {
     const updateItems = selectedItems;
@@ -325,7 +328,9 @@ const SearchPage_: React.FC<SearchProps> = (props) => {
                       nameFilter={typeaheadNameFilter}
                       namespace={namespace}
                       mock={noProjectsAvailable}
-                      key={resource}
+                      key={`${resource}-${namespace || 'all'}-${labelFilter.join(
+                        ',',
+                      )}-${typeaheadNameFilter}`}
                     />
                   )}
                 </AccordionContent>

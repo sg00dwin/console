@@ -47,6 +47,7 @@ import {
   RoleModel,
   SecretModel,
   ServiceAccountModel,
+  ServiceModel,
   ServiceMonitorModel,
   StatefulSetModel,
   StorageClassModel,
@@ -184,6 +185,9 @@ export const baseDetailsPages = ImmutableMap<ResourceMapKey, ResourceMapValue>()
   )
   .set(referenceForModel(SecretModel), () =>
     import('./secret' /* webpackChunkName: "secret" */).then((m) => m.SecretsDetailsPage),
+  )
+  .set(referenceForModel(ServiceModel), () =>
+    import('./service' /* webpackChunkName: "service" */).then((m) => m.ServicesDetailsPage),
   )
   .set(referenceForModel(ServiceAccountModel), () =>
     import('./service-account' /* webpackChunkName: "service-account" */).then(
@@ -388,6 +392,9 @@ export const baseListPages = ImmutableMap<ResourceMapKey, ResourceMapValue>()
   )
   .set(referenceForModel(SecretModel), () =>
     import('./secret' /* webpackChunkName: "secret" */).then((m) => m.SecretsPage),
+  )
+  .set(referenceForModel(ServiceModel), () =>
+    import('./service' /* webpackChunkName: "service" */).then((m) => m.ServicesPage),
   )
   .set(referenceForModel(ServiceAccountModel), () =>
     import('./service-account' /* webpackChunkName: "service-account" */).then(
