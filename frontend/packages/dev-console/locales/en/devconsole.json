@@ -487,6 +487,7 @@
   "The Dockerfile at {{filePath}} is recommended.": "The Dockerfile at {{filePath}} is recommended.",
   "A Builder Image is recommended.": "A Builder Image is recommended.",
   "Multiple import strategies detected": "Multiple import strategies detected",
+  "Source-to-Image import strategy detected.": "Source-to-Image import strategy detected.",
   "{{strategy}} detected.": "{{strategy}} detected.",
   "Import strategy changed to {{strategy}}": "Import strategy changed to {{strategy}}",
   "Unable to detect import strategy": "Unable to detect import strategy",

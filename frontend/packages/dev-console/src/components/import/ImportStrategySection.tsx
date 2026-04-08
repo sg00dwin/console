@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useRef, useMemo, useCallback } from 'react';
+import { useRef, useEffect, useMemo, useCallback } from 'react';
 import {
   AlertVariant,
   Alert,
@@ -20,7 +20,6 @@ import DockerSection from './git/DockerSection';
 import ImportStrategySelector from './ImportStrategySelector';
 import FormSection from './section/FormSection';
 import ServerlessFunctionSection from './serverless-function/ServerlessFunctionSection';
-import './ImportStrategySection.scss';
 
 export interface ImportStrategySectionProps {
   builderImages: NormalizedBuilderImages;
@@ -41,8 +40,12 @@ const ImportStrategySection: FC<ImportStrategySectionProps> = ({ builderImages }
     },
     devfile,
     docker,
+    image,
   } = values;
   const recommendedValues = useRef<FormikValues>(null);
+
+  const s2iCouldNotRecommend =
+    recommendedStrategy?.type === ImportStrategy.S2I && image?.couldNotRecommend;
 
   const strategySections = useMemo(
     () => ({
@@ -67,9 +70,11 @@ const ImportStrategySection: FC<ImportStrategySectionProps> = ({ builderImages }
       [ImportStrategy.DOCKERFILE]: t('devconsole~The Dockerfile at {{filePath}} is recommended.', {
         filePath: docker?.dockerfilePath,
       }),
-      [ImportStrategy.S2I]: t('devconsole~A Builder Image is recommended.'),
+      [ImportStrategy.S2I]: s2iCouldNotRecommend
+        ? ''
+        : t('devconsole~A Builder Image is recommended.'),
     }),
-    [devfile, docker, t],
+    [devfile, docker, s2iCouldNotRecommend, t],
   );
 
   const alertInfo = useMemo(() => {
@@ -82,7 +87,9 @@ const ImportStrategySection: FC<ImportStrategySectionProps> = ({ builderImages }
         if (importStrategies.length > 1) {
           title = t('devconsole~Multiple import strategies detected');
         } else if (importStrategies.length === 1) {
-          title = t('devconsole~{{strategy}} detected.', { strategy: recommendedStrategy.name });
+          title = s2iCouldNotRecommend
+            ? t('devconsole~Source-to-Image import strategy detected.')
+            : t('devconsole~{{strategy}} detected.', { strategy: recommendedStrategy.name });
         }
         description = recommendedStrategyDescriptions[recommendedStrategy.type];
       } else if (strategyChanged) {
@@ -112,11 +119,19 @@ const ImportStrategySection: FC<ImportStrategySectionProps> = ({ builderImages }
     loadError,
     importStrategies.length,
     recommendedStrategy,
+    s2iCouldNotRecommend,
     strategyChanged,
     recommendedStrategyDescriptions,
     t,
     selectedStrategy.name,
   ]);
+
+  useEffect(() => {
+    if (s2iCouldNotRecommend && !showEditImportStrategy) {
+      recommendedValues.current = values;
+      setFieldValue('import.showEditImportStrategy', true);
+    }
+  }, [s2iCouldNotRecommend, showEditImportStrategy, setFieldValue, values]);
 
   const handleEditStrategy = useCallback(() => {
     if (showEditImportStrategy) {
@@ -134,7 +149,7 @@ const ImportStrategySection: FC<ImportStrategySectionProps> = ({ builderImages }
         <Alert isInline variant={alertInfo.variant} title={alertInfo.title}>
           {alertInfo.description}
         </Alert>
-        {recommendedStrategy && (
+        {recommendedStrategy && !s2iCouldNotRecommend && (
           <Split>
             <SplitItem isFilled />
             <SplitItem>
@@ -154,17 +169,14 @@ const ImportStrategySection: FC<ImportStrategySectionProps> = ({ builderImages }
           </Split>
         )}
       </FormSection>
-      <div className={recommendedStrategy ? 'odc-import-strategy-section__strategy-selector' : ''}>
-        {showEditImportStrategy && (
-          <>
-            <FormSection>
-              <ImportStrategySelector />
-            </FormSection>
-            <br />
-          </>
-        )}
-        {strategySections[selectedStrategy.type]}
-      </div>
+      {showEditImportStrategy && (
+        <>
+          <FormSection>
+            <ImportStrategySelector />
+          </FormSection>
+        </>
+      )}
+      {strategySections[selectedStrategy.type]}
     </>
   );
 };

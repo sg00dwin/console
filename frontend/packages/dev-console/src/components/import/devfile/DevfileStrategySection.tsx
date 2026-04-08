@@ -12,7 +12,6 @@ import { ImportTypes, SampleRuntime } from '../import-types';
 import FormSection from '../section/FormSection';
 import { useDevfileServer, useDevfileSource, useSelectedDevfileSample } from './devfileHooks';
 import DevfileInfo from './DevfileInfo';
-import './DevfileStrategySection.scss';
 
 const DevfileStrategySection: FC = () => {
   const { t } = useTranslation();
@@ -124,12 +123,7 @@ const DevfileStrategySection: FC = () => {
     <>
       {devfileParseError && (
         <FormSection>
-          <Alert
-            isInline
-            className="odc-devfile-strategy-section__error-alert"
-            variant="danger"
-            title={t('devconsole~Import is not possible.')}
-          >
+          <Alert isInline variant="danger" title={t('devconsole~Import is not possible.')}>
             {devfileParseError}
           </Alert>
         </FormSection>
